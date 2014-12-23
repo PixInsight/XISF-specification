@@ -1,0 +1,2970 @@
+\documentclass PIGenericDoc
+
+\document XISF-1.0-spec
+
+\keywords {
+   XISF, file format, image file format, data serialization, image serialization
+}
+
+\title {
+   XISF Version 1.0 Specification\n*** DRAFT ***
+}
+
+\author {
+   Juan Conejero, PTeam
+}
+
+\copyright {
+   2014 Pleiades Astrophoto S.L.
+}
+
+\brief {
+   A formal description of the Extensible Image Serialization Format (XISF) version 1.0.
+}
+
+% -----------------------------------------------------------------------------
+% Introduction
+% -----------------------------------------------------------------------------
+
+\introduction {
+
+   Extensible Image Serialization Format (XISF) is a free file format for storage, management and interchange of digital images and associated data.
+
+   XISF has been originally designed and implemented as the native file format of PixInsight, an image processing software platform designed specifically for astronomical imaging, and developed by the company Pleiades Astrophoto S.L. However, our hope is that XISF serves as an efficient tool for the development of imaging software, including not only software specialized in astronomy, but image processing software in a wide range of technical and general fields.
+
+   Two key elements in the design of XISF can be found in its title: \e extensible and \e serialization. Extensibility is crucial to adapt the format easily and efficiently to the requirements of present and future software applications. The architecture of XISF has to facilitate the development of extensions to the core format specification, and for this purpose XISF headers are standard XML documents. Serialization denotes the ability of XISF to store not just image data, but also data structures associated with the environments where the images evolve as living objects. These data structures can be deserialized to recreate the images along with their working contexts. We formalize the resources to store data structures and objects as \e properties of a variety of predefined data types. XISF properties can be directly associated with images, with entire XISF units, or be defined as standalone components.
+
+   Finally, XISF is a free format open to the contributions of anyone interested, including users of PixInsight and other applications, as well as individuals and groups from other development teams, institutions and companies involved or interested in image processing software.
+} % Introduction
+
+% -----------------------------------------------------------------------------
+% Version History
+% -----------------------------------------------------------------------------
+
+\section { Version History } {
+
+   \table[numbered,caption,header,width:100\%] {
+      { Version History of this XISF Specification Document }
+      { { Version } { Date } { Description } }
+      { { 0.1 } { December 2014 } { First draft of the XISF specification } }
+   }
+} % Version History
+
+% -----------------------------------------------------------------------------
+% Terminology and Conventions
+% -----------------------------------------------------------------------------
+
+\section { Terminology and Conventions } {
+
+   \subsection { Requirement Levels } {
+
+      The key words \e must, \e {must not}, \e required, \e shall, \e {shall not}, \e should, \e {should not}, \e recommended, \e may, and \e optional in this document are to be interpreted as described in RFC 2119.\ref rfc_2119
+   }
+
+   \subsection { Typographical Conventions } {
+
+      \c {Monospaced text} represents literal source code fragments.
+
+      \c\e {Italicized monospace text} represents metalanguage fragments describing source code fragments:
+
+         \block[marginLeft:3em] {
+            \c { \hs\hs\hs name="\e{value}" }
+
+            In this example, the word \c\e value is a \e metasymbol used to describe the value of a \c name XML attribute.
+         }
+
+      In code fragments, an ellipsis represents a variable-length list of items:
+
+         \block[marginLeft:3em] {
+            \c { \hs\hs\hs \e{item}\sub{1}:...:\e{item}\sub{N} }
+
+            This example shows a list of N items separated by literal colon '\c{:}' characters. Note that the \c\e{item}\sub{i} elements are metasymbols in this case, not literal fragments.
+         }
+
+      Portions of this document enclosed by gray dashed lines represent literal source code examples:
+
+         \block[marginLeft:3em] {
+            \code {
+   This is a source code example.
+            }
+
+            Note that literal source code fragments not necessarily correspond to working code examples. When necessary or not obvious, this is indicated in the text describing the examples.
+         }
+
+      The subindexes \sub{10} and \sub{16} indicate base 10 and base 16 (or hexadecimal) integers. For example:
+
+         \block[marginLeft:3em] {
+
+            76\sub{10} = 4C\sub{16}
+         }
+
+      Figures are for illustration only; unless explicitly stated, they are not reference renderings.
+   }
+} % Terminology and Conventions
+
+% -----------------------------------------------------------------------------
+% Availability and Use of XISF
+% -----------------------------------------------------------------------------
+
+\section { Availability and Use of XISF } {
+
+   XISF has been conceived as a free, open format since its origin. The words \e free and \e open formally mean the following:
+
+   \list[ordered,spaced] {
+
+      { The entire definition of XISF \e shall be publicly available without any restrictions or monetary cost to anyone. }
+
+      { Anyone \e shall be able to use or implement XISF freely without any monetary cost for any purpose. }
+
+      { XISF \e shall \e not be subject to patents or royalties of any kind that could limit its availability or impose a monetary cost for its availability or its use. }
+
+      { These conditions \e shall constitute a legally binding assignment, and no individual or organization that implements, extends or redefines XISF in the future will be able to revoke or limit them under any circumstance. }
+   }
+
+   A copy of this specification document is available online at the following URL:
+
+   \xref http://pixinsight.com/doc/docs/XISF-1.0-spec/XISF-1.0-spec.html http://pixinsight.com/doc/docs/XISF-1.0-spec/XISF-1.0-spec.html
+} % Availability and Use of XISF
+
+% -----------------------------------------------------------------------------
+% Overview of XISF 1.0 Features
+% -----------------------------------------------------------------------------
+
+\section { Overview of XISF 1.0 Features } {
+
+   The initial XISF version 1.0 specification has the following main features:
+
+   \definition {
+      { Two storage models }
+      {
+         \list[spaced] {
+            { \e { Monolithic model }, where all image metadata, pixel sample data and image properties can be stored in a single storage unit (e.g. a disk file). }
+            { \e { Distributed model }, where image definitions and metadata are stored in a single header unit, and pixel sample data and image properties are stored as separate units, including local and remote storage units. }
+         }
+      }
+
+      { Relocatable distributed units }
+      {
+         A distributed XISF unit can be built so that it can be moved or copied to any location in a local file system and across different machines.
+      }
+
+      { Multiple images, metadata and image properties }
+      {
+         An XISF file can store an unlimited number of images with different geometries, color spaces, and associated metadata and properties.
+      }
+
+      { Multidimensional images }
+      {
+         XISF supports arbitrary image dimensions, including one-dimensional, two-dimensional and three-dimensional images, as well as images of higher dimensions such as tesseracts and other hypercubes.
+      }
+
+      { Multichannel images }
+      {
+         XISF supports an unlimited number of image hyperplanes (not to be confused with the dimensionality of the image), such as nominal color channels and alpha channels, for each stored image.
+      }
+
+      { Sequential and random access }
+      {
+         XISF units support sequential and random access to read or write individual pixel sample rows or sets of contiguous rows.
+      }
+
+      { Seven pixel sample data types }
+      {
+         XISF supports integer pixel samples stored as unsigned 8-bit, 16-bit and 32-bit integers, plus real and complex samples in 32-bit and 64-bit IEEE 754 floating point format.
+      }
+
+      { Colorimetrically defined color spaces }
+      {
+         XISF supports images represented in colorimetrically defined grayscale, RGB and CIE L*a*b* color spaces.
+      }
+
+      { RGB working spaces }
+      {
+         XISF can serialize the parameters of colorimetrically defined RGB working spaces associated with stored images.
+      }
+
+      { ICC color profiles }
+      {
+         XISF can store standard ICC color profiles associated with stored images.
+      }
+
+      { Unambiguous floating point data ranges }
+      {
+         Floating point real and complex images can be stored using arbitrary values and ranges. However, an unambiguous specification of the numeric range to which floating point real image data is referred---that is, the black and white points of the image---is mandatory. This prevents any ambiguity in the interpretation of floating point image data and guarantees interoperability between different implementations and applications.
+      }
+
+      { Data compression }
+      {
+         The XISF specification supports data compression codecs, including lossless and lossy compression schemes. The deflate/zlib algorithm is the standard compression codec of XISF.
+      }
+
+      { Digital signatures }
+      {
+         The XISF specification supports signed files with standard X.509 certificates and XML signatures. Digital signatures protect both data integrity and authenticity.
+      }
+
+      { XML file headers }
+      {
+         XISF headers (in both the monolithic and distributed models) are plain text in standard XML 1.0 format encoded as UTF-8.
+      }
+
+      { Full Unicode support }
+      {
+         Image metadata and textual properties fully support Unicode.
+      }
+
+      { Properties }
+      {
+         An XISF property is a data block accessible through a unique identifier (name-value pairs). Properties can be associated with images, with the whole XISF unit, or be serialized as standalone elements. XISF properties are typed objects of scalar, complex, string, vector and matrix types.
+      }
+
+      { FITS format compatibility }
+      {
+         FITS header keywords can be stored in XISF files and retrieved from XISF files as if the reader were working with actual FITS files.
+      }
+   }
+} % Overview of XISF 1.0 Features
+
+% -----------------------------------------------------------------------------
+% Definitions
+% -----------------------------------------------------------------------------
+
+\section { Definitions } {
+
+   \definition {
+
+      { Byte }
+      {
+         An 8-bit unsigned binary integer.
+      }
+
+      { File }
+      {
+         A file is a sequence of \e N 8-bit contiguous bytes, where \e N is the file length and bytes are numbered from 0 to \e{N}--1. The \e theoretical maximum file length is 2\sup{64}--1 = 18,446,744,073,709,551,615 bytes.
+      }
+
+      { Byte offset / byte position }
+      {
+         Number of bytes from the beginning of a file, or from the beginning of a given section of a file.
+      }
+
+      { \lref xisf_unit {XISF unit} }
+      {
+         A set of one or more files defining contents in the XISF format.
+      }
+
+      { Monolithic xisf_unit {XISF unit} }
+      {
+         An XISF unit structured following the monolithic storage model.
+      }
+
+      { Distributed xisf_unit {XISF unit} }
+      {
+         An XISF unit structured following the distributed storage model.
+      }
+
+      { \lref xisf_header {XISF header} }
+      {
+         A valid XML 1.0\ref xml_1_0 document encoded in UTF-8\ref unicode_encoding_forms \ref unicode_encoding_schemes that describes and locates the entire contents of an \lref xisf_unit {XISF unit}.
+      }
+
+      { \lref xisf_header_file {XISF header file} }
+      {
+         An \lref xisf_header {XISF header} stored as a single file.
+      }
+
+      { \lref data_block {XISF data block} }
+      {
+         A file or a subset of a file storing data that can be accessed through an \lref xisf_unit {XISF unit}.
+      }
+
+      { \lref data_blocks_file {XISF data blocks file} }
+      {
+         A file that allows indexed access to XISF data blocks, available as a local or a remote resource.
+      }
+
+      { Encoder }
+      {
+         Any system, application, utility or device able to generate \lref xisf_unit {XISF units} according to this specification.
+      }
+
+      { Decoder }
+      {
+         Any system, application, utility or device able to read and interpret the contents of an \lref xisf_unit {XISF unit} according to this specification.
+      }
+
+      { Scalar }
+      {
+         A single value without internal structure, such as an integer or floating point number.
+      }
+
+      { Complex number }
+      {
+         A number that can be expressed in the form \im{a + bi}, where \im{a} and \im{b} are real numbers and \im{i} is the \e {imaginary unit}, which is defined by the equation \im{#: i^2 = -1 :#}. The components \im{a} and \im{b} of a complex number are called its \e real and \e imaginary parts or components.
+      }
+
+      { Vector }
+      {
+         A homogeneous sequence of zero or more contiguous scalars or complex numbers.
+      }
+
+      { Matrix }
+      {
+         A homogeneous set of contiguous scalars or complex numbers, structured as a two-dimensional array with a fixed number of rows and columns.
+      }
+
+      { String }
+      {
+         A homogeneous sequence of zero or more contiguous Unicode or ASCII code points represented as integer scalars.
+      }
+
+      { Array }
+      {
+         A contiguous sequence of zero or more objects, where any object can be accessed through an \e {array index}.
+      }
+
+      { Homogeneous structure }
+      {
+         A structure that can only store objects of the same class or data type.
+      }
+
+      { Heterogeneous structure }
+      {
+         A structure that may store objects of different classes or data types.
+      }
+
+      { Contiguous sequence / contiguous objects }
+      {
+         Zero or more objects stored consecutively without any gaps.
+      }
+
+      { Little-endian }
+      {
+         A data encoding where the bytes within a 16-bit, 32-bit or 64-bit value are addressed from the least significant to the most significant as the byte address increases.
+      }
+
+      { Big-endian }
+      {
+         A data encoding where the bytes within a 16-bit, 32-bit or 64-bit value are addressed from the most significant to the least significant as the byte address increases.
+      }
+   }
+} % Definitions
+
+% -----------------------------------------------------------------------------
+% Conformance
+% -----------------------------------------------------------------------------
+
+\section { Conformance } {
+
+   We define several conformance levels for any encoder or decoder that claims conformance with this XISF specification:
+
+   \subsection { Level 1 XISF Conformance } {
+
+      \s {Level 1 XISF decoders and encoders} \e shall implement this specification \s entirely, including all optional components and features.
+   }
+
+   \subsection { Level 2 XISF Conformance } {
+
+      A \s {level 2 XISF decoder} \e shall implement this specification to read \lref xisf_unit {XISF units}, including all optional components and features, with the following \s exceptions:
+
+      \list {
+         { Read pixel data in the Complex32 and Complex64 \lref sampleformat_image_attribute {pixel sample formats}. }
+         { Read and process \lref xml_signature {XML signatures} to verify the integrity and authenticity of the data in an XISF unit. }
+      }
+
+      A \s {level 2 XISF encoder} \e shall implement this specification to generate XISF units, including all optional components and features, with the following \s exceptions:
+
+      \list {
+         { Write pixel data in the Complex32 and Complex64 \lref sampleformat_image_attribute {pixel sample formats}. }
+         { Write \lref xml_signature {XML signatures} to guarantee the integrity and authenticity of the data in an XISF unit. }
+      }
+   }
+
+   \subsection { Level 3 XISF Conformance } {
+
+      A \s {level 3 XISF decoder} \e shall implement this specification to read \lref xisf_unit {XISF units} with the following \s exceptions:
+
+      \list {
+         { Read files and \lref xisf_data_block blocks not stored in the local file system. }
+         { Read pixel data in the Complex32 and Complex64 \lref sampleformat_image_attribute {pixel sample formats}. }
+         { Read and process \lref xml_signature {XML signatures} to verify the integrity and authenticity of the data in an XISF unit. }
+      }
+
+      A \s {level 3 XISF encoder} \e shall implement this specification to generate XISF units with the following \s exceptions:
+
+      \list {
+         { Write files and \lref xisf_data_block blocks outside the local file system. }
+         { Write pixel data in the normal \lref pixel_storage_models {storage model}. }
+         { Write pixel data in the Complex32 and Complex64 \lref sampleformat_image_attribute {pixel sample formats}. }
+         { Write \lref xml_signature {XML signatures} to guarantee the integrity and authenticity of the data in an XISF unit. }
+      }
+
+      In addition, other optional features and components of the specification \e may be excluded in a level 3 XISF encoder or decoder.
+   }
+
+   \subsection { Baseline XISF Conformance } {
+
+      A \s {baseline XISF decoder} \e shall have \s {at least} the following abilities to read \lref xisf_unit {XISF units}:
+
+      \list {
+         { Read \lref monolithic_xisf_file {monolithic XISF files}. }
+         { Read multiple \lref image_core_element \c Image core elements from a monolithic XISF file. }
+         { Support \lref data_block_compression {zlib decompression}. }
+         { Read pixel data from \lref xisf_data_block {XISF blocks} with inline, embedded and attachment \lref data_block_location locations. }
+         { Read pixel data in the planar \lref pixel_storage_models {storage model}. }
+         { Read pixel data in the following \lref sampleformat_image_attribute {pixel sample formats}: UInt8, UInt16, Float32. }
+         { Read pixel data represented in the following \lref colorspace_image_attribute {color spaces}: Grayscale, RGB. }
+      }
+
+      A \s {baseline XISF encoder} \e shall have \s {at least} the following abilities to generate XISF units:
+
+      \list {
+         { Write \lref monolithic_xisf_file {monolithic XISF files}. }
+         { Write a single \c Image core element in a monolithic XISF file. }
+         { Write pixel data as \lref xisf_data_block {XISF blocks} with attachment \lref data_block_location location. }
+         { Write pixel data in the planar \lref pixel_storage_models {storage model}. }
+         { Write pixel data in the UInt16 \lref sampleformat_image_attribute {pixel sample format}. }
+         { Write pixel data represented in the grayscale and RGB \lref colorspace_image_attribute {color spaces}. }
+      }
+   }
+} % Conformance
+
+% -----------------------------------------------------------------------------
+% XISF Data Objects
+% -----------------------------------------------------------------------------
+
+\section { \label xisf_data_objects XISF Data Objects } {
+
+   Two high-level data objects have been defined in this XISF specification: \lref xisf_property Property and \lref xisf_image Image. In this section we define the structural and functional properties of these objects, independently on the structure of an \lref xisf_unit {XISF unit}. In successive sections we'll describe how these objects are represented and how they play their roles for data serialization. As a result of the extensibility of XISF, you can expect new high-level objects to be defined in future versions of this specification.
+
+   % --------------------------------------------------------------------------
+   % Fundamental Scalar Types
+   % --------------------------------------------------------------------------
+
+   \subsection { \label fundamental_data_types Fundamental Scalar Types } {
+
+      Table \tblref tbl_fundamental_data_types lists the fundamental data types used to define all objects serializable by XISF. All of these types are fixed-length scalar data types.
+
+      \table[numbered:tbl_fundamental_data_types,caption,header,width:100\%] {
+         { XISF Fundamental Scalar Types }
+         { { Type name } { Size (bytes) } { Lower bound }  { Upper bound } { Decimal precision } }
+         { { Unsigned 8-bit integer }  { 1 } \right { 0 } \right { 255 } {} }
+         { { Unsigned 16-bit integer } { 2 } \right { 0 } \right { 65,535 } {} }
+         { { Unsigned 32-bit integer } { 4 } \right { 0 } \right { 4,294,967,295 } {} }
+         { { Unsigned 64-bit integer } { 8 } \right { 0 } \right { 18,446,744,073,709,551,615 } {} }
+         { { Signed 8-bit integer }    { 1 } \right { --128 } \right { +127 } {} }
+         { { Signed 16-bit integer }   { 2 } \right { --32,768 } \right { +32,767 } {} }
+         { { Signed 32-bit integer }   { 4 } \right { --2,147,483,648 } \right { +2,147,483,647 } {} }
+         { { Signed 64-bit integer }   { 8 } \right { --9,223,372,036,854,775,808 } \right { +9,223,372,036,854,775,807 } {} }
+         { { IEEE 754\ref ieee_754 binary32 floating point } { 4 } \right { \pm 1.18 \times 10\sup{--38} } \right { \pm 3.40 \times 10\sup{38} } \right { 1.19 \times 10\sup{--7} } }
+         { { IEEE 754 binary64 floating point } { 8 } \right { \pm 2.23 \times 10\sup{--308} } \right { \pm 1.80 \times 10\sup{308} } \right { 2.22 \times 10\sup{--16} } }
+      }
+
+      Fundamental scalar types can be unsigned integer numbers, two's complement signed integer numbers, and floating point numbers. Floating point types correspond to the IEEE 754\ref ieee_754 binary32 and binary64 basic formats, also known as \e {single precision} and \e {double precision}, respectively. For floating point types, the lower and upper bound columns in Table \tblref tbl_fundamental_data_types refer to the approximate smallest and largest representable normal values, and the decimal precision column gives the relative rounding error for each type, also known as \e {machine epsilon}.
+
+      IEEE 754 non-numeric entities, including infinities and NaN (Not a Number), are supported by this specification and \e must be correctly handled (in an implementation-specific manner) by XISF encoders and decoders.
+   } % Fundamental Scalar Types
+
+   % --------------------------------------------------------------------------
+   % Endianness
+   % --------------------------------------------------------------------------
+
+   \subsection { Endianness } {
+
+      All the data stored in an \lref xisf_unit {XISF unit}, including \lref xisf_header {XISF headers}, \lref xisf_data_blocks_file {XISF data blocks files} and all \lref xisf_data_block {XISF data blocks}, \e shall be encoded as \s little-endian.
+
+      The \e only exception to this rule occurs when an object in other format requiring big endian encoding has to be embedded in an XISF unit. \lref iccprofile_core_element {ICC color profiles}\ref icc_profile are the most frequent instances of this exception.
+
+      The contents of external files not encoded as XISF data blocks, which can be referenced from XISF headers, are out of the scope of this specification. Therefore, the endianness of these files and the way they are used are the responsibility of the decoders and applications accessing them.
+   } % Endianness
+
+   % --------------------------------------------------------------------------
+   % Plain Text Serialization of Scalars
+   % --------------------------------------------------------------------------
+
+   \subsection { \label scalars_serializations Plain Text Serialization of Scalars } {
+
+      Serializations of scalar values as plain text (for example, in XML attribute values) \e shall comply with the following rules:
+
+      \division { \label signed_integer_serializations Plain text serialization of signed integers } {
+
+         A serialization of a signed integer value as plain text \e shall satisfy one of the following regular expressions:\ref ecmascript_regexp
+
+         \c { \hs #: \s*[+-]?[1-9][0-9]*\s* :#\n
+              \hs #: \s*0[xX][0-9a-fA-F]+\s* :# }
+
+         These regular expressions define, respectively, the syntactical rules to build decimal (base 10) and hexadecimal (base 16) plain text serializations of a signed two's complement integer number.
+
+         Examples:
+
+         \c { \hs -123 }\n
+         \c { \hs 0x80000000 }\n
+
+         In the second example, if the represented value is a signed 32-bit integer, the value is 80000000\sub{16} = -2147483648\sub{10}.
+      }
+
+      \division { \label unsigned_integer_serializations Plain text serialization of unsigned integers } {
+
+         A serialization of an unsigned integer value as plain text \e shall satisfy one of the following regular expressions:
+
+         \c { \hs #: \s*[1-9][0-9]*\s* :#\n
+              \hs #: \s*0[xX][0-9a-fA-F]+\s* :# }
+
+         These regular expressions define, respectively, the syntactical rules to build decimal (base 10) and hexadecimal (base 16) plain text serializations of an unsigned integer number.
+
+         Examples:
+
+         \c { \hs 123 }\n
+         \c { \hs 0xa0f9 }\n
+
+         In the second example, the represented value is A0F9\sub{16} = 41209\sub{10}.
+      }
+
+      \division { \label floating_point_serializations Plain text serialization of floating point values } {
+
+         A serialization of a numeric floating point scalar as plain text, including both IEEE 754\ref ieee_754 binary32 and binary64 formats, \e shall satisfy the following regular expression:
+
+         \c { \hs #: \s*[-+]?(([0-9]+)?\.)?[0-9]+([eE][-+]?[0-9]+)?\s* :# }
+
+         The non-numeric IEEE 754 entities NaN (Not a Number), +\inf and --\inf \e shall be serialized respectively as follows:
+
+         \c { \hs NaN }\n
+         \c { \hs +Inf }\n
+         \c { \hs -Inf }
+
+         Examples:
+
+         \c { \hs 123 }\n
+         \c { \hs 123.456 }\n
+         \c { \hs -123.456 }\n
+         \c { \hs .123 }\n
+         \c { \hs +.123 }\n
+         \c { \hs 1e0 }\n
+         \c { \hs -0.123e+02 }
+      }
+
+      \division { White space } {
+
+         For textual serializations of all scalar types, note that white space (represented as the \\s character class in regular expressions) is irrelevant, \e should \e not be generated by encoders, and \e must be ignored by decoders.
+      }
+   } % Plain Text Serialization of Scalars
+
+   % --------------------------------------------------------------------------
+   % XISF Property
+   % --------------------------------------------------------------------------
+
+   \subsection { \label xisf_property XISF Property } {
+
+      An XISF property is an association of two data structures, \e identifier and \e value. A property \e may also have an optional \e {format specifier} to control its representation as readable text. An XISF property \e may be associated, either with an object stored in an \lref xisf_unit {XISF unit}, or with an XISF unit as a whole. An XISF property \e may also be stored in an XISF unit as a standalone object. Valid associations between properties and objects will be defined later in this document.
+
+      \definition {
+
+         { Property identifier }
+         {
+            A property identifier \e must be a sequence of one or more 8-bit ASCII characters\ref unicode_ascii_subset satisfying the following regular expression:\ref ecmascript_regexp
+
+            \c { \hs #: [_a-zA-Z][_a-zA-Z0-9]*(:([_a-zA-Z][_a-zA-Z0-9])+)* :# }
+
+            Examples:
+
+            \c { \hs MyFirstProperty }\n
+            \c { \hs mySecondOne234 }\n
+            \c { \hs _this_1_is_a_test }\n
+            \c { \hs Namespace:Property }\n
+            \c { \hs foo:bar:Foo2_Bar3 }
+
+            The colon separator (':', ASCII code point 58\sub{10} = 3A\sub{16}) \e may be used to organize a set of properties into customary groups known as \e namespaces. Namespaces can be useful to improve structuration of properties by defining logical and semantic categories.
+
+            A property identifier \e must be unique for the object with which the property is associated. For example, all the properties of a given image must have unique identifiers, but two properties associated with different images may have the same identifier, or a property associated with the whole \lref xisf_unit {XISF unit} may have the same identifier as another property associated with an image.
+
+            There is no specific limit for the length of a property identifier.
+         }
+
+         { Property value }
+         {
+            A property value is a data object associated with a property identifier. A property value has a predefined \lref property_types {XISF property type}, which determines its structure and behavior.
+         }
+
+         { \label property_format_specifier Property format specifier }
+         {
+            A property format specifier \e may be associated with a property to control generation of readable plain text representations of the property value in a standardized way.
+
+            A property format specifier is a list of one or more \e {format tokens} separated by semicolon ASCII characters (';', ASCII code point 59\sub{10} = 3B\sub{16}):
+
+            \c { \hs \e{token}\sub{1};\e{token}\sub{2};...;\e{token}\sub{n} }
+
+            White space is irrelevant in a property format specifier and \e must be ignored. The following format tokens are supported by this specification:
+
+            \definition {
+
+               \c { width:\e{count} }
+               {
+                  \c\e count is a plain text representation of an unsigned integer. If the length \e n in characers of the represented value is less than the value of \c\e count, the represented value \e shall be padded with (\e n -- \c\e count) padding characters---see the \c fill token below. The location of padding characters depends on the current alignment---see the \c align token below.
+
+                  If no \c width token is specified, the value \e shall be represented using the minimum number of characters necessary, that is, no padding will be used by default.
+               }
+
+               \c { fill:\e{char} }
+               {
+                  \c\e char is a single ASCII character that \e shall be used as a filling character for padded representations---see the \c width token above.
+
+                  When no \c fill token is specified, the default padding character \e shall be the ASCII space character (ASCII code point 32\sub{10} = 20\sub{16}).
+               }
+
+               \c { align:\e{mode} }
+               {
+                  \c\e mode defines the \e alignment used for padded representations of all scalar types (see the \c width token above). \c\e mode \e must be one of:
+
+                  \definition {
+
+                     \c left
+                     {
+                        Padding characters \e shall be appended at the end of the represented value.
+                     }
+
+                     \c right
+                     {
+                        Padding characters \e shall be prepended at the beginning of the represented value.
+                     }
+
+                     \c center
+                     {
+                        If the length \e n of the padding space is even, the same number \e{n}/2 of padding characters \e shall be prepended and appended at the beginning and the end of the represented value, respectively. If the padding length \e n is odd, \e{n}/2+1 padding characters \e shall be prepended at the beginning and \e{n}/2 padding characters \e shall be appended at the end of the represented value.
+                     }
+                  }
+
+                  When not specified, the default alignment \e shall be \c right, as described above.
+               }
+
+               \c { sign:\e{mode} }
+               {
+                  \c\e mode defines how a sign character is used for representations of numeric values. \c\e mode \e must be one of:
+
+                  \definition {
+
+                     \c auto
+                     {
+                        A minus sign ASCII character ('-', ASCII code point 45\sub{10} = 2D\sub{16}) \e shall be prepended to a representation of a scalar if the represented value is less than zero. If the represented value is zero or greater than zero, a sign character \e shall \e not be prepended.
+                     }
+
+                     \c force
+                     {
+                        A minus sign ASCII character ('-', ASCII code point 45\sub{10} = 2D\sub{16}) \e shall be prepended to a representation of a scalar if the represented value is less than zero, and a plus sign ASCII character ('+', ASCII code point 43\sub{10} = 2B\sub{16}) \e shall be prepended if the value is greater than zero.
+                     }
+                  }
+
+                  In all cases, if the numeric value is being represented as zero (after a possible truncation or rounding operation), a sign character \e must \e not be prepended to the represented value.
+
+                  When not specified, the default \c sign \c\e mode \e shall be \c auto, as described above.
+
+                  A decoder \e must ignore the \c sign format token for representations of non-numeric values.
+               }
+
+               \c { precision:\e{count} }
+               {
+                  \c\e count is a plain text representation of an unsigned integer, whose value is the \e precision of the representation of a floating point value. The precision \e shall be interpreted according to the current floating point mode (see the \c float token below):
+
+                  \list {
+                     { For a representation of a floating point scalar when the floating point mode is \c\e scientific or \c\e fixed, the precision is the minimum number of digits to appear after the decimal separator. }
+                     { For a representation of a floating point scalar when the floating point mode is \c\e auto, the precision is the maximum number of significant digits. }
+                  }
+
+                  The represented floating point scalar \e shall be rounded to the nearest value with the required number of decimal digits.
+
+                  If no \c precision token is specified, the default precision \e shall be 6.
+
+                  A decoder \e must ignore the \c precision format token for representations of non-numeric or integer numeric values.
+               }
+
+               \c { float:\e{mode} }
+               {
+                  \c\e mode defines the \e {floating point mode} used for representations of floating point numeric scalars. \c\e mode \e must be one of:
+
+                  \definition {
+
+                     \c auto
+                     {
+                        The floating point value \e shall be represented using \e {printf's 'g' mode}.\ref open_group_printf The floating-point value \e shall be represented in \c scientific or \c fixed floating point mode, depending on the value being converted and the current precision, to generate the shortest possible text representation.
+                     }
+
+                     \c scientific
+                     {
+                        The floating point value \e shall be represented in exponential notation. Ignoring possible padding characters, the representation \e shall satisfy the following regular expression:\ref ecmascript_regexp
+
+                        \c { \hs #: [-+]?[0-9]+\.[0-9]+[eE][-+][0-9]+ :# }
+                     }
+
+                     \c fixed
+                     {
+                        The floating point value \e shall be represented in fixed-point decimal notation. Ignoring possible padding characters, the representation \e shall satisfy the following regular expression:
+
+                        \c { \hs #: [-+]?[0-9]+(\.[0-9]+)? :# }
+                     }
+                  }
+
+                  When not specified, the default floating point mode \e shall be \c auto, as described above.
+
+                  A decoder \e must ignore the \c float format token for representations of non-numeric or integer numeric values.
+               }
+
+               \c { bool:\e{mode} }
+               {
+                  \c\e mode defines how Boolean values are represented. \c\e mode \e must be one of:
+
+                  \definition {
+
+                     \c alpha
+                     {
+                        Boolean values \e shall be represented as the plain text words \e false and \e true.
+                     }
+
+                     \c numeric
+                     {
+                        The integers 0 and 1 \e shall be used to represent the Boolean values false and true, respectively.
+                     }
+                  }
+
+                  When not specified, the default \c\e mode \e shall be \c alpha.
+
+                  A decoder \e must ignore the \c bool format token for representations of non-Boolean values.
+               }
+
+               \c { base:\e{radix} }
+               {
+                  \c\e radix defines the numeric base for the representation of an integer value. \c\e radix \e must be one of:
+
+                  \definition {
+
+                     \c bin
+                     {
+                        The integer value \e shall be represented as a binary number using exclusively the digits '0' and '1'.
+                     }
+
+                     \c dec
+                     {
+                        The integer value \e shall be represented as a decimal number using the digits from '0' to '9'.
+                     }
+
+                     \c hex
+                     {
+                        The integer value \e shall be represented as an hexadecimal (base 16) number using the digits from '0' to '9' and from 'a' to 'f' to represent the numbers from 0 to 9 and from 10 to 15, respectively.
+                     }
+                  }
+
+                  When not specified, the default value of \c\e radix \e shall be \c dec, that is, decimal representations \e shall be generated for integer numbers by default.
+
+                  A decoder \e must ignore the \c base format token for representations of non-integer values.
+               }
+
+               \c { unit:\e{text} }
+               {
+                  \c\e text is a Unicode text fragment that, if present, \e must represent the unit in which the property value is expressed. The multiplication, division and raise operators, '*', '/' and '^' respectively, can be used to represent units. For example:
+
+                  \c { \hs\hs "unit:m/s" }\n
+                  \c { \hs\hs "unit:erg*s^−1*cm^2*Hz^−1" }
+
+                  In the second example the represented unit \e must be interpreted as \im {#: \hbox{erg} \cdot \hbox{s}^{-1} \cdot \hbox{cm}^{2} \cdot \hbox{Hz}^{-1} :#}.
+               }
+            }
+
+            A decoder \e shall follow these rules to apply a format specifier to structured numeric properties:
+
+            \list {
+               { A format specifier applied to a \lref complex_property_types {complex property} \e shall apply to the individual complex and imaginary components. }
+               { A format specifier applied to a \lref vector_property_types {vector property} \e shall apply to all vector components. }
+               { A format specifier applied to a \lref matrix_property_types {matrix property} \e shall apply to all matrix elements. }
+            }
+
+            For examples of property format specifiers, see the \lref property_core_element \c Property core element.
+         }
+      }
+   } % XISF Property
+
+   % --------------------------------------------------------------------------
+   % XISF Property Types
+   % --------------------------------------------------------------------------
+
+   \subsection { \label property_types XISF Property Types } {
+
+      XISF property types are organized into five categories: \e scalar, \e complex, \e string, \e vector and \e matrix properties.\n\n
+
+      \division { \label scalar_property_types XISF Scalar Property Types } {
+
+         A scalar is a single numeric value without internal structuration.
+
+         \table[caption,header,width:100\%] {
+            { XISF Scalar Property Types }
+            { { Type name } { Alternate name } { Description } }
+            { { \label boolean_property_type Boolean } {  } { An unsigned 8-bit integer representing one of the logical values \e false and \e true. The logical value \e false is represented by the integer value 0, and the logical value \e true is represented by the integer value 1. } }
+            { { \label int8_property_type Int8 } {  } { A signed two's complement 8-bit integer. } }
+            { { \label uint8_property_type UInt8 } { Byte } { An unsigned 8-bit integer. } }
+            { { \label int16_property_type Int16 } {  } { A signed two's complement 16-bit integer. } }
+            { { \label uint16_property_type UInt16 } {  } { An unsigned 16-bit integer. } }
+            { { \label int32_property_type Int32 } { Int } { A signed two's complement 32-bit integer. } }
+            { { \label uint32_property_type UInt32 } { UInt } { An unsigned 32-bit integer. } }
+            { { \label int64_property_type Int64 } {  } { A signed two's complement 64-bit integer. } }
+            { { \label uint64_property_type UInt64 } {  } { An unsigned 64-bit integer. } }
+            { { \label float32_property_type Float32 } {  } { An IEEE 754\ref ieee_754 binary32 floating point value (single precision). } }
+            { { \label float64_property_type Float64 } {  } { An IEEE 754 binary64 floating point value (double precision). } }
+         }
+      }
+
+      \division { \label complex_property_types XISF Complex Property Types } {
+
+         A complex number is a homogeneous, ordered sequence of two contiguous scalars:
+
+         \list {
+            { The two scalars that form a complex number are its \e components. }
+            { The first component of a complex number is its \e {real part}. }
+            { The second component of a complex number is its \e {imaginary part}. }
+         }
+
+         \table[caption,header,width:100\%] {
+            { XISF Complex Property Types }
+            { { Type name } { Alternate name } { Description } }
+            { { \label complex32_property_type Complex32 } {  } { A complex number whose components are encoded as two \lref float32_property_type Float32 values. } }
+            { { \label complex64_property_type Complex64 } {  } { A complex number whose components are encoded as two \lref float64_property_type Float64 values. } }
+            %{ {  } {  } {  } }
+         }
+      }
+
+      \division { \label string_property_types XISF String Property Types } {
+
+         A string is a homogeneous sequence of zero or more contiguous Unicode\ref unicode_standard or ASCII\ref unicode_ascii_subset code points represented as integer scalars.
+
+         \list {
+            { The scalars contained in a string are \e {string elements} or \e characters. }
+            { The number of elements in a string is the string's \e length. }
+            { An \e {empty string} is a string with zero length. }
+            { There is no specific limit for the length of a string. }
+         }
+
+         \table[caption,header,width:100\%] {
+            { XISF String Property Types }
+            { { Type name } { Alternate name } { Description } }
+            { { \label string16_property_type String16 } { String } { A Unicode string encoded in UTF-16,\ref unicode_encoding_forms \ref unicode_encoding_schemes whose elements are \lref uint16_property_type UInt16 values. } }
+            { { \label string8_property_type String8 } { IsoString } { A Unicode string encoded in UTF-8,\ref unicode_encoding_forms \ref unicode_encoding_schemes or an ISO/IEC 8859-1\ref iso_iec_8859_1 string, whose elements are \lref uint8_property_type UInt8 values. } }
+         }
+      }
+
+      \division { \label vector_property_types XISF Vector Property Types } {
+
+         A vector is a homogeneous sequence of zero or more contiguous scalars or complex numbers.
+
+         \list {
+            { The scalars or complex numbers contained in a vector are \e {vector components}. }
+            { The number of components in a vector is the vector's \e length. }
+            { An \e {empty vector} is a vector with zero length. }
+            { There is no specific limit for the length of a vector. }
+         }
+
+         \table[caption,header,width:100\%] {
+            { XISF Vector Property Types }
+            { { Type name } { Alternate name } { Description } }
+            { { I8Vector } {  } { A vector whose components are \lref int8_property_type Int8 values. } }
+            { { \label bytearray_property_type UI8Vector } { ByteArray } { A vector whose components are \lref uint8_property_type UInt8 values. } }
+            { { I16Vector } {  } { A vector whose components are \lref int16_property_type Int16 values. } }
+            { { UI16Vector } {  } { A vector whose components are \lref uint16_property_type UInt16 values. } }
+            { { I32Vector } { IVector } { A vector whose components are \lref int32_property_type Int32 values. } }
+            { { UI32Vector } { UIVector } { A vector whose components are \lref uint32_property_type UInt32 values. } }
+            { { I64Vector } {  } { A vector whose components are \lref int64_property_type Int64 values. } }
+            { { UI64Vector } {  } { A vector whose components are \lref uint64_property_type UInt64 values. } }
+            { { F32Vector } {  } { A vector whose components are \lref float32_property_type Float32 values. } }
+            { { F64Vector } {  } { A vector whose components are \lref float64_property_type Float64 values. } }
+            { { C32Vector } {  } { A vector whose components are \lref complex32_property_type Complex32 values. } }
+            { { C64Vector } {  } { A vector whose components are \lref complex64_property_type Complex64 values. } }
+         }
+      }
+
+      \division { \label matrix_property_types XISF Matrix Property Types } {
+
+         A matrix is a homogeneous set of contiguous scalars or complex numbers, structured as a two-dimensional array with a fixed number of rows and columns.
+
+         \list {
+            { The scalars or complex numbers contained in a matrix are \e {matrix elements}. }
+            { The number of rows and columns in a matrix are the \e {matrix dimensions}. }
+            { The total number of elements in a matrix is its \e length, which is equal to the product of its dimensions. }
+            { An \e {empty matrix} is a matrix with zero length. }
+            { There are no specific limits for the dimensions or the length of a matrix. }
+            { A matrix \e shall be stored as a contiguous sequence of matrix elements in \e {row order}: all matrix elements of the first row \e shall be stored by column order at consecutive locations, followed by all matrix elements of the second row, and so on. }
+         }
+
+         \table[caption,header,width:100\%] {
+            { XISF Matrix Property Types }
+            { { Type name } { Alternate name } { Description } }
+            { { I8Matrix } {  } { A matrix whose elements are \lref int8_property_type Int8 values. } }
+            { { UI8Matrix } { ByteMatrix } { A matrix whose elements are \lref uint8_property_type UInt8 values. } }
+            { { I16Matrix } {  } { A matrix whose elements are \lref int16_property_type Int16 values. } }
+            { { UI16Matrix } {  } { A matrix whose elements are \lref uint16_property_type UInt16 values. } }
+            { { I32Matrix } { IMatrix } { A matrix whose elements are \lref int32_property_type Int32 values. } }
+            { { UI32Matrix } { UIMatrix } { A matrix whose elements are \lref uint32_property_type UInt32 values. } }
+            { { I64Matrix } {  } { A matrix whose elements are \lref int64_property_type Int64 values. } }
+            { { UI64Matrix } {  } { A matrix whose elements are \lref uint64_property_type UInt64 values. } }
+            { { F32Matrix } {  } { A matrix whose elements are \lref float32_property_type Float32 values. } }
+            { { F64Matrix } {  } { A matrix whose elements are \lref float64_property_type Float64 values. } }
+            { { C32Matrix } {  } { A matrix whose elements are \lref complex32_property_type Complex32 values. } }
+            { { C64Matrix } {  } { A matrix whose elements are \lref complex64_property_type Complex64 values. } }
+         }
+      }
+   } % XISF Property Types
+
+   % --------------------------------------------------------------------------
+   % XISF Image
+   % --------------------------------------------------------------------------
+
+   \subsection { \label xisf_image XISF Image } {
+
+      \division { Structure and Properties } {
+
+         In the context of this specification, an image is an object with the following structure and properties:
+
+         \list[spaced] {
+
+            { An image is a set of scalars or complex numbers structured as a non-empty collection of \im{n}-dimensional arrays.\ref nist_array }
+
+            { The \e dimensionality of the image is \im{n > 0}. }
+
+            { Each \im{n}-dimensional array is known as a \e channel or \e (hyper)plane of the image. }
+
+            { All image channels have identical lengths in each one of their \im{n} dimensions. }
+
+            { Let \im{m > 0} be the number of channels in the image. Any channel \e must be addressable by its \e {channel index} \im{c}, an integer such that \im{#: 0 \le c < m :#}. }
+
+            { Let \im{d_j} be the length of any channel in the \im{j}-th dimension, \im{#: 0 \le j < n :#}. }
+
+            { An image with any length \im{#: d_j = 0 :#} for \im{#: 0 \le j < n :#} is an \e {empty image}. Empty images cannot be serialized in an XISF unit. }
+
+            { A \e {pixel coordinate} is an integer array index \im i_j such that \im{#: 0 \le i_j < d_j :#}. }
+
+            { Any \im{m}-tuple formed with the set of scalars or complex numbers at the same pixel coordinates \im{#: i_0,\dots,i_{n-1} :#} is a \e pixel. }
+
+            { The \im{m} components of a pixel are \e {pixel samples}. }
+
+            { Any pixel \e must be addressable by its \im{n}-tuple \im{#: \{i_0,\dots,i_{n-1}\} :#} of pixel coordinates. }
+
+            { Any pixel sample \e must be addressable by the \im{(n+1)}-tuple \im{#: \{c,i_0,\dots,i_{n-1}\} :#} of channel index and pixel coordinates. }
+
+            { The total number of pixels in an image is \im{#: N = \prod_{j=0}^{n-1} d_j :#}. }
+
+            { The total number of pixel samples in an image is \im{#: M = N \times m :#}. }
+
+            { For images with a visual representation role, pixel samples \e must be representable in a \e {color model}.\ref gonzalez_2008_color_model \ref wikipedia_color_model }
+
+            { The color model where pixel samples are represented, if defined, \e should be augmented with a number of viewing conditions and colorimetric properties, which define the \e {color space}\ref tkalcic_2003 of the image. }
+
+            { The first \im{#: r \le m :#} channels strictly required to define the color model (or color space) of an image, with indexes \im{#: 0,\dots,r-1 :#}, are \e {nominal channels}. }
+
+            { Excess channels beyond nominal channels, with indexes \im{#: r,r+1,\dots,m-1 :#}, are collectively known as \e {alpha channels}. }
+
+            { Although the roles of alpha channels are implementation-defined, the first alpha channel, at index \im{r}, \e should define the transparency of the image for alpha-compositing operations.\ref porter_1984 }
+         }
+
+         The mathematical symbols and terminology introduced in the above list will be used in the rest of this section.
+
+         \figure[numbered:fig_2d_image] {
+
+            \figtag \s { Structure of a two-dimensional image. }
+
+            \vs[length:2em]
+
+            \center \image[width:62.95em] { 2d-image.svg }
+         }
+      }
+
+      \division { Geometrical Conventions } {
+
+         In a two-dimensional image we have \im{n = 2} and the lengths \im{d_0} and \im{d_1} are known as the \e width and \e height of the image, respectively. Conventionally, the dimensions \im{i_0} and \im{i_1} are known as the \e X-axis and \e Y-axis, respectively. It is customary to use the symbols \im{x} and \im{y} to represent coordinates in the first and second dimensions, respectively. We also say that \im{i_0} is the \e {horizontal axis} and \im{i_1} is the \e {vertical axis}. The point with pixel coordinates \im{#: x = y = 0 :#} is said to be the \e {top-left corner} or the \e origin of the image. Note that all of these words don't necessarily imply any particular orientation of the \e represented image; they are just conventional designations.
+
+         In a three-dimensional image, \im{n = 3} and the dimensions \im{d_0}, \im{d_1} and \im{d_2} are the \e width, \e height and \e depth of the image, respectively. The dimensions \im{i_0}, \im{i_1} and \im{i_2} are known conventionally as the \e X-axis, \e Y-axis and \e Z-axis, respectively. It is customary to use the symbols \im{x}, \im{y} and \im{z} to represent coordinates in the first, second and third dimensions, respectively. \im{i_0} is the \e {horizontal axis}, \im{i_1} is the \e {vertical axis} and \im{i_2} is the \e {depth axis}. The point with pixel coordinates \im{#: x = y = z = 0 :#} is said to be the \e origin of the image. Again, these designations are purely conventional and don't imply any particular representation of the image.
+
+         For one-dimensional images and images with dimensionalities higher than three, such as tesseracts and other hypercubes, there are no conventional names for axes and lengths. Normally these structures are manipulated as mathematical objects in purely abstract terms without a perceptual meaning or a visual role.
+      }
+
+      \division { \label pixel_storage_models Pixel Storage Models } {
+
+         Two pixel storage models are formalized by this specification:
+
+         \definition {
+
+            { Planar pixel storage model }
+            {
+               In this model each channel is stored in a separate block:
+
+               \list[spaced] {
+
+                  { In the planar storage model, each channel of an image \e shall be stored as a contiguous sequence of pixel samples. }
+
+                  { For a given channel index \im{#: c \; | \; 0 \le c < m :#}, all pixel samples \e shall be stored in \e {pixel coordinate order}. The coordinates of the stored sequence of pixel samples can be represented as:\n\n
+
+                     \equation { #:
+                        $$
+                        \begin{array}{l l l}
+                           \{\, c, i_j = 0          && \; | \; 0 \le j < n \,\} \\
+                           \{\, c, i_0 = 1, i_j = 0 && \; | \; 1 \le j < n \,\} \\
+                           \{\, c, i_0 = 2, i_j = 0 && \; | \; 1 \le j < n \,\} \\
+                                                & \vdots &                      \\
+                           \{\, c, i_j = d_j-1      && \; | \; 0 \le j < n \,\} \\
+                        \end{array}
+                        $$
+                     :# }
+                  }
+               }
+            }
+
+            { Normal pixel storage model }
+            {
+               In this model all pixel samples are stored in a single block:
+
+               \list[spaced] {
+
+                  { In the normal storage model, all pixel samples of an image \e shall be stored as a contiguous sequence. }
+
+                  { All pixels \e shall be stored in \e {pixel coordinate order}. The coordinates of the stored sequence of pixel samples can be represented as:\n\n
+
+                     \equation { #:
+                        $$
+                        \begin{array}{l l l l}
+                           \{\, c = 0,   & i_j = 0          && \; | \; 0 \le j < n \,\} \\
+                           \{\, c = 1,   & i_j = 0          && \; | \; 0 \le j < n \,\} \\
+                                                  && \vdots &                            \\
+                           \{\, c = m-1, & i_j = 0          && \; | \; 0 \le j < n \,\} \\
+                           \{\, c = 0,   & i_0 = 1, i_j = 0 && \; | \; 1 \le j < n \,\} \\
+                           \{\, c = 1,   & i_0 = 1, i_j = 0 && \; | \; 1 \le j < n \,\} \\
+                                                  && \vdots &                            \\
+                           \{\, c = m-1, & i_0 = 1, i_j = 0 && \; | \; 1 \le j < n \,\} \\
+                                                  && \vdots &                            \\
+                           \{\, c = 0,   & i_j = d_j-1      && \; | \; 0 \le j < n \,\} \\
+                           \{\, c = 1,   & i_j = d_j-1      && \; | \; 0 \le j < n \,\} \\
+                                                  && \vdots &                            \\
+                           \{\, c = m-1, & i_j = d_j-1      && \; | \; 0 \le j < n \,\} \\
+                        \end{array}
+                        $$
+                     :# }
+                  }
+               }
+            }
+         }
+
+         \note { Note--- In the current XISF specification, only the planar storage model can be implemented. The normal storage model will be realizable in an incoming revision of this specification. }
+
+         Irrespective of the pixel storage model, the total space in bytes required to store an uncompressed image channel equals \im{#: N \times b :#}, where \im{b} is the size in bytes of a pixel sample. Similarly, the total space in bytes required to store an uncompressed image is \im{#: M \times b :#}.
+      }
+
+      \division { Color Spaces } {
+
+         The following color spaces are formally supported by this specification for storage of pixel data in XISF units: Grayscale (monochrome), RGB, and CIE L*a*b*.
+
+         An in-depth description of color spaces is beyond the scope of this specification. The reader should refer to the literature for further information on this subject; for example, see references \ref gonzalez_2008_color_model, \ref tkalcic_2003 and \ref www_bruce_lindbloom.
+
+         To remove any possible ambiguity in the specification of CIE L*a*b*, we'll describe the necessary color space transformation algorithms in the next sections.
+      }
+
+      \division { RGB Working Space } {
+
+         All color space transformations \e shall be performed relative to a colorimetrically defined RGB working space (RGBWS) associated with the image. An RGB working space is a set \im{#: \{ \mathbf{W}, \gamma, \mathbf{x}, \mathbf{y}, \mathbf{Y} \} :#}, where:
+
+         \list[spaced] {
+
+            { \im{#: \mathbf{W} = \{x_W,y_W,Y_W\} :#} is a reference white. In this specification, all RGB working space parameters \e shall be relative to the standard D50 reference white.\ref iso_3664 }
+
+            { \im{#: \gamma :#} is a gamma exponent for linearization of RGB components. }
+
+            { \im{#: \mathbf{x} = \{x_R,x_G,x_B\} :#} and \im{#: \mathbf{y} = \{y_R,y_G,y_B\} :#} are the chromaticity coordinates of the RGB primaries. }
+
+            { \im{#: \mathbf{Y} = \{Y_R,Y_G,Y_B\} :#} are the luminance coefficients of the RGB primaries. }
+         }
+
+         For spaces not originally defined with respect to the D50 reference white (for example, the sRGB\ref iec_srgb space is defined relative to D65), a chromatic adaptation algorithm \e must be applied to convert coordinates and coefficients to D50. The Bradford chromatic adaptation transform\ref icc_bradford is \e recommended.
+
+         All chromaticity coordinates and luminance coefficients \e shall be represented normalized to the \[0,1\] range.
+      }
+
+      \division { RGB to CIE XYZ Conversion } {
+
+         Let R, G, B be the nominal components of a pixel in the RGB color space. The nominal components R', G', B' in the linear RGB space are
+
+         \equation { #:
+            $$
+            \begin{array}{l c l}
+               R' &=& R^{\gamma} \\
+               G' &=& G^{\gamma} \\
+               B' &=& B^{\gamma} \\
+            \end{array} \, .
+            $$
+         :# }
+
+         If the RGB working space is the sRGB space,\ref iec_srgb then a special function \e must be used instead of the equations above. Define the linearization function
+
+         \equation { #:
+            $$
+            \hbox{S}(x) = \left\{ \begin{array}{l l}
+               \displaystyle{\frac{x}{12.92}}                            & \hbox{if} \;\; x \le 0.04045 \\
+               \\
+               \left(\displaystyle{\frac{x + 0.055}{1.055}}\right)^{2.4} & \hbox{otherwise}             \\
+            \end{array}
+            \right. \, .
+            $$
+         :# }
+
+         Now we have, for the sRGB space:
+
+         \equation { #:
+            $$
+            \begin{array}{l c l}
+               R' &=& \hbox{S}(R) \\
+               G' &=& \hbox{S}(G) \\
+               B' &=& \hbox{S}(B) \\
+            \end{array} \, .
+            $$
+         :# }
+
+         The CIE XYZ components are given by
+
+         \equation { #:
+            $$
+            \left( \begin{array}{l l}
+               X \\
+               Y \\
+               Z \\
+            \end{array} \right) = \hbox{M} \left( \begin{array}{l l}
+               R' \\
+               G' \\
+               B' \\
+            \end{array} \right) \, ,
+            $$
+         :# }
+
+         with the transformation matrix
+
+         \equation { #:
+            $$
+            \hbox{M} = \left( \begin{array}{c c c}
+               Y_R \cdot x_R / y_R & Y_G \cdot x_G / y_G & Y_B \cdot x_B / y_B \\
+               Y_R & Y_G & Y_B \\
+               Y_R (1 - x_R - y_R)/y_R & Y_G (1 - x_G - y_G)/y_G & Y_B (1 - x_B - y_B)/y_B \\
+            \end{array} \right) \, .
+            $$
+         :# }
+      }
+
+      \division { CIE XYZ To RGB Conversion } {
+
+         Let X, Y, Z be the nominal components of a pixel in the CIE XYZ color space. The components R', G', B' in the linear RGB space can be found by multiplication with the inverse transformation matrix:
+
+         \equation { #:
+            $$
+            \left( \begin{array}{l l}
+               R' \\
+               G' \\
+               B' \\
+            \end{array} \right) = \hbox{M}^{-1} \left( \begin{array}{l l}
+               X \\
+               Y \\
+               Z \\
+            \end{array} \right) \, .
+            $$
+         :# }
+
+         Then the RGB components are given by
+
+         \equation { #:
+            $$
+            \begin{array}{l c l}
+               R &=& R'^{\,1/\gamma} \\
+               G &=& G'^{\,1/\gamma} \\
+               B &=& B'^{\,1/\gamma} \\
+            \end{array} \, .
+            $$
+         :# }
+
+         If the RGB working space is the sRGB space,\ref iec_srgb then a special function \e must be used instead of the equations above. Define the delinearization function
+
+         \equation { #:
+            $$
+            \hbox{T}(x) = \left\{ \begin{array}{l l}
+               12.92 \times x          & \hbox{if} \;\; x \le 0.0031308 \\
+               \\
+               1.055 \, x^{1/2.4} - 0.055 & \hbox{otherwise}            \\
+            \end{array}
+            \right. \, .
+            $$
+         :# }
+
+         Now we have, for the sRGB space:
+
+         \equation { #:
+            $$
+            \begin{array}{l c l}
+               R &=& \hbox{T}(R') \\
+               G &=& \hbox{T}(G') \\
+               B &=& \hbox{T}(B') \\
+            \end{array} \, .
+            $$
+         :# }
+      }
+
+      \division { CIE XYZ to CIE L*a*b* Conversion } {
+
+         Define the function
+
+         \equation { #:
+            $$
+            \hbox{f}(x) = \left\{ \begin{array}{l l}
+               x^{1/3}                                 & \hbox{if} \;\; x > 0.008856 \\
+               \\
+               \displaystyle{\frac{903.3 x + 16}{116}} & \hbox{otherwise}            \\
+            \end{array}
+            \right. \, .
+            $$
+         :# }
+
+         Then the CIE L*a*b* components are:
+
+         \equation { #:
+            $$
+            \begin{array}{l c l}
+               L* &=& 1.16 \times \hbox{f}(Y) - 0.16       \\
+               a* &=& 5 \times (\hbox{f}(X) - \hbox{f}(Y)) \\
+               b* &=& 2 \times (\hbox{f}(Y) - \hbox{f}(Z)) \\
+            \end{array} \, .
+            $$
+         :# }
+      }
+
+      \division { CIE L*a*b* to CIE XYZ Conversion } {
+
+         Define the function
+
+         \equation { #:
+            $$
+            \hbox{g}(x) = \left\{ \begin{array}{l l}
+               x^3                                     & \hbox{if} \;\; x^3 > 0.008856 \\
+               \\
+               \displaystyle{\frac{116 x - 16}{903.3}} & \hbox{otherwise}              \\
+            \end{array}
+            \right. \, .
+            $$
+         :# }
+
+         Then the CIE XYZ components are:
+
+         \equation { #:
+            $$
+            \begin{array}{l c l}
+               Y &=& \hbox{g}\left( \displaystyle{\frac{{L*} + 0.16}{1.16}} \right) \\
+               X &=& \hbox{g}\left( \displaystyle{\frac{a*}{5}} + Y \right)         \\
+               Z &=& \hbox{g}\left( Y - \displaystyle{\frac{b*}{2}} \right)         \\
+            \end{array} \, .
+            $$
+         :# }
+      }
+
+      \division { RGB to Grayscale Conversion } {
+
+         A colorimetrically defined grayscale component \e shall be computed as the L* component of the CIE L*a*b space.
+      }
+   } % XISF Image
+} % XISF Data Objects
+
+% -----------------------------------------------------------------------------
+% XISF Structure
+% -----------------------------------------------------------------------------
+
+\section { \label xisf_structure XISF Structure } {
+
+   % --------------------------------------------------------------------------
+   % XISF Unit
+   % --------------------------------------------------------------------------
+
+   \subsection { \label xisf_unit XISF Unit } {
+
+      An \s {XISF unit} \e shall consist of a \e unique \lref xisf_header {XISF header} and zero or more \lref data_block {XISF data blocks}. Two storage models are supported and formally defined: \e monolithic and \e distributed:
+
+      \list[spaced] {
+
+         { The contents of a \s {monolithic XISF unit} \e shall be distributed as a single \lref monolithic_xisf_file {monolithic XISF file}, which \e must include a unique \lref xisf_header {XISF header} and zero or more \lref attached_data_block {attached XISF data blocks}, plus zero or more \lref external_data_block {external XISF data blocks}. }
+
+         { The contents of a \s {distributed XISF unit} \e shall be distributed as a unique \lref xisf_header_file {XISF header file} plus zero or more \lref external_data_block {external XISF data blocks}. }
+      }
+
+      Both storage models allow data stored as external XISF data blocks, which \e may be available as local or remote resources. External XISF data blocks \e may be stored either in \lref data_blocks_file {XISF data blocks files} or in generic files.
+
+      The difference between the monolithic and distributed storage models is that a monolithic XISF unit \e may store the header and all of the data pertaining to the XISF unit in a single file, while a distributed XISF unit \e must store the header and the data separately.
+
+      \figure[numbered:fig_monolithic_XISF_unit_structure] {
+
+         \figtag \s { Structure of a monolithic XISF unit. }
+
+         \vs[length:2em]
+
+         \center \image[width:40.85em] { monolithic-XISF-unit.svg }
+      }
+
+      \vs
+
+      \figure[numbered:fig_distributed_XISF_unit_structure] {
+
+         \figtag \s { Structure of a distributed XISF unit. }
+
+         \vs[length:2em]
+
+         \center \image[width:40.85em] { distributed-XISF-unit.svg }
+      }
+   } % XISF Unit
+
+   % --------------------------------------------------------------------------
+   % File Name Suffixes
+   % --------------------------------------------------------------------------
+
+   \subsection { \label file_name_suffixes File Name Suffixes } {
+
+      The following file name suffixes, also known as \e {file name extensions} in some operating systems, are mandatory for files pertaining to \lref xisf_unit {XISF units}:
+
+      \list[spaced] {
+
+         { \lref monolithic_xisf_file {Monolithic XISF files} \e must carry the \s .xisf file name suffix. }
+
+         { \lref xisf_header_file {XISF header files} \e must carry the \s .xish file name suffix. }
+
+         { \lref data_blocks_file {XISF data blocks files} \e shall carry the \s .xisb file name suffix. }
+      }
+   } % File Name Suffixes
+
+   % --------------------------------------------------------------------------
+   % XISF Header File
+   % --------------------------------------------------------------------------
+
+   \subsection { \label xisf_header_file XISF Header File } {
+
+      An XISF header file is a file that \e must contain \e exclusively the unique \lref xisf_header {XISF header} of a distributed \lref xisf_unit {XISF unit}.
+   }
+
+   % --------------------------------------------------------------------------
+   % XISF Data Block
+   % --------------------------------------------------------------------------
+
+   \subsection { \label data_block XISF Data Block } {
+
+      An XISF data block is a sequence of one or more contiguous bytes pertaining to an \lref xisf_unit {XISF unit}.
+
+      The location and role of an XISF data block \e must be completely and unambiguously defined by the unique \lref xisf_header {XISF header} of the XISF unit to which it pertains.
+
+      An XISF data block \e must be either \lref attached_data_block attached to a \lref monolithic_xisf_file {monolithic XISF file}, stored in an \lref data_blocks_file {XISF data blocks file}, serialized directly in the XISF header, or accessible as an external resource. See the section on \lref data_block_location {XISF data block location} for detailed information.
+   }
+
+   % --------------------------------------------------------------------------
+   % Attached XISF Data Block
+   % --------------------------------------------------------------------------
+
+   \subsection { \label attached_data_block Attached XISF Data Block } {
+
+      An attached XISF data block is an \lref data_block {XISF data block} stored in a \lref monolithic_xisf_file {monolithic XISF file}.
+
+      The position of an attached data block from the beginning of the monolithic XISF file where it is stored, as well as its length in bytes, \e must be completely and unambiguously defined by the \lref xisf_header {XISF header} of the \lref xisf_unit {XISF unit}.
+   }
+
+   % --------------------------------------------------------------------------
+   % External XISF Data Block
+   % --------------------------------------------------------------------------
+
+   \subsection { \label external_data_block External XISF Data Block } {
+
+      An external XISF data block is an \lref data_block {XISF data block} stored separately from the \lref xisf_header {XISF header} of the \lref xisf_unit {XISF unit}. An external XISF data block can be stored either in an \lref data_blocks_file {XISF data blocks file}, or in a generic file.
+
+      The position of an external data block and its length in bytes \e must be completely and unambiguously defined by the XISF header and, when applicable, by the XISF data blocks file where the block is stored.
+   }
+
+   % --------------------------------------------------------------------------
+   % XISF Data Blocks File
+   % --------------------------------------------------------------------------
+
+   \subsection { \label data_blocks_file XISF Data Blocks File } {
+
+      An XISF data blocks file is a file that \e may contain zero or more \lref data_block {XISF data blocks} and \e may contain unused space, as described below. XISF data blocks files can be available as local or remote resources.
+
+      An XISF data blocks file \e shall have the following structure (Figure \figref fig_XISF_data_blocks_file_structure):
+
+      \definition {
+
+         { Signature }
+         {
+            A sequence of eight contiguous bytes whose values \e must form the set \c 'XISB0100' of ASCII characters,\ref unicode_ascii_subset that is, the sequence 88\sub{10}, 73\sub{10}, 83\sub{10}, 66\sub{10}, 48\sub{10}, 49\sub{10}, 48\sub{10}, 48\sub{10} of unsigned 8-bit integers.
+         }
+
+         { Reserved field }
+         {
+            Eight contiguous bytes reserved for future use. The values of these bytes \e shall be zero.
+         }
+
+         { \label block_index Block index }
+         {
+            The block index of an XISF data blocks file is a singly linked list\ref nist_linked_list \ref sedgewick_2011_linked_lists \ref cormen_2009_linked_lists of \e {block index nodes} (Figure \figref fig_XISF_block_index_structure). A block index node contains a sequence of \e {block index elements}. Each block index element may define the position and length of an XISF data block stored in the data blocks file.
+
+            A block index node \e shall have the following structure:
+
+            \definition {
+
+               { Length }
+               {
+                  An unsigned 32-bit integer whose value \e must be the number of block index elements available in this block index node.
+               }
+
+               { Reserved field }
+               {
+                  Four contiguous bytes reserved for future use. The values of these bytes \e shall be zero.
+               }
+
+               { Next node }
+               {
+                  An unsigned 64-bit integer whose value \e must be the byte position, measured from the beginning of the XISF data blocks file, of the next block index node. If the value of this element is zero, then this is the last block index node of the block index.
+               }
+
+               { \label block_index_element Elements }
+               {
+                  A sequence of contiguous \e {block index elements}. A block index element \e must define the position and length of an XISF data block stored in the XISF data blocks file. We say that a block index element \e {points to} the XISF data block whose position and length it defines.
+
+                  A block index element \e shall be a sequence of 40 contiguous bytes with the following structure (Figure \figref fig_XISF_block_index_element_structure):
+
+                  \definition {
+
+                     { Unique Identifier }
+                     {
+                        An unsigned 64-bit integer. This identifier \e must be unique in the XISF data blocks file, that is, no two index elements can have the same identifier.
+                     }
+
+                     { Block position }
+                     {
+                        An unsigned 64-bit integer whose value \e must be the byte position, measured from the beginning of the XISF data blocks file, of the first byte of the XISF data block pointed to by the block index element.
+
+                        The block position of a block index element \e may be zero. In such case the element is called a \e {free block index element}. A free block index element does not provide access to any data block, and can be used as a placeholder to access future data blocks that can be stored in the data blocks file.
+                     }
+
+                     { Block length }
+                     {
+                        An unsigned 64-bit integer whose value \e must be the length in bytes of the XISF data block pointed to by the block index element.
+
+                        For free block index elements, the block length \e must be zero.
+                     }
+
+                     { Uncompressed block length }
+                     {
+                        An unsigned 64-bit integer. If the data block pointed to by the block index element has been compressed, the value of this item \e must be the length in bytes of the uncompressed data block.
+
+                        For free block index elements and index elements pointing to uncompressed blocks, the uncompressed block length \e must be zero.
+                     }
+
+                     { Reserved field }
+                     {
+                        Eight contiguous bytes reserved for future use. The values of these bytes \e shall be zero.
+                     }
+                  }
+               }
+            }
+         }
+
+         { XISF data blocks (\e optional) }
+         {
+            Zero or more \lref data_block {XISF data blocks}, which \e may be stored in the XISF data blocks file. Each data block is a sequence of one or more contiguous bytes, whose position and length \e must be defined by at least one block index element pertaining to the block index of the XISF data blocks file.
+         }
+
+         { Unused space (\e optional) }
+         {
+            Since XISF data blocks can be stored at arbitrary locations in an XISF data blocks file, there \e may be sequences of zero or more contiguous bytes that don't pertain to any data block. These sequences collectively form the \e {unused space} of an XISF data blocks file. All bytes pertaining to the unused space \e must be zero.
+
+            Unused spaces can be useful to optimize I/O buffering and access to data blocks in some devices. They can also be useful as pre-allocated spaces for storage of new data blocks.
+         }
+      }
+
+      Figure \figref fig_XISF_data_blocks_file_structure shows a graphical representation of an XISF data blocks file. An XISF decoder or a file management application can use the XISB signature (the first eight bytes of the file) to quickly determine if a given file can be a valid XISF data blocks file. Figure \figref fig_XISF_block_index_structure represents the structure of a block index structure. Finally, Figure \figref fig_XISF_block_index_element_structure outlines the structure of a block index element.
+
+      \figure[numbered:fig_XISF_data_blocks_file_structure] {
+
+         \figtag \s { Structure of an XISF data blocks file. }
+
+         \vs[length:2em]
+
+         \center \image[width:48.7em] { XISF-data-blocks-file-structure.svg }
+      }
+
+      \vs
+
+      \figure[numbered:fig_XISF_block_index_structure] {
+
+         \figtag \s { Structure of an XISF block index. }
+
+         \vs[length:2em]
+
+         \center \image[width:56.1em] { XISF-block-index-structure.svg }
+      }
+
+      \vs
+
+      \figure[numbered:fig_XISF_block_index_element_structure] {
+
+         \figtag \s { Structure of an XISF block index element. }
+
+         \vs[length:2em]
+
+         \center \image[width:55.7em] { XISF-block-index-element-structure.svg }
+      }
+
+      The following C++ code snippet shows a practical implementation of a structure to represent the initial components of an XISF data blocks file, including construction and validation.
+
+      \code[import] XISFDataBlocksFileHeader.cpp
+
+      In the next code fragment we implement the XISF block index element structure with automatic generation of unique identifiers. The \c RandomUI64() static member function of \c XISFBlockIndexElement should be implemented to generate high-quality, pseudo-random uniform deviates as unsigned 64-bit integer values with a good random seeding routine. The XorShift1024* algorithm\ref vigna_2014 \ref vigna_2014_1 \ref www_xorshift is strongly \e recommended.
+
+      \code[import] XISFBlockIndexElement.cpp
+   } % XISF Data Blocks File
+
+   % --------------------------------------------------------------------------
+   % Monolithic XISF File
+   % --------------------------------------------------------------------------
+
+   \subsection { \label monolithic_xisf_file Monolithic XISF File } {
+
+      A monolithic XISF file \e shall have the following structure:
+
+      \definition {
+
+         { Signature }
+         {
+            A sequence of eight contiguous bytes whose values \e must form the set \c 'XISF0100' of ASCII characters,\ref unicode_ascii_subset that is, the sequence 88\sub{10}, 73\sub{10}, 83\sub{10}, 70\sub{10}, 48\sub{10}, 49\sub{10}, 48\sub{10}, 48\sub{10} of unsigned 8-bit integers.
+         }
+
+         { Header length }
+         {
+            An unsigned 32-bit integer whose value \e must be the length in bytes of the \lref xisf_header {XISF header}.
+         }
+
+         { Reserved field }
+         {
+            Four contiguous bytes reserved for future use. The values of these bytes \e shall be zero.
+         }
+
+         { XISF header }
+         {
+            The unique \lref xisf_header {XISF header} of the \lref xisf_unit {XISF unit}.
+         }
+
+         { Unused space (\e optional) }
+         {
+            A sequence of zero or more contiguous bytes that \e may exist immediately after the XISF header. The bytes in an unused space \e must be zero.
+         }
+
+         { Attached XISF data blocks (\e optional) }
+         {
+            Zero or more \lref attached_data_block {attached XISF data blocks} that \e may exist, either immediately after the XISF header, or after the optional unused space if it exists. Each attached data block is a sequence of one or more contiguous bytes. Attached data blocks \e may be separated by unused space, with the same definition as above.
+         }
+      }
+
+      Figure \figref fig_monolithic_XISF_file_structure shows a graphical representation of a monolithic XISF file. An XISF decoder or a file management application can use the XISF signature (the first eight bytes of the file) to quickly determine if a given file can be a valid monolithic XISF file. The header length field has the advantage that an XISF decoder can load the entire XISF header in memory using a single file read operation. Without the header length element, a decoder would have to scan the XML source code sequentially in order to find the end of the XISF header. Unused spaces can be useful to optimize I/O buffering and access to attached data blocks in some devices.
+
+      \figure[numbered:fig_monolithic_XISF_file_structure] {
+
+         \figtag \s { Structure of a monolithic XISF file. }
+
+         \vs[length:2em]
+
+         \center \image[width:72em] { monolithic-XISF-file-structure.svg }
+      }
+
+      The following C++ code snippet shows a practical implementation of a structure to represent the initial components of a monolithic XISF file, including construction and validation.
+
+      \code[import] XISFMonolithicFileHeader.cpp
+   } % Monolithic XISF File
+
+   % --------------------------------------------------------------------------
+   % XISF Header
+   % --------------------------------------------------------------------------
+
+   \subsection { \label xisf_header XISF Header } {
+
+      An XISF header \e shall be a valid XML 1.0 document\ref xml_1_0 encoded in UTF-8\ref unicode_encoding_forms \ref unicode_encoding_schemes, with strict compliance of the syntax and properties described in this document. The functional roles of an XISF header \e shall be at least the following:
+
+      \list {
+         { Define a number of elements and properties describing an \lref xisf_unit {XISF unit} as a whole. }
+         { Define a number of elements and properties describing every object and data structure contained in an XISF unit. }
+         { Define the location and length of every \lref data_block {XISF data block} stored in an XISF unit. }
+      }
+
+      A valid XISF header \e shall have the following structure:
+
+      \definition {
+
+         { XML declaration }
+         {
+            A valid XISF header \e must begin with the following XML declaration:
+
+            \c { <?xml version="1.0" encoding="UTF-8"?> }
+         }
+
+         { Initial comment (\e recommended) }
+         {
+            An XISF header \e should include a brief comment after the XML declaration. This initial comment \e should (1) specify that the XML document pertains to an \lref xisf_unit {XISF unit} by declaring the XISF format and its version, and (2) identify the software which has created the XISF unit. The following example shows the starting lines of an XISF header with the XML declaration followed by a valid initial comment:
+
+            \code {
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Extensible Image Serialization Format - XISF version 1.0
+Created with TheMagicImagingSoftware - http://reallymagic.com/
+-->
+            }
+
+            An XISF encoder should replace "TheMagicImagingSoftware" and "http://reallymagic.com/" in the comment above with the name of the software application that has created the XISF unit and a relevant URL, respectively.
+
+            An XISF decoder \e must \e not rely on the information included in the initial comment of an XISF header to modify its behavior in any way.
+         }
+
+         { \label root_element XISF root element }
+         {
+            The XISF root element is the top-level XML element that defines the entire contents of an \lref xisf_unit {XISF unit}. A \e unique instance of the XISF root element \e shall be present in every XISF header, following the XML declaration and, when it exists, the initial comment. The XISF root element has the following properties:
+
+            \list[spaced] {
+
+               { Its name \e shall be \c xisf and \e shall be interpreted as case-sensitive. }
+
+               { \e Must have the \c version attribute, whose value \e shall be \c "1.0". }
+
+               { \e Should have the following namespace\ref xml_namespaces and schema\ref xml_schema attributes:\n\n
+
+                 \c { \hs xmlns="http://www.pixinsight.com"\n
+                      \hs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n
+                      \hs xsi:schemaLocation="http://www.pixinsight.com/xisf http://pixinsight.com/xsd/xisf-1.0.xsd" }
+               }
+
+               { \e May have child XML elements describing the objects and data structures contained in an \lref xisf_unit {XISF unit}. }
+
+               { If the XISF unit contains some data structures or objects, then the XISF root element \e must have the necessary child elements to describe them. }
+
+               { \e Must \e not have character data contents. }
+            }
+
+            The following example shows the initial lines of a valid XISF header with the start-tag of its XISF root element:
+
+            \code {
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Extensible Image Serialization Format - XISF version 1.0
+Created with TheMagicImagingSoftware - http://reallymagic.com/
+-->
+<xisf version="1.0"
+      xmlns="http://www.pixinsight.com"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.pixinsight.com/xisf http://pixinsight.com/xsd/xisf-1.0.xsd">
+            }
+         }
+
+         { XISF child elements (\e optional) }
+         {
+            XISF child elements are child XML elements of the unique \lref root_element {XISF root element} in an XISF header. XISF child elements \e shall describe data structures and objects stored in an \lref xisf_unit {XISF unit}. A reduced number of XISF child elements have been formalized in this specification to support essential data structures; we call these elements \lref core_elements {XISF core elements}.
+
+            XISF is an extensible format mainly because new child elements \e may be defined as necessary to describe new data structures and objects stored in XISF units, which have not been formalized in this specification.
+         }
+
+         { \label xml_signature XML signature (\e optional) }
+         {
+            After the XISF root element, an XML signature\ref xml_signature \e may be included to provide data integrity and authentication. The signed data \e shall be the XISF root element and its entire contents, including the whole XML tree: All child XML elements of the root element and their contents.
+
+            If the XISF unit is digitally signed with an XML signature, then the \lref data_block_checksum \c checksum attribute \e must be included and correctly implemented for every data block not serialized directly in the XISF header, including all blocks with \lref attachment_data_block attachment, \lref url_data_block url, \lref absolute_path_data_block {absolute path} and \lref relative_path_data_block {relative path} block locations. With a digital signature and data checksums correctly implemented, a signed XISF unit effectively seals all of its contents and guarantees data integrity.
+
+            The XML signature of a XISF unit \e must be implemented as a detached signature in the header XML document. The XISF root element, which \e shall be the object being signed, must be specified through an \c id attribute in the \e Reference element of the signature. The following example carifies these concepts:
+
+            \code {
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Extensible Image Serialization Format - XISF version 1.0
+Created with TheMagicImagingSoftware - http://reallymagic.com/
+-->
+<xisf version="1.0" id="XISFRootElement"
+      xmlns="http://www.pixinsight.com"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.pixinsight.com/xisf http://pixinsight.com/xsd/xisf-1.0.xsd">
+      ...
+      ...
+      ...
+</xisf>
+<Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+   <SignedInfo>
+      <CanonicalizationMethod Algorithm="http://www.w3.org/2006/12/xml-c14n11"/>
+      <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#dsa-sha1"/>
+      <Reference URI="#XISFRootElement">
+         <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+         <DigestValue>...</DigestValue>
+      </Reference>
+   </SignedInfo>
+   <SignatureValue>...</SignatureValue>
+   <KeyInfo>
+      <KeyValue>
+         <RSAKeyValue>
+            <Modulus>...</Modulus>
+            <Exponent>...</Exponent>
+         </RSAKeyValue>
+      </KeyValue>
+      <X509Data>
+         <X509SubjectName>...</X509SubjectName>
+         <X509IssuerSerial>
+            <X509IssuerName>...</X509IssuerName>
+            <X509SerialNumber>...</X509SerialNumber>
+         </X509IssuerSerial>
+         <X509Certificate>...</X509Certificate>
+      </X509Data>
+   </KeyInfo>
+</Signature>
+            }
+
+            In this example, the XISF root element being signed is selected with the "XISFRootElement" identifier through a \e {same-document reference}.\ref rfc_3986 The root element is signed with a SHA-1 digest\ref rfc_3174 and the RSA public key of an X.509 certificate.\ref rfc_5280
+         }
+      }
+   } % XISF Header
+
+   % --------------------------------------------------------------------------
+   % XISF Data Block Location
+   % --------------------------------------------------------------------------
+
+   \subsection { \label data_block_location XISF Data Block Location } {
+
+      The location (and, when necessary, also the \e {dimensions}) of an \lref data_block {XISF data block} \e must be completely defined in the \lref xisf_header {XISF header} of the \lref xisf_unit {XISF unit} where the block is serialized. The \c location XML attribute defines the location of an XISF data block and a number of related properties. The values of a \c location attribute can be:
+
+      \definition {
+
+         { \label inline_data_block \c { location="inline:\e{encoding}" } }
+         {
+            Defines an \e {inline XISF data block}. An inline data block is serialized in the character contents of an XML element, encoded as plain ASCII\ref unicode_ascii_subset text. \e\c encoding defines the data encoding used, which \e must be either \c base64 or \c hex, corresponding to the Base64 and Base16 (or hexadecimal) encodings,\ref rfc_4648 respectively. For data encoded in Base16, the digit symbols 'a', 'b', 'c', 'd', 'e' and 'f' \e shall be used to represent the nibble values 10\sub{10}, 11\sub{10}, 12\sub{10}, 13\sub{10}, 14\sub{10} and 15\sub{10}, respectively; in other words, a lowercase hexadecial representation \e shall be used for Base16 encoding.
+
+            Example of inline XISF data block:
+
+            \code {
+<Property id="TestProperty" type="ByteArray" length="34" location="inline:base64">
+   VGhpcyBpcyBhIHRlc3QgLSBURVNUIC0gMTIzNDU2Nzg5MA==
+</Property>
+            }
+
+            Note that white space is irrelevant and \e must always be ignored for Base64 and Base16 encoded data.
+
+            XML elements serializing inline XISF data blocks \e shall \e not have child XML elements.
+         }
+
+         { \label embedded_data_block \c { location="embedded" } }
+         {
+            Defines an \e {embedded XISF data block}. An embedded block \e shall be serialized in the character contents of a child \c Data element, encoded as plain ASCII\ref unicode_ascii_subset text. The \c Data element \e must have an \c encoding attribute, with the same meaning and rules as for \lref inline_data_block {inline data blocks}.
+
+            Example of embedded XISF data block:
+
+            \code {
+<Image geometry="6:6:3" sampleFormat="UInt8" colorSpace="RGB" location="embedded">
+   <Data encoding="base64">
+      AAAAAP8A/wD/AAAAAAAAAP8AAP8AAAAAAAAA/wD/AP8AAAAA/wD//wD/AP8AAP8A/wD//wD//
+      wD//wD/AP8AAP8A/wD//wD/AP8AAAAAAAAA/wD/AP8AAAAAAAAAAP8A/wD/AAAAAAAAAP8A
+   </Data>
+</Image>
+            }
+
+            Note that white space is irrelevant and \e must always be ignored for Base64 and Base16 encoded data.
+
+            The \c Data child element serializing an embedded data block \e shall \e not have child elements or additional character data contents.
+
+            Embedded data blocks are necessary for blocks that have to be serialized within XML elements that can have child elements or character data contents. In these cases an inline serialization is \e forbidden by this specification.
+         }
+
+         \c { \label attachment_data_block location="attachment:\e{position}:\e{size}" }
+         {
+            Defines an \e {attached XISF data block}. \c\e position and \c\e size \e must be plain text representations of unsigned integers. The value of \c\e position is the byte position of the first byte of the XISF data block from the beginning of the monolithic XISF file where it is stored. The value of \c\e size is the size in bytes of the XISF data block.
+
+            Example of attached XISF data block:
+
+            \code {
+<Image geometry="960:540:3" sampleFormat="Float32" bounds="0:1" colorSpace="RGB"
+                     location="attachment:4096:6220800" />
+            }
+         }
+
+         \c { \label url_data_block location="url;\e{URL}"\n
+              location="url:\e{index-id};\e{URL}" }
+         {
+            Defines an \e {external XISF data block}.
+
+            \c\e URL \e must be a valid \e {uniform resource locator}\ref rfc_3986 specification for a local or remote file where the XISF data block should be available.
+
+            In the first form, the data block \e shall start at byte position zero of the specified file, and its size in bytes \e must be the total size of the specified file, whose value \e must be retrievable by some means that are beyond the scope of this specification; for example, by reading the properties of a local directory entry, or by fetching the total length of the data downloaded from a remote server.
+
+            In the second form, the specified file \e must be an \lref data_blocks_file {XISF data blocks file}. \c\e index-id \e must be a plain text representation of an unsigned integer, whose value \e must be the unique identifier of a \lref block_index_element {block index element} in the XISF data blocks file. \c\e index-id \e should be represented as an hexadecimal number. The referenced block index element \e must define the position and size of the XISF data block being located.
+
+            Example of external XISF data block stored in a remote server:
+
+            \code {
+<Image geometry="4096:4096:1" sampleFormat="UInt16"
+                     location="url;http://mysite.net/myfile.bin" />
+            }
+
+            Example of XISF data block stored in an XISF data blocks file:
+
+            \code {
+<Property id="AHugeOne" type="F32Matrix" rows="100000" columns="25000"
+                     location="url:0x7a73526b584c6167;file:///data/huge-things.xisb" />
+            }
+         }
+
+         \c { \label absolute_path_data_block location="path;\e{abs-file-path}"\n
+              location="path:\e{index-id};\e{abs-file-path}" }
+         {
+            Defines an external XISF data block stored in a local file with an \e {absolute file path specification}.
+
+            \c\e {abs-file-path} is an absolute path\ref open_group_posix_absolute_pathname to a file located on, or accessible from, the local file system. File path specifications \e shall follow standard UNIX pathname syntax rules\ref open_group_posix_pathname and pathname resolution\ref open_group_posix_pathname_resolution on all platforms. In particular, \e only slash '/' characters \e shall be used as directory separators.
+
+            In the first form, the data block \e shall start at byte position zero of the specified file, and its size in bytes \e must be the total size of the file, whose value \e must be retrievable by some means that are beyond the scope of this specification; for example, by reading the properties of a local directory entry.
+
+            In the second form, the specified file \e must be an \lref data_blocks_file {XISF data blocks file}. \c\e index-id \e must be a plain text representation of an unsigned integer, whose value \e must be the unique identifier of a \lref block_index_element {block index element} in the XISF data blocks file. \c\e index-id \e should be represented as an hexadecimal number. The referenced block index element \e must define the position and size of the XISF data block being located.
+
+            In general, absolute paths are \e not \e recommended and \e should be avoided, since they tend to prevent distributed XISF units from being relocatable. If a unit with absolute path names is moved or copied to a different file system or machine, it will cease to be valid unless the original directory tree exists on the target file system.
+         }
+
+         \c { \label relative_path_data_block location="path;@header_path/\e{rel-file-path}"\n
+              location="path:\e{index-id};@header_path/\e{rel-file-path}" }
+         {
+            Defines an external XISF data block stored in a local file with a \e {relative directory path specification}.
+
+            \c\e {rel-file-path} is a path to a file, relative\ref open_group_posix_relative_pathname to the directory where the file containing the XISF header is located on, or accessible from, the local file system. Directory path specifications \e shall follow standard UNIX pathname syntax rules\ref open_group_posix_pathname and pathname resolution\ref open_group_posix_pathname_resolution on all platforms. In particular, \e only slash '/' characters \e shall be used as directory separators.
+
+            In the first form, the data block \e shall start at byte position zero of the specified file, and its size in bytes \e must be the total size of the file, whose value \e must be retrievable by some means that are beyond the scope of this specification; for example, by reading the properties of a local directory entry.
+
+            In the second form, the specified file \e must be an \lref data_blocks_file {XISF data blocks file}. \c\e index-id \e must be a plain text representation of an unsigned integer, whose value \e must be the unique identifier of a \lref block_index_element {block index element} in the XISF data blocks file. \c\e index-id \e should be represented as an hexadecimal number. The referenced block index element \e must define the position and size of the XISF data block being located.
+
+            The following \c Image element shows an example of XISF data block located with a relative directory specification. The \c sample-screenshots.xisb data blocks file should be on the same directory as the XISF header file or monolithic XISF file being decoded:
+
+            \code {
+<Image geometry="1024:768:3" sampleFormat="UInt8" colorSpace="RGB"
+                     location="path:0x4d373e33756e480f;@header_path/sample-screenshots.xisb" />
+            }
+
+            The following example assumes that an \c astrometry sub-directory exists on the local directory represented by \c @header_path:
+
+            \code {
+<Property id="AstrometricSolution" type="F64Matrix" rows="428" columns="16"
+                     location="path;@header_path/astrometry/solution.dat" />
+            }
+
+            Relative file paths are useful to build relocatable distributed XISF units. A distributed unit that locates all of its external data blocks through relative paths can be transferred to any location on any file system, including multiple machines, without breaking its validity. This can't be ensured for blocks located by absolute paths.
+         }
+      }
+   } % XISF Data Block Location
+
+   % --------------------------------------------------------------------------
+   % XISF Data Block Checksum
+   % --------------------------------------------------------------------------
+
+   \subsection { \label data_block_checksum XISF Data Block Checksum } {
+
+      XML elements serializing \lref data_block {XISF data blocks} can include a \c checksum attribute to enforce data integrity with a cryptographic hashing algorithm.
+
+      If the XISF unit is digitally signed with an XML signature, then the \c checksum attribute \e must be included and correctly implemented for every data block not serialized directly in the XISF header, including all blocks with \lref attachment_data_block attachment, \lref url_data_block url, \lref absolute_path_data_block {absolute path} and \lref relative_path_data_block {relative path} block locations.
+
+      Cryptographic checksums are \e optional for non-signed units, although their implementation is \e recommended for all XISF encoders as a user-selectable option available in all cases, irrespective of digital signatures.
+
+      When a \c checksum attribute is defined for an XML element serializing a data block, an XISF decoder \e must verify it by computing a new digest from the serialized data and comparing it with the value of the corresponding \c checksum attribute. If the digests differ, a decoder should issue a warning or error message and give the user an option to stop loading the affected data block or the entire XISF unit, as appropriate. This validation process must always occur before making the data block available to the user, either directly or indirectly. Checksum verification \e may be implemented on an on-demand basis: only data blocks whose contents have to be loaded from the XISF unit need to be verified. For unattented operations such as batch processes, a decoder \e should \e not load an XISF unit for which a checksum verification fails.
+
+      The syntax of the \c checksum attribute is as follows:
+
+      \definition {
+
+         \c { checksum="\e{algorithm}:\e{digest}" }
+         {
+            where \c\e algorithm is a cryptographic hashing algorithm, and \c\e digest is the corresponding message digest computed for the \e entire contents of the \lref data_block {XISF data block} being serialized.
+
+            Message digests \e shall be encoded in Base16 using the lowercase hexadecimal digits 'a', 'b', 'c', 'd', 'e', and 'f'.
+
+            Supported algorithms include:
+
+            \table[caption,header,width:100\%] {
+               { Cryptographic Hashing Algorithms }
+               { { Algorithm } { \c checksum \c\e algorithm value } { Alternate \c\e algorithm value } }
+               { { SHA-1\ref rfc_3174 } { \c sha-1 } { \c sha1 } }
+               { { SHA-256\ref rfc_6234 } { \c sha-256 } { \c sha256 } }
+               { { SHA-512\ref rfc_6234 } { \c sha-512 } { \c sha512 } }
+               { { SHA3-256 (Keccak)\ref nist_sha3 \ref www_keccak } { \c sha3-256 } {} }
+               { { SHA3-512 (Keccak)\ref nist_sha3 \ref www_keccak } { \c sha3-512 } {} }
+            }
+
+            SHA-1 is the \e recommended general-purpose hashing algorithm for use in XISF units.
+
+            See the section on \lref data_block_compression {compressed XISF data blocks} for important security considerations about checksums and compression.
+
+            Example:
+
+            \code {
+<Image geometry="4096:4096:1" sampleFormat="Float32" bounds="0:1"
+            location="attached:134217728:67108864"
+            checksum="sha1:97b25345e3bd74bcd6613d24e3ecb47617a31d20" />
+            }
+         }
+      }
+   } % XISF Data Block Checksum
+
+   % --------------------------------------------------------------------------
+   % XISF Data Block Compression
+   % --------------------------------------------------------------------------
+
+   \subsection { \label data_block_compression XISF Data Block Compression } {
+
+
+      An \lref data_block {XISF data block} \e may be transformed with a compression codec or algorithm. Both lossless and lossy compression schemes are permitted. XML elements serializing the values of compressed XISF data blocks \e must include a \c compression XML attribute with the following syntax:
+
+      \c { \hs compression="\e{codec}:\e{parameters}" }
+
+      where \c\e codec is the name of a compression algorithm, and \c\e parameters is a set of algorithm-dependent parameters. The value of the \c compression attribute \e must be sufficient to recover meaningful data for the XISF data block being serialized. Note that we specify \e meaningful instead of \e {the original} because lossy compression algorithms are supported. The performance and ability of a compression algorithm to maximize compression ratios and minimize data degradation are beyond the scope of this specification.
+
+      For \lref embedded_data_block {embedded XISF data blocks}, the \c compression attribute \e shall be an attribute of the \c Data child element serializing the block's contents, \e not of the element that serializes the block. For the rest of \lref data_block_location {block location modes}, the \c compression attribute \e shall be included in the element that serializes the block.
+
+      When a \lref data_block_checksum {\c checksum attribute} is included in the XML element serializing a compressed data block, an encoder \e shall compute the corresponding cryptoghraphic digest for the compressed data, and \e never from the original, uncompressed data. If a checksum verification fails for a compressed data block, a decoder \e must \e not attempt to decompress the altered data, as this might cause a vulnerability that could be exploited.
+
+      \division { Zlib compression } {
+
+         The deflate compression algorithm\ref rfc_1951 and the standard zlib format\ref rfc_1950 are formally supported by this first XISF specification as the standard XISF compression codec. Future revisions of XISF will include more compression methods.
+
+         In particular, the implementation written by Jean-Loup Gailly and Mark Adler, the well-known zlib library,\ref www_zlib is \e recommended by this specification.
+
+         An XML element serializing the contents of an XISF data block compressed with the zlib format \e must have a \c compression attribute with the following syntax:
+
+         \c { \hs compression="zlib:\e{uncompressed-size}" }
+
+         where \c\e uncompressed-size is a plain text representation of an unsigned integer whose value is the size in bytes of the original uncompressed data.
+
+         Example:
+
+         \code {
+<Image geometry="6:6:3" sampleFormat="UInt8" colorSpace="RGB" location="embedded">
+   <Data compression="zlib:108" encoding="base64">
+      eJxjYGBg+A+GEPCfAYkJFQZSUPZ/KBtTBFMXOuc/AwCjKyPd
+   </Data>
+</Image>
+         }
+
+         This example serializes a tiny RGB color image of 6x6 pixels, compressed and embedded within an \lref image_core_element \c Image element. The following example:
+
+         \code {
+<Property id="Test" type="ByteArray" length="34" compression="zlib:34" location="inline:base64">
+   eNoLycgsVgCiRIWS1OISBV2FENfgECBlaGRsYmpmbmFpAACzWQkd
+</Property>
+         }
+
+         shows a \lref property_core_element \c Property element serializing a \lref bytearray_property_type ByteArray XISF property with zlib compression as an \lref inline_data_block {inline data block}.
+
+         This example shows a zlib-compressed image with a SHA-1 checksum:
+
+         \code {
+<Image geometry="960:540:3" sampleFormat="Float32" bounds="0:1"
+   colorSpace="RGB" compression="zlib:6220800" location="attachment:4570:1428362"
+   checksum="sha1:1ad9a10249b7574f97c7b4771f13924603b9852d" />
+         }
+      }
+   } % XISF Data Block Compression
+} % XISF Structure
+
+% -----------------------------------------------------------------------------
+% XISF Core Elements
+% -----------------------------------------------------------------------------
+
+\section { \label core_elements XISF Core Elements } {
+
+   XISF core elements have the following properties:
+
+   \list[spaced] {
+
+      { XISF core elements \e shall be descendant XML elements of the unique \lref root_element {XISF root element} of an \lref xisf_header {XISF header}. }
+
+      { The tag names of all XISF core elements \e shall be interpreted as case-sensitive. }
+   }
+
+   Three core elements have been formalized and defined in this specification to support a number of essential components of \lref xisf_unit {XISF units}: \lref property_core_element \c Property, \lref metadata_core_element \c Metadata, and \lref image_core_element \c Image. In addition, a number of core elements have been defined to serialize properties and auxiliary objects associated with images: \lref fitskeyword_core_element FITSKeyword, \lref iccprofile_core_element ICCProfile, \lref rgbws_core_element RGBWS, \lref resolution_core_element Resolution, and \lref thumbnail_core_element Thumbnail.
+
+   % --------------------------------------------------------------------------
+   % Property Core Element
+   % --------------------------------------------------------------------------
+
+   \subsection { \label property_core_element \c Property Core Element } {
+
+      The \c Property core element has the following properties:
+
+      \list {
+
+         { A \c Property element \e shall serialize an \lref xisf_property {XISF property}. }
+
+         { An \lref xisf_header {XISF header} \e may contain multiple \c Property core elements. }
+
+         { A \c Property element \e may be a child element of the unique \lref root_element {XISF root element} to serialize a standalone property. }
+
+         { A \c Property element \e may be a child element of a \lref metadata_core_element \c Metadata core element to serialize a property of the \lref xisf_unit {XISF unit}. }
+
+         { A \c Property element \e may be a child element of an \lref image_core_element \c Image core element to serialize a property of an \lref xisf_image {XISF image}. }
+
+         { The names of all attributes of the \c Property element \e shall be interpreted as case-sensitive. }
+      }
+
+      \division { \c Property element attributes required for all properties } {
+
+         Every \c Property element \e shall have the following attributes:
+
+         \definition {
+
+            { \c id }
+            { The value of this attribute \e shall be the identifier of the \lref xisf_property {XISF Property} being serialized. }
+
+            { \c type }
+            { The value of this attribute \e shall identify the name of a \lref property_types {XISF property type}, which \e shall be the data type of the XISF Property being serialized. }
+         }
+      }
+
+      \division { \c Property \c format attribute (optional) } {
+
+         A \c Property element \e may have a \c format attribute. If present, the value of a \c format attribute \e must be a \lref property_format_specifier {property format specifier}.
+
+         Examples:
+
+         \code {
+<Property id="FocalDistance" type="UInt32" value="2540" format="width:8;align:center" />
+<Property id="Magnitude" type="Float32" value="1.25"
+                                    format="width:6;precision:2;float:fixed;sign:force" />
+<Property id="Flags" type="UInt16" value="0xff39" format="width:8;base:hex;fill:." />
+<Property id="Coefficients" type="Vector64" length="1234"
+                                    location="attachment:4096:9872" format="width:10;precision:3" />
+         }
+
+         These examples would generate the following plain text representations:
+
+         \verbatim {
+   "  2540  "
+   " +1.25"
+   "....ff39"
+   "      32.1, -1.24e-08" }
+
+         In the last example, note that the \c {float:auto} format token is implicitly being used by default. Only the first two vector components are shown, and in this example we assume that the decoder application is representing vectors as comma-separated lists of components, which is not part of this specification and hence is not mandatory.
+
+         XISF decoders supporting property format specifiers \e should apply them, as appropriate, to generate plain text representations of scalar values. This includes all \lref scalar_property_types {scalar property types}, the components of \lref complex_property_types {complex properties}, \lref string_property_types {string properties} (where only \c width and \c align format tokens should be taken into account), the components of \lref vector_property_types {vector properties}, and the elements of \lref matrix_property_types {matrix properties}.
+      }
+
+      \division { Serialization of scalar properties } {
+
+         A \c Property element serializing a \lref scalar_property_types {scalar XISF property} \e shall have a \c value attribute, whose value \e shall be a valid \lref scalars_serializations {plain text serialization} of the property value. Typically, in these cases the \c Property element is an empty XML element.
+
+         Examples:
+
+         \code {
+<Property id="HasData" type="Boolean" value="1" />
+<Property id="Flags" type="UInt32" value="0x8000FFA0" />
+<Property id="Volume" type="Float64" value="1.1234e+04" />
+         }
+      }
+
+      \division { Serialization of complex properties } {
+
+         A \c Property element serializing a \lref complex32_property_type Complex32 or \lref complex64_property_type Complex64 property \e shall have a \c value attribute, whose value \e shall serialize the value of the XISF property as follows:
+
+         \c { \hs value="(\e{real},\e{imag})" }
+
+         where \c\e real and \c\e imag are, respectively, \lref floating_point_representations {plain text representations} of the floating point real and imaginary parts of the complex number. Typically, in these cases the \c Property element is an empty XML element.
+
+         Example:
+
+         \code {
+<Property id="PeakElement" type="Complex32" value="(0.123,-0.735e-02)" />
+         }
+      }
+
+      \division { Serialization of string properties } {
+
+         A \c Property element serializing a \lref string16_property_type String16 or \lref string8_property_type String8 property \e shall \e not have a \c value attribute, and \e must serialize the property value either directly in its character data contents, or as an \lref data_block {XISF data block}.
+
+         Examples:
+
+         \code {
+<Property id="Description" type="String16">This is one of my very best images.</Property>
+<Property id="CreationTime" type="String8">2014-12-01T18:07:54Z</Property>
+<Property id="ALongString" type="String16" location="attached:17600:8192" />
+<Property id="AnEncodedString" type="String16"
+                  location="inline:base64">VGhlIHF1aWNrIGJyb3duIGZveA==</Property>
+<Property id="AnExternalDocument" type="String8"
+                  location="url;http://mysite.net/MyTextDocument.txt" />
+         }
+
+         When a string is serialized unencoded, directly in the character contents of a \c Property element, keep in mind that all of the white space between the starting and ending tags \e is significant and a compliant decoder \e must preserve it. To prevent unwanted leading and trailing spaces, the \c Property element \e should be generated as a single text line in the XISF header in these cases.
+      }
+
+      \division { Serialization of vector properties } {
+
+         A \c Property element serializing a \lref vector_property_types vector property:
+
+         \list {
+            { \e Shall \e not have a \c value attribute. }
+            { \e Shall have a \c length attribute. The value of the \c length attribute \e must be a plain text representation of an unsigned integer, whose value \e must be the vector length, that is, the number of components in the vector. }
+            { \e Shall serialize the value of the XISF property as an \lref data_block {XISF data block}. }
+         }
+
+         Example:
+
+         \code {
+<Property id="TestProperty" type="ByteArray" length="34" location="inline:base64">
+   VGhpcyBpcyBhIHRlc3QgLSBURVNUIC0gMTIzNDU2Nzg5MA==
+</Property>
+         }
+      }
+
+      \division { Serialization of matrix properties } {
+
+         A \c Property element serializing a \lref matrix_property_types matrix property:
+
+         \list {
+            { \e Shall \e not have a \c value attribute. }
+            { \e Shall have a \c rows attribute. The value of the \c rows attribute \e must be a plain text representation of an unsigned integer, whose value \e must be the number of rows in the matrix. }
+            { \e Shall have a \c columns attribute. The value of the \c columns attribute \e must be a plain text representation of an unsigned integer, whose value \e must be the number of columns in the matrix. }
+            { \e Shall serialize the value of the XISF property as an \lref data_block {XISF data block}. }
+         }
+
+         Example:
+
+         \code {
+<Property id="AstrometricSolution" type="F64Matrix" rows="428" columns="16"
+                           location="path;@header_path/astrometry/solution.dat" />
+         }
+      }
+   } % Property Core Element
+
+   % --------------------------------------------------------------------------
+   % Metadata Core Element
+   % --------------------------------------------------------------------------
+
+   \subsection { \label metadata_core_element \c Metadata Core Element } {
+
+      The \c Metadata core element serializes a set of \lref xisf_property {XISF properties} to describe an object pertaining to an \lref xisf_unit {XISF unit}. \c Metadata properties \e must be serialized with child \lref property_core_element \c Property elements, and the \c Metadata element \e must be a child of the element serializing the object described.
+
+      A \c Metadata element \e shall be included in every \lref xisf_header {XISF header} as a child element of the \lref root_element {XISF root element}. This \c Metadata element \e shall describe the XISF unit, and \e must contain \c Property child elements serializing the following properties:
+
+      \definition {
+
+         { \c CreationTime }
+         {
+            A \lref string8_property_type String8 property whose value \e must be a plain text representation of the date and time the XISF header has been created. The format of this representation \e shall comply with the ISO 8601 extended specification for representations of dates and times.\ref iso_8601 \ref rfc_3339
+
+            Example:
+
+            \code {
+<Property id="CreationTime" type="String8">2014-12-09T12:38:15Z</Property>
+            }
+         }
+
+         { \c CreatorApplication }
+         {
+            A \lref string16_property_type String16 or \lref string8_property_type String8 property, whose value \e must be a plain text readable identification of the software application that has created the XISF header. The format and contents of this property are implementation-dependent, but it \e should contain the name and version of the application in readable form.
+
+            Example:
+
+            \code {
+<Property id="CreatorApplication" type="String16">PixInsight 01.08.03.1123</Property>
+            }
+         }
+      }
+
+      In addition, the following properties are \e optional for a \c Metadata element describing an \lref xisf_unit {XISF unit}, but \e should be serialized as \lref property_core_element \c Property child elements, as appropriate:
+
+      \definition {
+
+         { \c CreatorModule }
+         {
+            A \lref string16_property_type String16 or \lref string8_property_type String8 property. If the software that has created the XISF header (\c CreatorApplication) is a modular system where the XISF format has been implemented by a versioned subsystem or module, this property \e should be defined to provide a plain text readable identification of the subsystem or module that has created the XISF header. The format and contents of this property are implementation-dependent, but it \e should contain the name and version of the subsystem or module in readable form.
+
+            Example:
+
+            \code {
+<Property id="CreatorModule" type="String16">XISF module version 01.00.00.0024</Property>
+            }
+         }
+
+         { \c CreatorOS }
+         {
+            A \lref string16_property_type String16 or \lref string8_property_type String8 property. This property \e should be defined to provide a plain text readable identification of the operating system where the XISF header has been created. The following values \e must be used to identify several common operating systems:
+
+            \table[caption,header,width:100\%] {
+               { \c CreatorOS Property Values }
+               { { Operating system }  { \c CreatorOS property value } }
+               { { FreeBSD }           { \c FreeBSD } }
+               { { Linux }             { \c Linux } }
+               { { Apple OS X }        { \c {OS X} } }
+               { { Microsoft Windows } { \c Windows } }
+            }
+
+            Example:
+
+            \code {
+<Property id="CreatorOS" type="String16">Linux</Property>
+            }
+         }
+
+         { \c CompressionMethod }
+         {
+            A \lref string8_property_type String8 property. If the XISF unit contains \lref data_block_compression {compressed data blocks}, this property \e should be defined to enumerate the applied compression algorithm(s) used. If more than one algorithm has been used, they should be specified as a comma-separated list.
+
+            Example:
+
+            \code {
+<Property id="CompressionMethod" type="String8">zlib</Property>
+            }
+         }
+
+         { \c CompressionLevel }
+         {
+            An \lref int32_property_type Int32 property. If the XISF unit contains data blocks \lref data_block_compression compressed with the standard zlib method,\ref rfc_1950 this property \e should be defined to specify the \e {compression level} used. Zlib's compression level is an integer parameter in the range from 0 to 9 that controls the speed/compression balance.
+
+            Example:
+
+            \code {
+<Property id="CompressionLevel" type="Int32" value="6"/>
+            }
+         }
+
+         { \c Author }
+         {
+            An \e optional \lref string16_property_type String16 or \lref string8_property_type String8 property. The name(s) of the person(s) who have created the \lref xisf_unit {XISF unit}.
+
+            Example:
+
+            \code {
+<Property id="Author" type="String8">James T. Kirk</Property>
+            }
+         }
+
+         { \c Copyright }
+         {
+            An \e optional \lref string16_property_type String16 or \lref string8_property_type String8 property. Copyright information applicable to the materials included in the \lref xisf_unit {XISF unit}.
+
+            Example:
+
+            \code {
+<Property id="Copyright" type="String8">Copyright (c) 2014 Extragalactic Imaging Corporation.
+All Rights Reserved.</Property>
+            }
+         }
+
+         { \c BriefDescription }
+         {
+            An \e optional \lref string16_property_type String16 or \lref string8_property_type String8 property. A brief description or caption for the materials included in the \lref xisf_unit {XISF unit}. If this metadata property is specified, it \e should be a brief text not longer than 256 characters.
+
+            Example:
+
+            \code {
+<Property id="BriefDescription" type="String8">Messier 45, The Pleiades Cluster</BriefDescription>
+            }
+         }
+
+         { \c Description }
+         {
+            An \e optional \lref string16_property_type String16 or \lref string8_property_type String8 property. A description of the materials included in the \lref xisf_unit {XISF unit}.
+
+            Example:
+
+            \code {
+<Property id="Description" type="String16" location="attached:2048:8325" />
+            }
+         }
+
+         { \c Keywords }
+         {
+            An \e optional \lref string16_property_type String16 or \lref string8_property_type String8 property. A comma-separated list of keywords or search index terms applicable to the materials included in the \lref xisf_unit {XISF unit}.
+
+            Example:
+
+            \code {
+<Property id="Keywords" type="String8">IC 342, galaxies, spiral galaxies</Property>
+            }
+         }
+      }
+   } % Metadata Core Element
+
+   % --------------------------------------------------------------------------
+   % Image Core Element
+   % --------------------------------------------------------------------------
+
+   \subsection { \label image_core_element \c Image Core Element } {
+
+      The \c Image core element serializes an \lref xisf_image {XISF image} stored in an \lref xisf_unit {XISF unit}. \c Image elements \e shall be child elements of the unique \lref root_element {XISF root element} of the XISF unit.
+
+      The entire pixel data contents of an XISF image \e shall be serialized as a single \lref data_block {XISF data block}. An \c Image element cannot serialize pixel data as an \lref inline_data_block {inline XISF data block}, this restriction obeying to the fact that \c Image elements can have child XML elements.
+
+      An \c Image element can have the following attributes:
+
+      \definition {
+
+         \c { geometry="\e{dim\sub{1}}:...:\e{dim\sub{N}}:\e{channel-count}" }
+         {
+            This attribute \e shall be specified for all \c Image elements.
+
+            Defines the geometry of an N-dimensional image. The number N \ge 1 of \c\e dim items is the \e dimensionality of the image: N=1 for a one-dimensional image, N=2 for a two-dimensional image, etc. Each \c\e {dim\sub{i}} item is a plain text representation of an unsigned integer whose value, which must be greater than zero, is the corresponding length of the image on its \e i-th axis in pixel units. The last \c\e channel-count item is a plain text representation of an unsigned integer whose value, which must be greater than zero, is the number of existing image channels or planes.
+
+            For a two-dimensional or three-dimensional image, the first dimension corresponds to the X-axis of the image and the second dimension corresponds to its Y-axis. For a three-dimensional image, the third dimension corresponds to the Z-axis.
+
+            Example:
+
+            \code {
+<Image geometry="960:540:3" sampleFormat="Float32" bounds="0:1"
+   colorSpace="RGB" compression="zlib:6220800" location="attachment:4570:1428362" />
+            }
+
+            This example defines a two-dimensional image with three channels. Its width is 960 pixels and its height is 540 pixels.
+         }
+
+         \c { \label sampleformat_image_attribute sampleFormat="\e{sample-format}" }
+         {
+            This attribute \e shall be specified for all \c Image elements.
+
+            Defines the data type used to represent the pixel samples of the image, also known as the \e {sample format} of the image. \c\e sample-format \e must be one of the following literals:
+
+            \table[caption,header,width:100\%] {
+               { \c sampleFormat Attribute Values }
+               { { Sample data type }                                   { \c sampleFormat attribute value } }
+               { { Unsigned 8-bit integer }                             { \c UInt8 } }
+               { { Unsigned 16-bit integer }                            { \c UInt16 } }
+               { { Unsigned 32-bit integer }                            { \c UInt32 } }
+               { { Unsigned 64-bit integer }                            { \c UInt64 } }
+               { { Real IEEE 754\ref ieee_754 binary32 floating point } { \c Float32 } }
+               { { Real IEEE 754 binary64 floating point }              { \c Float64 } }
+               { { Complex IEEE 754 binary32 floating point }           { \c Complex32 } }
+               { { Complex IEEE 754 binary64 floating point }           { \c Complex64 } }
+            }
+         }
+
+         \c { bounds="\e{lower}:\e{upper}" }
+         {
+            This attribute \e shall be specified for all \c Image elements serializing floating point real pixel data. It is \e optional for \c Image elements serializing integer pixel data, and \e must \e not be specified for complex images. These restrictions are further described below.
+
+            The \c bounds attribute defines the \e {representable range} of a real or integer image in the grayscale or RGB color spaces. \c\e lower is a plain text representation of a floating point number, whose value is the lower bound of the representable range, or the \e {black point} of the image. \c\e upper is a plain text representation of a floating point number, whose value is the upper bound of the representable range, or the \e {white point} of the image.
+
+            Consider an output device able to generate image representations for pixel sample values in the \[v\sub{0},v\sub{1}\] range, such that v\sub{0} < v\sub{1}. We call this range the \e {device gamut}. Out-of-gamut pixel samples will generate \e saturated representations: Any pixel sample value \le v\sub{0} will be represented as black, while any pixel sample value \ge v\sub{1} will be represented as white. In-gamut pixel samples will generate unsaturated representations as gray levels proportional to the sample values. Assuming an image representation device so defined, the representable range of the image \e shall be applied according to the following algorithm:
+
+            \block[marginLeft:2em] \c {
+               set r\sub{0} = valueOf( \c\e lower )\n
+               set r\sub{1} = valueOf( \c\e upper )\n
+               if r\sub{1} < r\sub{0}\n
+                  \hs[length:2em] exchange( r\sub{0}, r\sub{1} )\n
+               end\n
+               for each pixel sample f\n
+                  \hs[length:2em] if r\sub{1} = r\sub{0}\n
+                     \hs[length:2em] \hs[length:2em] set f = 0\n
+                  \hs[length:2em] else\n
+                     \hs[length:2em] \hs[length:2em] if f < r\sub{0}\n
+                        \hs[length:2em] \hs[length:2em] \hs[length:2em] set f = r\sub{0}\n
+                     \hs[length:2em] \hs[length:2em] else if f > r\sub{1}\n
+                        \hs[length:2em] \hs[length:2em] \hs[length:2em] set f = r\sub{1}\n
+                     \hs[length:2em] \hs[length:2em] end\n
+                     \hs[length:2em] \hs[length:2em] set f = (f -- r\sub{0})/(r\sub{1} -- r\sub{0})\n
+                  \hs[length:2em] end\n
+                  \hs[length:2em] output( v\sub{0} + (v\sub{1} -- v\sub{0})\times{f} )\n
+               end\n
+            }
+
+            For example, for an image being deserialized to be represented on a typical 8-bit output device, such as a computer display or a printer, we would have v\sub{0} = 0 and v\sub{1} = 255. An image processing application that works internally with normalized floating point pixel data in the \[0,1\] range would apply the above algorithm with v\sub{0} = 0 and v\sub{1} = 1 (note that in this case the algorithm can be simplified).
+
+            The \c bounds attribute is \e mandatory for floating point real images, that is, for images where the value of the \c sampleFormat attribute is \c Float32 or \c Float64.
+
+            For integer images, where the value of the \lref sampleformat_image_attribute \c sampleFormat attribute is \c Uint8, \c UInt16, \c UInt32 or \c UInt64, the \c bounds attribute is \e optional. If the \c\e bounds attribute is not specified for an integer image, the representable range \e shall be \[0,2\sup{n}--1\], where n is the number of bits per pixel sample. For integer n-bit images using representable ranges equal to the default \[0,2\sup{n}--1\] range, the \c\e bounds attribute \e should \e not be specified.
+
+            For complex images, where the value of the \lref sampleformat_image_attribute \c sampleFormat attribute is \c Complex32 or \c Complex64, the \c bounds attribute \e must \e not be specified. The reason for this restriction is that a visually representable range, as we have described it with the above algorithm, does not really make sense for data in the frequency domain. The methods used for representation of complex-valued pixel data are left as implementation-defined by this specification.
+
+            For images expressed in color spaces different from grayscale or RGB, the representable range defined by the \c\e lower and \c\e upper bounds \e shall apply to pixel sample values \e {once converted} to the RGB color space.
+         }
+
+         \c { colorSpace="\e{color-space}" }
+         {
+            This attribute is \e optional for all \c Image elements.
+
+            Defines the color space where pixel sample values are represented for the serialized image. \c\e color-space \e must be one of the following literals:
+
+            \table[caption,header,width:100\%] {
+               { \c colorSpace Attribute Values }
+               { { Color space / color ordering system }           { \c colorSpace attribute value } }
+               { { Grayscale (monochrome) }                        { \c Gray } }
+               { { RGB }                                           { \c RGB } }
+               { { CIE L*a*b* }                                    { \c CIELab } }
+            }
+
+            For descriptions of these color spaces and the corresponding transformation algorithms, see the \lref xisf_image {XISF Image} section.
+
+            For \c Image elements without a \c colorSpace attribute, the default grayscale color space \e shall be assumed.
+         }
+
+         \c { cfaType="\e{cfa-spec}" }
+         {
+            This attribute \e should be specified for \c Image elements serializing images mosaiced with a Color Filter Array (CFA)\ref wikipedia_cfa, such as a Bayer filter. \ref wikipedia_bayer_filter \ref bayer_patent This attribute \e shall \e not be specified for images not mosaiced with a CFA.
+
+            Supported \c cfaType attribute values include:
+
+            \table[caption,header,width:100\%] {
+               { \c cfaType Attribute Values }
+               { { Color filter array } { \c cfaType attribute value } }
+               { { BGGR Bayer filter } { \c BGGR } }
+               { { GRBG Bayer filter } { \c GRBG } }
+               { { GBRG Bayer filter } { \c GBRG } }
+               { { RGGB Bayer filter } { \c RGGB } }
+               { { CYGM (cyan/yellow/green/magenta) filter } { \c CYGM } }
+               { { Fujifilm X-Trans filter } { \c XTrans } }
+            }
+         }
+
+         \c { orientation="\e{rotation}" }
+         {
+            This attribute is \e optional for all \c Image elements.
+
+            \c\e rotation defines geometric operations that \e should be applied to correct the default orientation of the image. \c\e rotation can be one of:
+
+            \definition {
+
+               \c 0
+               {
+                  The default image orientation is correct, so do nothing.
+               }
+
+               \c flip
+               {
+                  Flip (reflect) the image horizontally.
+               }
+
+               \c 90
+               {
+                  Rotate the image by 90 degrees, counter-clockwise direction.
+               }
+
+               \c 90;flip
+               {
+                  Rotate the image by 90 degrees in the counter-clockwise direction, then flip it horizontally.
+               }
+
+               \c -90
+               {
+                  Rotate the image by 90 degrees, clockwise direction.
+               }
+
+               \c -90;flip
+               {
+                  Rotate the image by 90 degrees in the clockwise direction, then flip it horizontally.
+               }
+
+               \c 180
+               {
+                  Rotate the image by 180 degrees.
+               }
+
+               \c 180;flip
+               {
+                  Rotate the image by 180 degrees, then flip it horizontally (equivalent to a vertical reflection).
+               }
+            }
+
+            A decoder supporting image orientation \e should apply the appropriate rotation and/or reflection upon loading an image to be represented visually, if the \c orientation attribute is present for the corresponding \c Image element.
+
+            However, a decoder \e must \e not apply orientation transformations to images loaded for image processing tasks that depend on the physical disposition of pixel data. For example, an image calibration process should not reorient image data, since this might invalidate the application of master calibration frames.
+         }
+
+         \c { \label iccprofileref_image_attribute iccProfileRef="#\e{element-id}" }
+         {
+            This attribute is \e optional for all \c Image elements. It associates an \lref iccprofile_core_element \c ICCProfile core element with an image through a \e {same-document reference}.\ref rfc_3986
+
+            \c\e element-id \e must be the unique identifier of an \c ICCProfile core element, which \e must be defined in the XISF unit. The referenced ICC color profile \e shall be associated with this \c Image element.
+         }
+
+         \c { \label rgbwsref_image_attribute rgbwsRef="#\e{element-id}" }
+         {
+            This attribute is \e optional for all \c Image elements. It associates an \lref rgbws_core_element \c RGBWS core element with an image through a \e {same-document reference}.\ref rfc_3986
+
+            \c\e element-id \e must be the unique identifier of an \c RGBWS core element, which \e must be defined in the XISF unit. The referenced RGBWS \e shall be associated with this \c Image element.
+         }
+
+         \c { \label resolutionref_image_attribute resolutionRef="#\e{element-id}" }
+         {
+            This attribute is \e optional for all \c Image elements. It associates a \lref resolution_core_element \c Resolution core element with an image through a \e {same-document reference}.\ref rfc_3986
+
+            \c\e element-id \e must be the unique identifier of a \c Resolution core element, which \e must be defined in the XISF unit. The referenced resolution parameters \e shall be associated with this \c Image element.
+         }
+
+         \c { \label thumbnailref_image_attribute thumbnailRef="#\e{element-id}" }
+         {
+            This attribute is \e optional for all \c Image elements. It associates a \lref thumbnail_core_element \c Thumbnail core element with an image through a \e {same-document reference}.\ref rfc_3986
+
+            \c\e element-id \e must be the unique identifier of a \c Thumbnail core element, which \e must be defined in the XISF unit. The referenced thumbnail image \e shall be associated with this \c Image element.
+         }
+
+         \c { id="\e{element-id}" }
+         {
+            This attribute is \e optional for all \c Image elements.
+
+            \c\e element-id \e must be a valid image identifier satisfying the following regular expression:\ref ecmascript_regexp
+
+            \c { \hs #: [_a-zA-Z][_a-zA-Z0-9]* :# }
+
+            Image identifiers \e shall be interpreted as case-sensitive.
+
+            Image identifiers \e must be unique in an XISF unit, that is, no other XML element can be assigned the same identifier.
+         }
+      }
+   } % Image Core Element
+
+   % --------------------------------------------------------------------------
+   % FITSKeyword Core Element
+   % --------------------------------------------------------------------------
+
+   \subsection { \label fitskeyword_core_element \c FITSKeyword Core Element } {
+
+      The \c FITSKeyword core element serializes a FITS header keyword\ref fits_keyword_records and associates it with an \lref xisf_image {XISF image} stored in an \lref xisf_unit {XISF unit}.
+
+      The contents of a \c FITSKeyword element (i.e. the values of its \c name, \c value and \c comment attributes; see below) \e must comply with the requirements of the FITS format specification\ref fits_format for FITS header keywords.
+
+      Multiple instances of the \c FITSKeyword element can be children of an \c Image element to define a list of FITS keywords for an image.
+
+      A \c FITSKeyword element \e shall be a child of an \c Image element and \e shall have the following attributes:
+
+      \definition {
+
+         \c { name="\e{keyword-name}" }
+         {
+            \c\e keyword-name is the name of a FITS header keyword. Quoted from the FITS standard:\ref fits_keyword_name
+
+            \e { The keyword name \e shall be a left justified, 8-character, space-filled, ASCII string with no embedded spaces. All digits 0 through 9 (decimal ASCII codes 48 to 57, or hexadecimal 30 to 39) and upper case Latin alphabetic characters ‘A’ through ‘Z’ (decimal 65 to 90 or hexadecimal 41 to 5A) are permitted; lower case characters \e shall \e not be used. The underscore ( ‘_’, decimal 95 or hexadecimal 5F) and hyphen (‘-’, decimal 45 or hexadecimal 2D) are also permitted. No other characters are permitted. }
+
+         }
+
+         \c { value="\e{keyword-value}" }
+         {
+            \c\e keyword-value is the value of a FITS header keyword.\ref fits_keyword_records The HISTORY and COMMENT keywords don't have a value, so this attribute \e must be an empty string for these keywords.
+         }
+
+         \c { comment="\e{keyword-comment}" }
+         {
+            \c\e keyword-comment is the comment of a FITS header keyword.\ref fits_keyword_records
+         }
+      }
+
+      Example:
+
+      \code {
+<Image geometry="2048:2048:1" sampleFormat="Float32" bounds="0:1"
+                                    colorSpace="Gray" location="attachment:12288:16777216">
+   <FITSKeyword name="DATE-OBS" value="'2012-03-15T02:55:15'" comment="Observation start time, UT"/>
+   <FITSKeyword name="EXPTIME" value="300" comment="Exposure time in seconds"/>
+   <FITSKeyword name="XBINNING" value="1" comment="Binning factor, X-axis"/>
+   <FITSKeyword name="YBINNING" value="1" comment="Binning factor, Y-axis"/>
+   <FITSKeyword name="HISTORY" value="" comment="Processed with magic techniques"/>
+   ...
+</Image>
+      }
+
+      The \c FITSKeyword element provides a compatibility layer with image data stored as legacy FITS files. An XISF decoder should load all existing \c FITSKeyword elements and give access to them transparently as if the original data were stored in the FITS format.
+   } % FITSKeyword Core Element
+
+   % --------------------------------------------------------------------------
+   % ICCProfile Core Element
+   % --------------------------------------------------------------------------
+
+   \subsection { \label iccprofile_core_element \c ICCProfile Core Element } {
+
+      The \c ICCProfile core element defines an ICC color profile\ref icc_profile \ref iso_15076_1 in an \lref xisf_unit {XISF unit}.
+
+      An \c ICCProfile element \e must serialize an \lref data_block {XISF data block} storing the ICC profile structure.
+
+      Besides the required attributes for data block serialization, the \c ICCProfile element \e may have the following XML attribute:
+
+      \definition {
+
+         \c { id="\e{element-id}" }
+         {
+            \c\e element-id \e must be a unique identifier that \e may be used to reference this \c ICCProfile element. \c\e element-id \e must be a sequence of ASCII characters satisfying the following regular expression:\ref ecmascript_regexp
+
+            \c { \hs #: [_a-zA-Z][_a-zA-Z0-9]* :# }
+
+            ICC profile identifiers \e shall be interpreted as case-sensitive.
+
+            ICC profile identifiers \e must be unique in an XISF unit, i.e., no other XML element can be assigned the same identifier.
+         }
+      }
+
+      An \c ICCProfile element \e must be either a child element of an \lref image_core_element \c Image core element, or a child element of the unique \lref xisf_root_element {XISF root element}. In the latter case, an \c id attribute \e should be used to reference the ICC profile from the \lref iccprofileref_image_attribute \c iccProfileRef attributes of one or more \c Image elements.
+
+      The \e {embedded profile flag} (see Section 7.2.11 of the ICC profile specification\ref icc_profile) of an ICC profile stored in an XISF unit \e must be set to one to signify that the profile has been embedded in a file.
+
+      Note that the ICC profile specification states that \e {all profile data shall be encoded as big-endian} (Section 7 of the ICC profile specification\ref icc_profile). This implies that an XISF data block storing an ICC profile structure is an exception to the \lref endianness {native little-endian encoding} of XISF.
+
+      Examples (some parts of the code replaced with \c ... to shorten the examples):
+
+      \code {
+<Image geometry="4657:3452:4" sampleFormat="UInt8" colorSpace="RGB"
+                                    location="attachment:4096:48227892">
+   ...
+   <ICCProfile location="attachment:48234496:28456"/>
+   ...
+</Image>
+      }
+
+      In this example, the ICC color profile has been stored as an attached data block. The following example:
+
+      \code {
+<Image geometry="...
+...
+   <ICCProfile compression="zlib:3024" location="inline:base64">
+      eNq1lmdYE1kXx+9MeqMkAemEXoN0Aoj0LtKrjZAECCVASMCCDREVWFFEpCmCLAq44OpSZC2IBQ
+      uLgBQVdYMsAsrr4io2VN5B9n10P74f9jzPnfnf35wz994zH+YPAKlPkCLgwQCAZIFIGOTpwoiI
+      jGLgBgEOyAEaIAENNic9FXkMIGR4u7sy0pGkv6d/x9vhpdk9plcAgwH+v5Dh8tI5yOvcEC2KQR
+      ...
+      CFh98YEgFLtyW/BsA/feU/Av5Wh5JHhgWCar+xlBoAWHMIP5DOj/vKXINCGN/1gRnEi+UJeQLk
+      qGF8XiZfEIecX8Dli/gpAgZfwPhHm/49v/bNK4t4G0Vf95mSuknIj4sXMbx4mUk8kYgRwOYkso
+      VcY4a5qaklSI+1MF/qDBnxyJjfFxZe6wKAKwbgc+HCwnz1wsJn5OyoUQA6xf8FPPPKDg==
+   </ICCProfile>
+...
+</Image>
+      }
+
+      shows a zlib-compressed ICC color profile serialized as an inline data block, encoded in Base64.
+
+      In the next example, an \c ICCProfile element has been defined somewhere in the \lref xisf_header {XISF header} with \c id="TheProfile", and is being referenced from an \c Image element via an \lref iccprofileref_image_attribute \c iccProfileRef attribute:
+
+      \code {
+<Image geometry="..." iccProfileRef="#TheProfile" ...
+...
+</Image>
+...
+<ICCProfile ... id="TheProfile" ... />
+      }
+   } % ICCProfile Core Element
+
+   % --------------------------------------------------------------------------
+   % RGBWS Core Element
+   % --------------------------------------------------------------------------
+
+   \subsection { \label rgbws_core_element \c RGBWS Core Element } {
+
+      The \c RGBWS core element serializes the parameters of a colorimetrically-defined RGB working color space (RGBWS) in an \lref xisf_unit {XISF unit}. The parameters of an RGBWS are:
+
+      \definition {
+
+         { Reference white }
+         {
+            All RGB working space parameters defined in an XISF unit \e shall be relative to the standard D50 reference white.\ref iso_3664
+         }
+
+         \im {#: \gamma :#}
+         {
+            Gamma exponent.
+         }
+
+         { \im {#: \mathbf{x} = \{x_R,x_G,x_B\} :#}\n
+           \im {#: \mathbf{y} = \{y_R,y_G,y_B\} :#} }
+         {
+            Chromaticity coordinates of the RGB primaries.
+         }
+
+         \im {#: \mathbf{Y} = \{Y_R,Y_G,Y_B\} :#}
+         {
+            Luminance coefficients of the RGB primaries.
+         }
+      }
+
+      For spaces not originally defined with respect to the D50 reference white (for example, the sRGB\ref iec_srgb space is defined relative to D65), a chromatic adaptation algorithm \e must be applied to convert coordinates and coefficients to D50. The Bradford chromatic adaptation transform\ref icc_bradford is \e recommended.
+
+      Chromaticity coordinates and luminance coefficients \e shall be represented normalized in the \[0,1\] range.
+
+      These parameters \e must be serialized with the following mandatory XML attributes:
+
+      \definition {
+
+         \c { gamma="\e{gamma-spec}" }
+         {
+            \c\e gamma-spec can be one of:
+
+            \list
+            {
+               { A plain text representation of a floating point number, whose value > 0 is the \im {#: \gamma :#} exponent of the RGBWS. }
+               { The word \c\s sRGB (case-insensitive) --- in this case the RGBWS \e shall use an sRGB\ref iec_srgb gamma function instead of a fixed \im {#: \gamma :#} exponent. }
+            }
+         }
+
+         \c { x="\e{x_R}:\e{x_G}:\e{x_B}" }
+         {
+            \c\e x_R, \c\e x_G and \c\e x_B are plain text representations of a floating point numbers. The values of these attributes are, respectively, the chromaticity coordinates \im {#: x_R, x_G, x_B :#} of the red, green and blue primary colors of the RGBWS.
+         }
+
+         \c { y="\e{y_R}:\e{y_G}:\e{y_B}" }
+         {
+            \c\e y_R, \c\e y_G and \c\e y_B are plain text representations of a floating point numbers. The values of these attributes are, respectively, the chromaticity coordinates \im {#: y_R, y_G, y_B :#} of the red, green and blue primary colors of the RGBWS.
+         }
+
+         \c { Y="\e{Y_R}:\e{Y_G}:\e{Y_B}" }
+         {
+            \c\e Y_R, \c\e Y_G and \c\e Y_B are plain text representations of a floating point numbers. The values of these attributes are, respectively, the luminance coefficients  \im {#: Y_R, Y_G, Y_B :#} of the red, green and blue primary colors of the RGBWS.
+         }
+      }
+
+      The following attributes are \e optional for an \c RGBWS element:
+
+      \definition {
+
+         \c { name="\e{rgbws-name}" }
+         {
+            \c\e rgbws-name is a sequence of ASCII characters that will be assigned as the name of the RGBWS for identification purposes.
+         }
+
+         \c { id="\e{element-id}" }
+         {
+            \c\e element-id \e must be a unique identifier that \e may be used to reference this \c RGBWS element. \c\e element-id \e must be a sequence of ASCII characters satisfying the following regular expression:\ref ecmascript_regexp
+
+            \c { \hs #: [_a-zA-Z][_a-zA-Z0-9]* :# }
+
+            RGBWS identifiers \e shall be interpreted as case-sensitive.
+
+            RGBWS identifiers \e must be unique in an XISF unit, that is, no other XML element can be assigned the same identifier.
+         }
+      }
+
+      An \c RGBWS element \e must be either a child element of an \lref image_core_element \c Image core element, or a child element of the unique \lref xisf_root_element {XISF root element}. In the latter case, an \c id attribute \e should be used to reference the RGBWS from the \lref rgbwsref_image_attribute \c rgbwsRef attributes of one or more \c Image elements.
+
+      When no \c RGBWS element is specified for an \c Image core element, the default RGBWS \e shall be the sRGB space.\ref iec_srgb
+
+      Examples (some parts of the code replaced with \c ... to shorten the examples):
+
+      \code {
+<Image geometry="...
+...
+   <RGBWS x="0.648431:0.230154:0.155886"
+          y="0.330856:0.701572:0.066044"
+          Y="0.311114:0.625662:0.063224" gamma="2.2"
+          name="Adobe RGB (1998)" />
+...
+</Image>
+      }
+
+      \code {
+<Image geometry="...
+...
+   <RGBWS x="0.648431:0.321152:0.155886"
+          y="0.330856:0.597871:0.066044"
+          Y="0.222491:0.716888:0.060621" gamma="sRGB"
+          name="sRGB" />
+...
+</Image>
+      }
+
+      \code {
+<Image geometry="...
+...
+   <RGBWS x="0.648431:0.230154:0.155886"
+          y="0.330856:0.701572:0.066044"
+          Y="0.333333:0.333333:0.333333" gamma="1"
+          name="Uniform Linear with sRGB Primaries" />
+...
+</Image>
+      }
+
+      In the next example, an \c RGBWS has been defined somewhere in the \lref xisf_header {XISF header} with \c id="SampleRGBWS", and is being referenced from an \c Image element via an \lref rgbwsref_image_attribute \c rgbwsRef attribute:
+
+      \code {
+<Image geometry="..." rgbwsRef="#SampleRGBWS" ...
+...
+</Image>
+...
+<RGBWS ... id="SampleRGBWS" ... />
+      }
+   } % RGBWS Core Element
+
+   % --------------------------------------------------------------------------
+   % Resolution Core Element
+   % --------------------------------------------------------------------------
+
+   \subsection { \label resolution_core_element \c Resolution Core Element } {
+
+      The \c Resolution core element serializes the data necessary to control the \e resolution of an \lref xisf_image {XISF image} stored in an \lref xisf_unit {XISF unit}. Resolution defines the amount of pixels represented per unit of surface on a display medium, such as a printer or a computer monitor, and can be measured either in pixels per inch or in pixels per centimeter.
+
+      The \c Resolution element \e shall have the following mandatory attributes:
+
+      \definition {
+
+         \c { horizontal="\e{x-resolution}" }
+         {
+            \c\e x-resolution is a plain text representation of a floating point number, whose value \e must be greater than zero and \e shall be the resolution of the image in its X-axis (or horizontal axis), measured in pixels per resolution unit (see the \c unit attribute below).
+         }
+
+         \c { vertical="\e{y-resolution}" }
+         {
+            \c\e y-resolution is a plain text representation of a floating point number, whose value \e must be greater than zero and \e shall be the resolution of the image in its Y-axis (or vertical axis), measured in pixels per resolution unit (see the \c unit attribute below).
+         }
+      }
+
+      The following attributes are \e optional for the \c Resolution core element:
+
+      \definition {
+
+         \c { unit="\e{resolution-unit}" }
+         {
+            \c\e resolution-unit defines the unit of length used to express image resolution values in the X and Y axes. \c\e resolution-unit \e must be one of:
+
+            \definition {
+
+               \c inch
+               {
+                  Image resolution \e shall be measured in pixels per inch.
+               }
+
+               \c cm
+               {
+                  Image resolution \e shall be measured in pixels per centimeter.
+               }
+            }
+
+            When no \c unit attribute is specified, image resolution \e shall be expressed in pixels per inch by default.
+         }
+
+         \c { id="\e{element-id}" }
+         {
+            \c\e element-id \e must be a unique identifier that \e may be used to reference this \c Resolution element. \c\e element-id \e must be a sequence of ASCII characters satisfying the following regular expression:\ref ecmascript_regexp
+
+            \c { \hs #: [_a-zA-Z][_a-zA-Z0-9]* :# }
+
+            \c Resolution identifiers \e shall be interpreted as case-sensitive.
+
+            \c Resolution identifiers \e must be unique in an XISF unit, that is, no other XML element can be assigned the same identifier.
+         }
+      }
+
+      A \c Resolution element \e must be either a child element of an \lref image_core_element \c Image core element, or a child element of the unique \lref xisf_root_element {XISF root element}. In the latter case, an \c id attribute \e should be used to reference the \c Resolution element from the  \lref resolutionref_image_attribute \c resolutionRef attributes of one or more \c Image elements.
+
+      When no \c Resolution element is specified for an \c Image core element, the default image resolution \e shall be 72.0 pixels per inch.
+
+   } % Resolution Core Element
+
+   % --------------------------------------------------------------------------
+   % Thumbnail Core Element
+   % --------------------------------------------------------------------------
+
+   \subsection { \label thumbnail_core_element \c Thumbnail Core Element } {
+
+      The \c Thumbnail core element defines a thumbnail image and associates it with an \lref xisf_image {XISF image} stored in an \lref xisf_unit {XISF unit}. A thumbnail is a two-dimensional image of relatively small dimensions providing a significant representation of a larger image. Typically, thumbnails are loaded by file browser applications to generate quick graphical previews of images stored in disk files.
+
+      A \c Thumbnail element \e shall serialize an \lref xisf_image {XISF image}, which \e must have the following properties:
+
+      \list {
+         { Two-dimensional image. }
+         { UInt8 or UInt16 sample format. }
+         { RGB or grayscale color space. }
+         { Its width and height \e must \e not be greater than 1024 pixels. }
+         { Can have one alpha channel. }
+      }
+
+      Other than its tag name, the \c Thumbnail core element \e shall be identical to the \lref image_core_element \c Image core element with the following restrictions:
+
+      \list {
+         { The \c bounds attribute \e must \e not exist. This implies that the representable range of a thumbnail image is always \[0,2\sup{n}--1\], where n is either 8 or 16 (bits). }
+         { The \c cfaType attribute \e must \e not exist. This implies that thumbnail images associated with mosaiced images \e should be already demosaiced versions. }
+         { The \c thumbnailRef attribute \e must \e not exist. }
+      }
+
+      A \c Thumbnail element \e must be either a child element of an \lref image_core_element \c Image core element, or a child element of the unique \lref xisf_root_element {XISF root element}. In the latter case, an \c id attribute \e should be used to reference the \c Thumbnail element from the  \lref thumbnailref_image_attribute \c thumbnailRef attribute of an \c Image element.
+   } % Thumbnail Core Element
+}
+
+\reference rfc_1950 { Jean-Loup Gailly, L. Peter Deutsch (1996), RFC 1950: \xref {https://tools.ietf.org/html/rfc1950} \e {ZLIB Compressed Data Format Specification version 3.3} }
+
+\reference rfc_1951 { Jean-Loup Gailly, L. Peter Deutsch (1996), RFC 1951: \xref {https://tools.ietf.org/html/rfc1951} \e {DEFLATE Compressed Data Format Specification version 1.3} }
+
+\reference rfc_2119 { Scott Bradner (1997), RFC 2119: \xref {https://tools.ietf.org/html/rfc2119} \e {Key words for use in RFCs to Indicate Requirement Levels}. }
+
+\reference rfc_3174 { Donald E. Eastlake, 3rd, Paul E. Jones (2001), RFC3174: \xref {http://tools.ietf.org/html/rfc3174} \e {US Secure Hash Algorithm 1 (SHA1)}. }
+
+\reference rfc_3339 { Chris Newman, Graham Klyne (2002), RFC 3339: \xref {http://tools.ietf.org/html/rfc3339} \e {Date and Time on the Internet: Timestamps} }
+
+\reference rfc_3986 { Tim Berners-Lee, Roy T. Fielding, Larry Masinter (2005), RFC 3986: \xref {https://tools.ietf.org/html/rfc3986} \e {Uniform Resource Identifier (URI): Generic Syntax}. }
+
+\reference rfc_4648 { Simon Josefsson (2006), RFC 4648: \xref {https://tools.ietf.org/html/rfc4648} \e {The Base16, Base32, and Base64 Data Encodings}. }
+
+\reference rfc_5280 { David Cooper, Stefan Santesson, Stephen Farrell, Sharon Boeyen, Russell Housley, Tim Polk (2008), RFC 5280: \xref {http://tools.ietf.org/html/rfc5280} \e {Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile}. }
+
+\reference rfc_6234 { Donald Eastlake, Tony Hansen (2011), RFC 6234: \xref {http://tools.ietf.org/html/rfc6234} \e {US Secure Hash Algorithms (SHA and SHA-based HMAC and HKDF)}. }
+
+\reference xml_1_0 { W3C Recommendation: \xref {http://www.w3.org/TR/REC-xml/} \e {Extensible Markup Language (XML) 1.0}. }
+
+\reference xml_namespaces { W3C Recommendation: \e \xref {http://www.w3.org/TR/xml-names/} {Namespaces in XML 1.0}. }
+
+\reference xml_schema { W3C Recommendation: \xref {http://www.w3.org/TR/xmlschema-1/} \e {XML Schema Part 1: Structures}. }
+
+\reference xml_signature { W3C Recommendation: \xref {http://www.w3.org/TR/xmldsig-core/} \e {XML Signature Syntax and Processing}. }
+
+\reference unicode_standard { The Unicode Consortium. \xref {http://www.unicode.org/versions/latest/} \e {The Unicode Standard}. }
+
+\reference unicode_encoding_forms { The Unicode Consortium. The Unicode Standard Version 7.0 -- Core Specification, \xref {http://www.unicode.org/versions/Unicode7.0.0/ch03.pdf#G7404} \e {\sect 3.9: Unicode Encoding Forms: UTF-8, UTF-16, UTF-32 conversion and validation}. }
+
+\reference unicode_encoding_schemes { The Unicode Consortium. The Unicode Standard Version 7.0 -- Core Specification, \xref {http://www.unicode.org/versions/Unicode7.0.0/ch03.pdf#G28070} \e {\sect 3.10: Unicode Encoding Schemes: UTF-8, UTF-16 (BE/LE), UTF-32 (BE/LE) conversion and validation}. }
+
+\reference unicode_ascii_subset { The Unicode Consortium. The Unicode Standard Version 7.0 -- \xref {http://www.unicode.org/charts/PDF/U0000.pdf} \e {C0 Controls and Basic Latin} }
+
+\reference ecmascript_regexp { ECMA International. \xref {http://www.ecma-international.org/publications/files/ECMA-ST/Ecma-262.pdf} \e {ECMAScript Language Specification 5.1 Edition, \sect 15.10: RegExp (Regular Expression) Objects}. }
+
+\reference open_group_printf { The Open Group Base Specifications Issue 7. IEEE Std 1003.1, 2013 Edition. \xref {http://pubs.opengroup.org/onlinepubs/9699919799/functions/printf.html} \e {printf() function definition}. }
+
+\reference open_group_posix_pathname { The Open Group Base Specifications Issue 6. IEEE Std 1003.1, 2004 Edition \xref {http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap03.html#tag_03_266} \e {\sect 3.266 Pathname}. }
+
+\reference open_group_posix_pathname_resolution { The Open Group Base Specifications Issue 6. IEEE Std 1003.1, 2004 Edition \xref {http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap04.html#tag_04_11} \e {\sect 4.11 Pathname Resolution}. }
+
+\reference open_group_posix_absolute_pathname { The Open Group Base Specifications Issue 6. IEEE Std 1003.1, 2004 Edition \xref {http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap03.html#tag_03_02} \e {\sect 3.2 Absolute Pathname}. }
+
+\reference open_group_posix_relative_pathname { The Open Group Base Specifications Issue 6. IEEE Std 1003.1, 2004 Edition \xref {http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap03.html#tag_03_319} \e {\sect 3.319 Relative Pathname}. }
+
+\reference ieee_754 { IEEE Computer Society (2008), \xref {http://ieeexplore.ieee.org/xpl/mostRecentIssue.jsp?punumber=4610933} \e {IEEE Standard for Floating-Point Arithmetic} }
+
+\reference iec_srgb { International Electrotechnical Commission, \e {IEC 61966-2-1:1999 -- Multimedia systems and equipment -- Colour measurement and management -- Part 2-1: Colour management -- Default RGB colour space -- sRGB} }
+
+\reference icc_profile { International Color Consortium, \xref {http://www.color.org/specification/ICC1v43_2010-12.pdf} \e {Specification ICC.1:2010 (Profile version 4.3.0.0). Image technology colour management --- Architecture, profile format, and data structure}. }
+
+\reference icc_bradford { International Color Consortium, \xref {http://www.color.org/specification/ICC1v43_2010-12.pdf} \e {Specification ICC.1:2010 (Profile version 4.3.0.0)}, Annex E. }
+
+\reference iso_15076_1 { International Organization for Standardization, \xref {http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=54754} \e {ISO 15076-1:2010 -- Image technology colour management -- Architecture, profile format and data structure -- Part 1: Based on ICC.1:2010}. }
+
+\reference iso_3664 { International Organization for Standardization, \xref {http://www.iso.org/iso/catalogue_detail?csnumber=43234} \e {ISO 3664:2009 -- Graphic technology and photography -- Viewing conditions} }
+
+\reference iso_8601 { International Organization for Standardization, \xref {http://www.iso.org/iso/catalogue_detail?csnumber=40874} \e {ISO 8601:2004 -- Data elements and interchange formats -- Information interchange -- Representation of dates and times} }
+
+\reference iso_iec_8859_1 { International Organization for Standardization, \xref {http://www.iso.org/iso/catalogue_detail?csnumber=28245} \e {ISO/IEC 8859-1:1998 -- Information technology -- 8-bit single-byte coded graphic character sets -- Part 1: Latin alphabet No. 1} }
+
+\reference nist_sha3 { National Institute of Standards and Technology (2014) \xref {http://csrc.nist.gov/groups/ST/hash/sha-3/sha-3_standard_fips202.html} \e {Draft FIPS 202, SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions}. }
+
+\reference wikipedia_cfa { Wikipedia article: \xref {http://en.wikipedia.org/wiki/Color_filter_array} \e {Color filter array} }
+
+\reference wikipedia_bayer_filter { Wikipedia article: \xref {http://en.wikipedia.org/wiki/Bayer_filter} \e {Bayer filter} }
+
+\reference wikipedia_color_model { Wikipedia article: \xref {http://en.wikipedia.org/wiki/Color_model} \e {Color model} }
+
+\reference bayer_patent { Bayer, B. E., \e {Color Image Array}. \xref {http://www.google.com/patents/US3971065} {U.S. Patent 3971065, July 1976}. }
+
+\reference fits_format { \e {Definition of the Flexible Image Transport System (FITS). The FITS Standard version 3.0}. }
+
+\reference fits_keyword_records { \e {Definition of the Flexible Image Transport System (FITS). The FITS Standard version 3.0. \sect 4.1. Keyword records} }
+
+\reference fits_keyword_name { \e {Definition of the Flexible Image Transport System (FITS). The FITS Standard version 3.0. \sect 4.1.2.1. Keyword name} }
+
+\reference nist_array { National Institute of Standards and Technology. Dictionary of Algorithms and Data Structures (2014): \xref {http://xlinux.nist.gov/dads/HTML/array.html} \e {Array} }
+
+\reference nist_linked_list { National Institute of Standards and Technology. Dictionary of Algorithms and Data Structures (2014): \xref {http://xlinux.nist.gov/dads/HTML/linkedList.html} \e {Linked list} }
+
+\reference sedgewick_2011_linked_lists { Robert Sedgewick, Kevin Wayne (2011), \e { Algorithms }, 4th Ed., Addison-Wesley Professional, \sect 1.3, pp. 142--155 }
+
+\reference cormen_2009_linked_lists { Thomas H. Cormen et al. (2009), \e { Introduction to Algorithms }, 3rd Ed., MIT Press, \sect 10.2, pp. 236--241 }
+
+\reference gonzalez_2008_color_model { R. C. González and R.E. Woods (2008), \e { Digital Image Processing, Third Edition }, Pearson / Prentice Hall, \sect 6.2, pp. 401--414 }
+
+\reference tkalcic_2003 { Marko Tkalcic and Jurij F. Tasic (2003), \e { Colour spaces: perceptual, historical and applicational background }, EUROCON 2003. Computer as a Tool. The IEEE Region 8. Vol. 1, pp. 304--308 }
+
+\reference vigna_2014 { Sebastiano Vigna (2014), \e { An experimental exploration of Marsaglia's xorshift generators, scrambled } (arXiv:1402.6246) }
+
+\reference vigna_2014_1 { Sebastiano Vigna (2014), \e { Further scramblings of Marsaglia's xorshift generators } (arXiv:1404.0390) }
+
+\reference porter_1984 { Thomas Porter and Tom Duff (1984), \e { Compositing Digital Images }, Computer Graphics, Vol. 18, No. 3, pp 253--259. }
+
+\reference www_bruce_lindbloom { Bruce Justin Lindbloom, \xref {http://www.brucelindbloom.com/} { Bruce Lindbloom's Web Site } }
+
+\reference www_xorshift { Sebastiano Vigna, \xref {http://xorshift.di.unimi.it/} { xorshift*/xorshift+ generators and the PRNG shootout (XorShift website) } }
+
+\reference www_keccak { Guido Bertoni, Joan Daemen, Michaël Peeters and Gilles Van Assche, \xref {http://keccak.noekeon.org/} { The Keccak sponge function family (Keccak Website) } }
+
+\reference www_zlib { Greg Roelofs, Mark Adler, \xref {http://www.zlib.net/} { Zlib Home Site } }
+
+\make
