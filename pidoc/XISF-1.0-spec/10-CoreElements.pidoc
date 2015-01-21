@@ -1,0 +1,23 @@
+
+\section { \label core_elements XISF Core Elements } {
+
+   XISF core elements have the following properties:
+
+   \list[spaced] {
+
+      { XISF core elements \e shall be descendant XML elements of the unique \lref root_element {XISF root element} of an \lref xisf_header {XISF header}. }
+
+      { The tag names of all XISF core elements \e shall be interpreted as case-sensitive. }
+   }
+
+   Three core elements have been formalized and defined in this specification to support a number of essential components of \lref xisf_unit {XISF units}: \lref property_core_element \c Property, \lref metadata_core_element \c Metadata, and \lref image_core_element \c Image. In addition, a number of core elements have been defined to serialize properties and auxiliary objects associated with images: \lref fitskeyword_core_element FITSKeyword, \lref iccprofile_core_element ICCProfile, \lref rgbws_core_element RGBWS, \lref resolution_core_element Resolution, and \lref thumbnail_core_element Thumbnail.
+
+   \include 10_01-CoreElements_Property.pidoc
+   \include 10_02-CoreElements_Metadata.pidoc
+   \include 10_03-CoreElements_Image.pidoc
+   \include 10_04-CoreElements_FITSKeyword.pidoc
+   \include 10_05-CoreElements_ICCProfile.pidoc
+   \include 10_06-CoreElements_RGBWS.pidoc
+   \include 10_07-CoreElements_Resolution.pidoc
+   \include 10_08-CoreElements_Thumbnail.pidoc
+}

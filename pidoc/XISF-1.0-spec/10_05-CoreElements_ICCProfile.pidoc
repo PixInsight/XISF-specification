@@ -1,0 +1,70 @@
+
+\subsection { \label iccprofile_core_element \c ICCProfile Core Element } {
+
+   The \c ICCProfile core element defines an ICC color profile\ref icc_profile \ref iso_15076_1 in an \lref xisf_unit {XISF unit}.
+
+   An \c ICCProfile element \e must serialize an \lref data_block {XISF data block} storing the ICC profile structure.
+
+   Besides the required attributes for data block serialization, the \c ICCProfile element \e may have the following XML attribute:
+
+   \definition {
+
+      \c { id="\e{element-id}" }
+      {
+         \c\e element-id \e must be a unique identifier that \e may be used to reference this \c ICCProfile element. \c\e element-id \e must be a sequence of ASCII characters satisfying the following regular expression:\ref ecmascript_regexp
+
+         \c { \hs #: [_a-zA-Z][_a-zA-Z0-9]* :# }
+
+         ICC profile identifiers \e shall be interpreted as case-sensitive.
+
+         ICC profile identifiers \e must be unique in an XISF unit, i.e., no other XML element can be assigned the same identifier.
+      }
+   }
+
+   An \c ICCProfile element \e must be either a child element of an \lref image_core_element \c Image core element, or a child element of the unique \lref root_element {XISF root element}. In the latter case, an \c id attribute \e should be used to reference the ICC profile from the \lref iccprofileref_image_attribute \c iccProfileRef attributes of one or more \c Image elements.
+
+   The \e {embedded profile flag} (see Section 7.2.11 of the ICC profile specification\ref icc_profile) of an ICC profile stored in an XISF unit \e must be set to one to signify that the profile has been embedded in a file.
+
+   Note that the ICC profile specification states that \e {all profile data shall be encoded as big-endian} (Section 7 of the ICC profile specification\ref icc_profile). This implies that an XISF data block storing an ICC profile structure is an exception to the \lref endianness {native little-endian encoding} of XISF.
+
+   Examples (some parts of the code replaced with \c ... to shorten the examples):
+
+   \code[lang:xml] { #:
+<Image geometry="4657:3452:4" sampleFormat="UInt8" colorSpace="RGB"
+                                 location="attachment:4096:48227892">
+...
+<ICCProfile location="attachment:48234496:28456"/>
+...
+</Image>
+   :# }
+
+   In this example, the ICC color profile has been stored as an attached data block. The following example:
+
+   \code[lang:xml] { #:
+<Image geometry="..."
+...
+<ICCProfile compression="zlib:3024" location="inline:base64">
+   eNq1lmdYE1kXx+9MeqMkAemEXoN0Aoj0LtKrjZAECCVASMCCDREVWFFEpCmCLAq44OpSZC2IBQ
+   uLgBQVdYMsAsrr4io2VN5B9n10P74f9jzPnfnf35wz994zH+YPAKlPkCLgwQCAZIFIGOTpwoiI
+   jGLgBgEOyAEaIAENNic9FXkMIGR4u7sy0pGkv6d/x9vhpdk9plcAgwH+v5Dh8tI5yOvcEC2KQR
+   ...
+   CFh98YEgFLtyW/BsA/feU/Av5Wh5JHhgWCar+xlBoAWHMIP5DOj/vKXINCGN/1gRnEi+UJeQLk
+   qGF8XiZfEIecX8Dli/gpAgZfwPhHm/49v/bNK4t4G0Vf95mSuknIj4sXMbx4mUk8kYgRwOYkso
+   VcY4a5qaklSI+1MF/qDBnxyJjfFxZe6wKAKwbgc+HCwnz1wsJn5OyoUQA6xf8FPPPKDg==
+</ICCProfile>
+...
+</Image>
+   :# }
+
+   shows a zlib-compressed ICC color profile serialized as an inline data block, encoded in Base64.
+
+   In the next example, an \c ICCProfile element has been defined somewhere in the \lref xisf_header {XISF header} with \c id="TheProfile", and is being referenced from an \c Image element via an \lref iccprofileref_image_attribute \c iccProfileRef attribute:
+
+   \code[lang:xml] { #:
+<Image geometry="..." iccProfileRef="#TheProfile" ...
+...
+</Image>
+...
+<ICCProfile ... id="TheProfile" ... />
+   :# }
+}

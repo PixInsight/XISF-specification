@@ -1,0 +1,146 @@
+
+\subsection { \label metadata_core_element \c Metadata Core Element } {
+
+   The \c Metadata core element serializes a set of \lref xisf_property {XISF properties} to describe an object pertaining to an \lref xisf_unit {XISF unit}. \c Metadata properties \e must be serialized with child \lref property_core_element \c Property elements, and the \c Metadata element \e must be a child of the element serializing the object described.
+
+   A \c Metadata element \e shall be included in every \lref xisf_header {XISF header} as a child element of the \lref root_element {XISF root element}. This \c Metadata element \e shall describe the XISF unit, and \e must contain \c Property child elements serializing the following properties:
+
+   \definition {
+
+      { \c CreationTime }
+      {
+         A \lref string8_property_type String8 property whose value \e must be a plain text representation of the date and time the XISF header has been created. The format of this representation \e shall comply with the ISO 8601 extended specification for representations of dates and times.\ref iso_8601 \ref rfc_3339
+
+         Example:
+
+         \code[lang:xml] { #:
+<Property id="CreationTime" type="String8">2014-12-09T12:38:15Z</Property>
+         :# }
+      }
+
+      { \c CreatorApplication }
+      {
+         A \lref string16_property_type String16 property, whose value \e must be a plain text readable identification of the software application that has created the XISF header. The format and contents of this property are implementation-dependent, but it \e should contain the name and version of the application in readable form.
+
+         Example:
+
+         \code[lang:xml] { #:
+<Property id="CreatorApplication" type="String16">PixInsight 01.08.03.1123</Property>
+         :# }
+      }
+   }
+
+   In addition, the following properties are \e optional for a \c Metadata element describing an \lref xisf_unit {XISF unit}, but \e should be serialized as \lref property_core_element \c Property child elements, as appropriate:
+
+   \definition {
+
+      { \c CreatorModule }
+      {
+         A \lref string16_property_type String16 property. If the software that has created the XISF header (\c CreatorApplication) is a modular system where the XISF format has been implemented by a versioned subsystem or module, this property \e should be defined to provide a plain text readable identification of the subsystem or module that has created the XISF header. The format and contents of this property are implementation-dependent, but it \e should contain the name and version of the subsystem or module in readable form.
+
+         Example:
+
+         \code[lang:xml] { #:
+<Property id="CreatorModule" type="String16">XISF module version 01.00.00.0024</Property>
+         :# }
+      }
+
+      { \c CreatorOS }
+      {
+         A \lref string16_property_type String16 property. This property \e should be defined to provide a plain text readable identification of the operating system where the XISF header has been created. The following values \e must be used to identify several common operating systems:
+
+         \table[caption,header,width:100\%] {
+            { \c CreatorOS Property Values }
+            { { Operating system }  { \c CreatorOS property value } }
+            { { FreeBSD }           { \c FreeBSD } }
+            { { Linux }             { \c Linux } }
+            { { Apple OS X }        { \c {OS X} } }
+            { { Microsoft Windows } { \c Windows } }
+         }
+
+         Example:
+
+         \code[lang:xml] { #:
+<Property id="CreatorOS" type="String16">Linux</Property>
+         :# }
+      }
+
+      { \c CompressionMethod }
+      {
+         A \lref string8_property_type String8 property. If the XISF unit contains \lref data_block_compression {compressed data blocks}, this property \e should be defined to enumerate the applied compression algorithm(s) used. If more than one algorithm has been used, they should be specified as a comma-separated list.
+
+         Example:
+
+         \code[lang:xml] { #:
+<Property id="CompressionMethod" type="String8">zlib</Property>
+         :# }
+      }
+
+      { \c CompressionLevel }
+      {
+         An \lref int32_property_type Int32 property. If the XISF unit contains data blocks \lref data_block_compression compressed with the standard zlib method,\ref rfc_1950 this property \e should be defined to specify the \e {compression level} used. Zlib's compression level is an integer parameter in the range from 0 to 9 that controls the speed/compression balance.
+
+         Example:
+
+         \code[lang:xml] { #:
+<Property id="CompressionLevel" type="Int" value="6" />
+         :# }
+      }
+
+      { \c Author }
+      {
+         An \e optional \lref string16_property_type String16 property. The name(s) of the person(s) who have created the \lref xisf_unit {XISF unit}.
+
+         Example:
+
+         \code[lang:xml] { #:
+<Property id="Author" type="String">James T. Kirk</Property>
+         :# }
+      }
+
+      { \c Copyright }
+      {
+         An \e optional \lref string16_property_type String16 property. Copyright information applicable to the materials included in the \lref xisf_unit {XISF unit}.
+
+         Example:
+
+         \code[lang:xml] { #:
+<Property id="Copyright" type="String">Copyright (c) 2014 Extragalactic Imaging Corporation.
+All Rights Reserved.</Property>
+         :# }
+      }
+
+      { \c BriefDescription }
+      {
+         An \e optional \lref string16_property_type String16 property. A brief description or caption for the materials included in the \lref xisf_unit {XISF unit}. If this metadata property is specified, it \e should be a brief text not longer than 256 characters.
+
+         Example:
+
+         \code[lang:xml] { #:
+<Property id="BriefDescription" type="String">Messier 45, The Pleiades Cluster</Property>
+         :# }
+      }
+
+      { \c Description }
+      {
+         An \e optional \lref string16_property_type String16 property. A description of the materials included in the \lref xisf_unit {XISF unit}.
+
+         Example:
+
+         \code[lang:xml] { #:
+<Property id="Description" type="String" location="attached:2048:8325" />
+         :# }
+      }
+
+      { \c Keywords }
+      {
+         An \e optional \lref string16_property_type String16 property. A comma-separated list of keywords or search index terms applicable to the materials included in the \lref xisf_unit {XISF unit}, specified in decreasing order of relevance.
+
+         Example:
+
+         \code[lang:xml] { #:
+<Property id="Keywords" type="String">IC 342, galaxies, spiral galaxies</Property>
+         :# }
+      }
+   }
+}

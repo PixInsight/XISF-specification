@@ -1,0 +1,48 @@
+
+\subsection { \label fitskeyword_core_element \c FITSKeyword Core Element } {
+
+   The \c FITSKeyword core element serializes a FITS header keyword\ref fits_keyword_records and associates it with an \lref xisf_image {XISF image} stored in an \lref xisf_unit {XISF unit}.
+
+   The contents of a \c FITSKeyword element (i.e. the values of its \c name, \c value and \c comment attributes; see below) \e must comply with the requirements of the FITS format specification\ref fits_format for FITS header keywords.
+
+   Multiple instances of the \c FITSKeyword element can be children of an \c Image element to define a list of FITS keywords for an image.
+
+   A \c FITSKeyword element \e shall be a child of an \c Image element and \e shall have the following attributes:
+
+   \definition {
+
+      \c { name="\e{keyword-name}" }
+      {
+         \c\e keyword-name is the name of a FITS header keyword. Quoted from the FITS standard:\ref fits_keyword_name
+
+         \e { The keyword name \e shall be a left justified, 8-character, space-filled, ASCII string with no embedded spaces. All digits 0 through 9 (decimal ASCII codes 48 to 57, or hexadecimal 30 to 39) and upper case Latin alphabetic characters ‘A’ through ‘Z’ (decimal 65 to 90 or hexadecimal 41 to 5A) are permitted; lower case characters \e shall \e not be used. The underscore ( ‘_’, decimal 95 or hexadecimal 5F) and hyphen (‘-’, decimal 45 or hexadecimal 2D) are also permitted. No other characters are permitted. }
+
+      }
+
+      \c { value="\e{keyword-value}" }
+      {
+         \c\e keyword-value is the value of a FITS header keyword.\ref fits_keyword_records The HISTORY and COMMENT keywords don't have a value, so this attribute \e must be an empty string for these keywords.
+      }
+
+      \c { comment="\e{keyword-comment}" }
+      {
+         \c\e keyword-comment is the comment of a FITS header keyword.\ref fits_keyword_records
+      }
+   }
+
+   Example:
+
+   \code[lang:xml] { #:
+<Image geometry="2048:2048:1" sampleFormat="Float32" bounds="0:1"
+                                 colorSpace="Gray" location="attachment:12288:16777216">
+<FITSKeyword name="DATE-OBS" value="'2012-03-15T02:55:15'" comment="Observation start time, UT"/>
+<FITSKeyword name="EXPTIME" value="300" comment="Exposure time in seconds"/>
+<FITSKeyword name="XBINNING" value="1" comment="Binning factor, X-axis"/>
+<FITSKeyword name="YBINNING" value="1" comment="Binning factor, Y-axis"/>
+<FITSKeyword name="HISTORY" value="" comment="Processed with magic techniques"/>
+...
+</Image>
+   :# }
+
+   The \c FITSKeyword element provides a compatibility layer with image data stored as legacy FITS files. An XISF decoder should load all existing \c FITSKeyword elements and give access to them transparently as if the original data were stored in the FITS format.
+}

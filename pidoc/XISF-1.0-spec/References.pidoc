@@ -1,0 +1,106 @@
+
+\reference rfc_1950 { Jean-Loup Gailly, L. Peter Deutsch (1996), RFC 1950: \xref {https://tools.ietf.org/html/rfc1950} \e {ZLIB Compressed Data Format Specification version 3.3} }
+
+\reference rfc_1951 { Jean-Loup Gailly, L. Peter Deutsch (1996), RFC 1951: \xref {https://tools.ietf.org/html/rfc1951} \e {DEFLATE Compressed Data Format Specification version 1.3} }
+
+\reference rfc_2119 { Scott Bradner (1997), RFC 2119: \xref {https://tools.ietf.org/html/rfc2119} \e {Key words for use in RFCs to Indicate Requirement Levels}. }
+
+\reference rfc_3174 { Donald E. Eastlake, 3rd, Paul E. Jones (2001), RFC3174: \xref {http://tools.ietf.org/html/rfc3174} \e {US Secure Hash Algorithm 1 (SHA1)}. }
+
+\reference rfc_3339 { Chris Newman, Graham Klyne (2002), RFC 3339: \xref {http://tools.ietf.org/html/rfc3339} \e {Date and Time on the Internet: Timestamps} }
+
+\reference rfc_3986 { Tim Berners-Lee, Roy T. Fielding, Larry Masinter (2005), RFC 3986: \xref {https://tools.ietf.org/html/rfc3986} \e {Uniform Resource Identifier (URI): Generic Syntax}. }
+
+\reference rfc_4648 { Simon Josefsson (2006), RFC 4648: \xref {https://tools.ietf.org/html/rfc4648} \e {The Base16, Base32, and Base64 Data Encodings}. }
+
+\reference rfc_5280 { David Cooper, Stefan Santesson, Stephen Farrell, Sharon Boeyen, Russell Housley, Tim Polk (2008), RFC 5280: \xref {http://tools.ietf.org/html/rfc5280} \e {Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile}. }
+
+\reference rfc_6234 { Donald Eastlake, Tony Hansen (2011), RFC 6234: \xref {http://tools.ietf.org/html/rfc6234} \e {US Secure Hash Algorithms (SHA and SHA-based HMAC and HKDF)}. }
+
+\reference xml_1_0 { W3C Recommendation: \xref {http://www.w3.org/TR/REC-xml/} \e {Extensible Markup Language (XML) 1.0}. }
+
+\reference xml_namespaces { W3C Recommendation: \e \xref {http://www.w3.org/TR/xml-names/} {Namespaces in XML 1.0}. }
+
+\reference xml_schema { W3C Recommendation: \xref {http://www.w3.org/TR/xmlschema-1/} \e {XML Schema Part 1: Structures}. }
+
+\reference xml_signature { W3C Recommendation: \xref {http://www.w3.org/TR/xmldsig-core/} \e {XML Signature Syntax and Processing}. }
+
+\reference unicode_standard { The Unicode Consortium. \xref {http://www.unicode.org/versions/latest/} \e {The Unicode Standard}. }
+
+\reference unicode_encoding_forms { The Unicode Consortium. The Unicode Standard Version 7.0 -- Core Specification, \xref {http://www.unicode.org/versions/Unicode7.0.0/ch03.pdf#G7404} \e {\sect 3.9: Unicode Encoding Forms: UTF-8, UTF-16, UTF-32 conversion and validation}. }
+
+\reference unicode_encoding_schemes { The Unicode Consortium. The Unicode Standard Version 7.0 -- Core Specification, \xref {http://www.unicode.org/versions/Unicode7.0.0/ch03.pdf#G28070} \e {\sect 3.10: Unicode Encoding Schemes: UTF-8, UTF-16 (BE/LE), UTF-32 (BE/LE) conversion and validation}. }
+
+\reference unicode_ascii_subset { The Unicode Consortium. The Unicode Standard Version 7.0 -- \xref {http://www.unicode.org/charts/PDF/U0000.pdf} \e {C0 Controls and Basic Latin} }
+
+\reference ecmascript_regexp { ECMA International. \xref {http://www.ecma-international.org/publications/files/ECMA-ST/Ecma-262.pdf} \e {ECMAScript Language Specification 5.1 Edition, \sect 15.10: RegExp (Regular Expression) Objects}. }
+
+\reference open_group_printf { The Open Group Base Specifications Issue 7. IEEE Std 1003.1, 2013 Edition. \xref {http://pubs.opengroup.org/onlinepubs/9699919799/functions/printf.html} \e {printf() function definition}. }
+
+\reference open_group_posix_pathname { The Open Group Base Specifications Issue 6. IEEE Std 1003.1, 2004 Edition \xref {http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap03.html#tag_03_266} \e {\sect 3.266 Pathname}. }
+
+\reference open_group_posix_pathname_resolution { The Open Group Base Specifications Issue 6. IEEE Std 1003.1, 2004 Edition \xref {http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap04.html#tag_04_11} \e {\sect 4.11 Pathname Resolution}. }
+
+\reference open_group_posix_absolute_pathname { The Open Group Base Specifications Issue 6. IEEE Std 1003.1, 2004 Edition \xref {http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap03.html#tag_03_02} \e {\sect 3.2 Absolute Pathname}. }
+
+\reference open_group_posix_relative_pathname { The Open Group Base Specifications Issue 6. IEEE Std 1003.1, 2004 Edition \xref {http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap03.html#tag_03_319} \e {\sect 3.319 Relative Pathname}. }
+
+\reference open_group_posix_symbolic_link { The Open Group Base Specifications Issue 6. IEEE Std 1003.1, 2004 Edition \xref {http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap03.html#tag_03_372} \e {\sect 3.372 Symbolic Link}. }
+
+\reference ieee_754 { IEEE Computer Society (2008), \xref {http://ieeexplore.ieee.org/xpl/mostRecentIssue.jsp?punumber=4610933} \e {IEEE Standard for Floating-Point Arithmetic} }
+
+\reference iec_srgb { International Electrotechnical Commission, \e {IEC 61966-2-1:1999 -- Multimedia systems and equipment -- Colour measurement and management -- Part 2-1: Colour management -- Default RGB colour space -- sRGB} }
+
+\reference icc_profile { International Color Consortium, \xref {http://www.color.org/specification/ICC1v43_2010-12.pdf} \e {Specification ICC.1:2010 (Profile version 4.3.0.0). Image technology colour management --- Architecture, profile format, and data structure}. }
+
+\reference icc_bradford { International Color Consortium, \xref {http://www.color.org/specification/ICC1v43_2010-12.pdf} \e {Specification ICC.1:2010 (Profile version 4.3.0.0)}, Annex E. }
+
+\reference iso_15076_1 { International Organization for Standardization, \xref {http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=54754} \e {ISO 15076-1:2010 -- Image technology colour management -- Architecture, profile format and data structure -- Part 1: Based on ICC.1:2010}. }
+
+\reference iso_3664 { International Organization for Standardization, \xref {http://www.iso.org/iso/catalogue_detail?csnumber=43234} \e {ISO 3664:2009 -- Graphic technology and photography -- Viewing conditions} }
+
+\reference iso_8601 { International Organization for Standardization, \xref {http://www.iso.org/iso/catalogue_detail?csnumber=40874} \e {ISO 8601:2004 -- Data elements and interchange formats -- Information interchange -- Representation of dates and times} }
+
+\reference iso_iec_8859_1 { International Organization for Standardization, \xref {http://www.iso.org/iso/catalogue_detail?csnumber=28245} \e {ISO/IEC 8859-1:1998 -- Information technology -- 8-bit single-byte coded graphic character sets -- Part 1: Latin alphabet No. 1} }
+
+\reference nist_sha3 { National Institute of Standards and Technology (2014) \xref {http://csrc.nist.gov/groups/ST/hash/sha-3/sha-3_standard_fips202.html} \e {Draft FIPS 202, SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions}. }
+
+\reference wikipedia_cfa { Wikipedia article: \xref {http://en.wikipedia.org/wiki/Color_filter_array} \e {Color filter array} }
+
+\reference wikipedia_bayer_filter { Wikipedia article: \xref {http://en.wikipedia.org/wiki/Bayer_filter} \e {Bayer filter} }
+
+\reference wikipedia_color_model { Wikipedia article: \xref {http://en.wikipedia.org/wiki/Color_model} \e {Color model} }
+
+\reference bayer_patent { Bayer, B. E., \e {Color Image Array}. \xref {http://www.google.com/patents/US3971065} {U.S. Patent 3971065, July 1976}. }
+
+\reference fits_format { \e {Definition of the Flexible Image Transport System (FITS). The FITS Standard version 3.0}. }
+
+\reference fits_keyword_records { \e {Definition of the Flexible Image Transport System (FITS). The FITS Standard version 3.0. \sect 4.1. Keyword records} }
+
+\reference fits_keyword_name { \e {Definition of the Flexible Image Transport System (FITS). The FITS Standard version 3.0. \sect 4.1.2.1. Keyword name} }
+
+\reference nist_array { National Institute of Standards and Technology. Dictionary of Algorithms and Data Structures (2014): \xref {http://xlinux.nist.gov/dads/HTML/array.html} \e {Array} }
+
+\reference nist_linked_list { National Institute of Standards and Technology. Dictionary of Algorithms and Data Structures (2014): \xref {http://xlinux.nist.gov/dads/HTML/linkedList.html} \e {Linked list} }
+
+\reference sedgewick_2011_linked_lists { Robert Sedgewick, Kevin Wayne (2011), \e { Algorithms }, 4th Ed., Addison-Wesley Professional, \sect 1.3, pp. 142--155 }
+
+\reference cormen_2009_linked_lists { Thomas H. Cormen et al. (2009), \e { Introduction to Algorithms }, 3rd Ed., MIT Press, \sect 10.2, pp. 236--241 }
+
+\reference gonzalez_2008_color_model { R. C. González and R.E. Woods (2008), \e { Digital Image Processing, Third Edition }, Pearson / Prentice Hall, \sect 6.2, pp. 401--414 }
+
+\reference tkalcic_2003 { Marko Tkalcic and Jurij F. Tasic (2003), \e { Colour spaces: perceptual, historical and applicational background }, EUROCON 2003. Computer as a Tool. The IEEE Region 8. Vol. 1, pp. 304--308 }
+
+\reference vigna_2014 { Sebastiano Vigna (2014), \e { An experimental exploration of Marsaglia's xorshift generators, scrambled } (arXiv:1402.6246) }
+
+\reference vigna_2014_1 { Sebastiano Vigna (2014), \e { Further scramblings of Marsaglia's xorshift generators } (arXiv:1404.0390) }
+
+\reference porter_1984 { Thomas Porter and Tom Duff (1984), \e { Compositing Digital Images }, Computer Graphics, Vol. 18, No. 3, pp 253--259. }
+
+\reference www_bruce_lindbloom { Bruce Justin Lindbloom, \xref {http://www.brucelindbloom.com/} { Bruce Lindbloom's Web Site } }
+
+\reference www_xorshift { Sebastiano Vigna, \xref {http://xorshift.di.unimi.it/} { xorshift*/xorshift+ generators and the PRNG shootout (XorShift website) } }
+
+\reference www_keccak { Guido Bertoni, Joan Daemen, Michaël Peeters and Gilles Van Assche, \xref {http://keccak.noekeon.org/} { The Keccak sponge function family (Keccak Website) } }
+
+\reference www_zlib { Greg Roelofs, Mark Adler, \xref {http://www.zlib.net/} { Zlib Home Site } }

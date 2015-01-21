@@ -1,0 +1,60 @@
+
+\subsection { \label resolution_core_element \c Resolution Core Element } {
+
+   The \c Resolution core element serializes the data necessary to control the \e resolution of an \lref xisf_image {XISF image} stored in an \lref xisf_unit {XISF unit}. Resolution defines the amount of pixels represented per unit of surface on a display medium, such as a printer or a computer monitor, and can be measured either in pixels per inch or in pixels per centimeter.
+
+   The \c Resolution element \e shall have the following mandatory attributes:
+
+   \definition {
+
+      \c { horizontal="\e{x-resolution}" }
+      {
+         \c\e x-resolution is a plain text representation of a floating point number, whose value \e must be greater than zero and \e shall be the resolution of the image in its X-axis (or horizontal axis), measured in pixels per resolution unit (see the \c unit attribute below).
+      }
+
+      \c { vertical="\e{y-resolution}" }
+      {
+         \c\e y-resolution is a plain text representation of a floating point number, whose value \e must be greater than zero and \e shall be the resolution of the image in its Y-axis (or vertical axis), measured in pixels per resolution unit (see the \c unit attribute below).
+      }
+   }
+
+   The following attributes are \e optional for the \c Resolution core element:
+
+   \definition {
+
+      \c { unit="\e{resolution-unit}" }
+      {
+         \c\e resolution-unit defines the unit of length used to express image resolution values in the X and Y axes. \c\e resolution-unit \e must be one of:
+
+         \definition {
+
+            \c inch
+            {
+               Image resolution \e shall be measured in pixels per inch.
+            }
+
+            \c cm
+            {
+               Image resolution \e shall be measured in pixels per centimeter.
+            }
+         }
+
+         When no \c unit attribute is specified, image resolution \e shall be expressed in pixels per inch by default.
+      }
+
+      \c { id="\e{element-id}" }
+      {
+         \c\e element-id \e must be a unique identifier that \e may be used to reference this \c Resolution element. \c\e element-id \e must be a sequence of ASCII characters satisfying the following regular expression:\ref ecmascript_regexp
+
+         \c { \hs #: [_a-zA-Z][_a-zA-Z0-9]* :# }
+
+         \c Resolution identifiers \e shall be interpreted as case-sensitive.
+
+         \c Resolution identifiers \e must be unique in an XISF unit, that is, no other XML element can be assigned the same identifier.
+      }
+   }
+
+   A \c Resolution element \e must be either a child element of an \lref image_core_element \c Image core element, or a child element of the unique \lref root_element {XISF root element}. In the latter case, an \c id attribute \e should be used to reference the \c Resolution element from the  \lref resolutionref_image_attribute \c resolutionRef attributes of one or more \c Image elements.
+
+   When no \c Resolution element is specified for an \c Image core element, the default image resolution \e shall be 72.0 pixels per inch.
+}

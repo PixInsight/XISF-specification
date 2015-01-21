@@ -1,0 +1,139 @@
+
+\subsection { \label data_blocks_file XISF Data Blocks File } {
+
+   An XISF data blocks file is a file that \e may contain zero or more \lref data_block {XISF data blocks} and \e may contain unused space, as described below. XISF data blocks files can be available as local or remote resources.
+
+   An XISF data blocks file \e shall have the following structure (Figure \figref fig_XISF_data_blocks_file_structure):
+
+   \definition {
+
+      { Signature }
+      {
+         A sequence of eight contiguous bytes whose values \e must form the set \c 'XISB0100' of ASCII characters,\ref unicode_ascii_subset that is, the sequence 88\sub{10}, 73\sub{10}, 83\sub{10}, 66\sub{10}, 48\sub{10}, 49\sub{10}, 48\sub{10}, 48\sub{10} of unsigned 8-bit integers.
+      }
+
+      { Reserved field }
+      {
+         Eight contiguous bytes reserved for future use. The values of these bytes \e shall be zero.
+      }
+
+      { Block index }
+      {
+         The block index of an XISF data blocks file is a singly linked list\ref nist_linked_list \ref sedgewick_2011_linked_lists \ref cormen_2009_linked_lists of \e {block index nodes} (Figure \figref fig_XISF_block_index_structure). A block index node contains a sequence of \e {block index elements}. Each block index element may define the position and length of an XISF data block stored in the data blocks file.
+
+         A block index node \e shall have the following structure:
+
+         \definition {
+
+            { Length }
+            {
+               An unsigned 32-bit integer whose value \e must be the number of block index elements available in this block index node.
+            }
+
+            { Reserved field }
+            {
+               Four contiguous bytes reserved for future use. The values of these bytes \e shall be zero.
+            }
+
+            { Next node }
+            {
+               An unsigned 64-bit integer whose value \e must be the byte position, measured from the beginning of the XISF data blocks file, of the next block index node. If the value of this element is zero, then this is the last block index node of the block index.
+            }
+
+            { \label block_index_element Elements }
+            {
+               A sequence of contiguous \e {block index elements}. A block index element \e must define the position and length of an XISF data block stored in the XISF data blocks file. We say that a block index element \e {points to} the XISF data block whose position and length it defines.
+
+               A block index element \e shall be a sequence of 40 contiguous bytes with the following structure (Figure \figref fig_XISF_block_index_element_structure):
+
+               \definition {
+
+                  { Unique Identifier }
+                  {
+                     An unsigned 64-bit integer. This identifier \e must be unique in the XISF data blocks file, that is, no two index elements can have the same identifier.
+                  }
+
+                  { Block position }
+                  {
+                     An unsigned 64-bit integer whose value \e must be the byte position, measured from the beginning of the XISF data blocks file, of the first byte of the XISF data block pointed to by the block index element.
+
+                     The block position of a block index element \e may be zero. In such case the element is called a \e {free block index element}. A free block index element does not provide access to any data block, and can be used as a placeholder to access future data blocks that can be stored in the data blocks file.
+                  }
+
+                  { Block length }
+                  {
+                     An unsigned 64-bit integer whose value \e must be the length in bytes of the XISF data block pointed to by the block index element.
+
+                     For free block index elements, the block length \e must be zero.
+                  }
+
+                  { Uncompressed block length }
+                  {
+                     An unsigned 64-bit integer. If the data block pointed to by the block index element has been compressed, the value of this item \e must be the length in bytes of the uncompressed data block.
+
+                     For free block index elements and index elements pointing to uncompressed blocks, the uncompressed block length \e must be zero.
+                  }
+
+                  { Reserved field }
+                  {
+                     Eight contiguous bytes reserved for future use. The values of these bytes \e shall be zero.
+                  }
+               }
+            }
+         }
+      }
+
+      { XISF data blocks (\e optional) }
+      {
+         Zero or more \lref data_block {XISF data blocks}, which \e may be stored in the XISF data blocks file. Each data block is a sequence of one or more contiguous bytes, whose position and length \e must be defined by at least one block index element pertaining to the block index of the XISF data blocks file.
+      }
+
+      { Unused space (\e optional) }
+      {
+         Since XISF data blocks can be stored at arbitrary locations in an XISF data blocks file, there \e may be sequences of zero or more contiguous bytes that don't pertain to any data block. These sequences collectively form the \e {unused space} of an XISF data blocks file. All bytes pertaining to the unused space \e must be zero.
+
+         Unused spaces can be useful to optimize I/O buffering and access to data blocks in some devices. They can also be useful as pre-allocated spaces for storage of new data blocks.
+      }
+   }
+
+   Figure \figref fig_XISF_data_blocks_file_structure shows a graphical representation of an XISF data blocks file. An XISF decoder or a file management application can use the XISB signature (the first eight bytes of the file) to quickly determine if a given file can be a valid XISF data blocks file. Figure \figref fig_XISF_block_index_structure represents the structure of a block index structure. Finally, Figure \figref fig_XISF_block_index_element_structure outlines the structure of a block index element.
+
+   \figure[numbered:fig_XISF_data_blocks_file_structure] {
+
+      \figtag \s { Structure of an XISF data blocks file. }
+
+      \vs[length:2em]
+
+      \center \image[width:48.7em] { XISF-data-blocks-file-structure.svg }
+   }
+
+   \vs
+
+   \figure[numbered:fig_XISF_block_index_structure] {
+
+      \figtag \s { Structure of an XISF block index. }
+
+      \vs[length:2em]
+
+      \center \image[width:56.1em] { XISF-block-index-structure.svg }
+   }
+
+   \vs
+
+   \figure[numbered:fig_XISF_block_index_element_structure] {
+
+      \figtag \s { Structure of an XISF block index element. }
+
+      \vs[length:2em]
+
+      \center \image[width:55.7em] { XISF-block-index-element-structure.svg }
+   }
+
+   The following C++ code snippet shows a practical implementation of a structure to represent the initial components of an XISF data blocks file, including construction and validation.
+
+   \code[import] XISFDataBlocksFileHeader.cpp
+
+   In the next code fragment we implement the XISF block index element structure with automatic generation of unique identifiers. The \c RandomUI64() static member function of \c XISFBlockIndexElement should be implemented to generate high-quality, pseudo-random uniform deviates as unsigned 64-bit integer values with a good random seeding routine. The XorShift1024* algorithm\ref vigna_2014 \ref vigna_2014_1 \ref www_xorshift is \e recommended.
+
+   \code[import] XISFBlockIndexElement.cpp
+}

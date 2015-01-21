@@ -1,0 +1,387 @@
+
+\subsection { \label xisf_image XISF Image } {
+
+   \subsection { Structure and Properties } {
+
+      In the context of this specification, an image is an object with the following structure and properties:
+
+      \list[spaced] {
+
+         { An image is a set of scalars or complex numbers structured as a non-empty collection of \im{n}-dimensional arrays.\ref nist_array }
+
+         { The \e dimensionality of the image is \im{n > 0}. }
+
+         { Each \im{n}-dimensional array is known as a \e channel or \e (hyper)plane of the image. }
+
+         { All image channels have identical lengths in each one of their \im{n} dimensions. }
+
+         { Let \im{m > 0} be the number of channels in the image. Any channel \e must be addressable by its \e {channel index} \im{c}, an integer such that \im{#: 0 \le c < m :#}. }
+
+         { Let \im{d_j} be the length of any channel in the \im{j}-th dimension, \im{#: 0 \le j < n :#}. }
+
+         { An image with any length \im{#: d_j = 0 :#} for \im{#: 0 \le j < n :#} is an \e {empty image}. Empty images cannot be serialized in an XISF unit. }
+
+         { A \e {pixel coordinate} is an integer array index \im i_j such that \im{#: 0 \le i_j < d_j :#}. }
+
+         { Any \im{m}-tuple formed with the set of scalars or complex numbers at the same pixel coordinates \im{#: i_0,\dots,i_{n-1} :#} is a \e pixel. }
+
+         { The \im{m} components of a pixel are \e {pixel samples}. }
+
+         { Any pixel \e must be addressable by its \im{n}-tuple \im{#: \{i_0,\dots,i_{n-1}\} :#} of pixel coordinates. }
+
+         { Any pixel sample \e must be addressable by the \im{(n+1)}-tuple \im{#: \{c,i_0,\dots,i_{n-1}\} :#} of channel index and pixel coordinates. }
+
+         { The total number of pixels in an image is \im{#: N = \prod_{j=0}^{n-1} d_j :#}. }
+
+         { The total number of pixel samples in an image is \im{#: M = N \times m :#}. }
+
+         { For images with a visual representation role, pixel samples \e must be representable in a \e {color model}.\ref gonzalez_2008_color_model \ref wikipedia_color_model }
+
+         { The color model where pixel samples are represented, if defined, \e should be augmented with a number of viewing conditions and colorimetric properties, which define the \e {color space}\ref tkalcic_2003 of the image. }
+
+         { The first \im{#: r \le m :#} channels strictly required to define the color model (or color space) of an image, with indexes \im{#: 0,\dots,r-1 :#}, are \e {nominal channels}. }
+
+         { Excess channels beyond nominal channels, with indexes \im{#: r,r+1,\dots,m-1 :#}, are collectively known as \e {alpha channels}. }
+
+         { Although the roles of alpha channels are implementation-defined, the first alpha channel, at index \im{r}, \e should define the transparency of the image for alpha-compositing operations.\ref porter_1984 }
+      }
+
+      The mathematical symbols and terminology introduced in the above list will be used in the rest of this section.
+
+      \figure[numbered:fig_2d_image] {
+
+         \figtag \s { Structure of a two-dimensional image. }
+
+         \vs[length:2em]
+
+         \center \image[width:62.95em] { 2d-image.svg }
+      }
+   }
+
+   \subsection { Geometrical Conventions } {
+
+      In a two-dimensional image we have \im{n = 2} and the lengths \im{d_0} and \im{d_1} are known as the \e width and \e height of the image, respectively. Conventionally, the dimensions \im{i_0} and \im{i_1} are known as the \e X-axis and \e Y-axis, respectively. It is customary to use the symbols \im{x} and \im{y} to represent coordinates in the first and second dimensions, respectively. We also say that \im{i_0} is the \e {horizontal axis} and \im{i_1} is the \e {vertical axis}. The point with pixel coordinates \im{#: x = y = 0 :#} is said to be the \e {top-left corner} or the \e origin of the image. Note that all of these words don't necessarily imply any particular orientation of the \e represented image; they are just conventional designations.
+
+      In a three-dimensional image, \im{n = 3} and the dimensions \im{d_0}, \im{d_1} and \im{d_2} are the \e width, \e height and \e depth of the image, respectively. The dimensions \im{i_0}, \im{i_1} and \im{i_2} are known conventionally as the \e X-axis, \e Y-axis and \e Z-axis, respectively. It is customary to use the symbols \im{x}, \im{y} and \im{z} to represent coordinates in the first, second and third dimensions, respectively. \im{i_0} is the \e {horizontal axis}, \im{i_1} is the \e {vertical axis} and \im{i_2} is the \e {depth axis}. The point with pixel coordinates \im{#: x = y = z = 0 :#} is said to be the \e origin of the image. Again, these designations are purely conventional and don't imply any particular representation of the image.
+
+      For one-dimensional images and images with dimensionalities higher than three, such as tesseracts and other hypercubes, there are no conventional names for axes and lengths. Normally these structures are manipulated as mathematical objects in purely abstract terms without a perceptual meaning or a visual role.
+   }
+
+   \subsection { \label pixel_storage_models Pixel Storage Models } {
+
+      Two pixel storage models are formalized by this specification:
+
+      \subsection { \label planar_pixel_storage_model Planar pixel storage model } {
+
+         In this model each channel is stored in a separate block:
+
+         \list[spaced] {
+
+            { In the planar storage model, each channel of an image \e shall be stored as a contiguous sequence of pixel samples. }
+
+            { For a given channel index \im{#: c \; | \; 0 \le c < m :#}, all pixel samples \e shall be stored in \e {pixel coordinate order}. The coordinates of the stored sequence of pixel samples can be represented as:\n\n
+
+               \equation { #:
+                  $$
+                  \begin{array}{l l l}
+                     \{\, c, i_j = 0          && \; | \; 0 \le j < n \,\} \\
+                     \{\, c, i_0 = 1, i_j = 0 && \; | \; 1 \le j < n \,\} \\
+                     \{\, c, i_0 = 2, i_j = 0 && \; | \; 1 \le j < n \,\} \\
+                                          & \vdots &                      \\
+                     \{\, c, i_j = d_j-1      && \; | \; 0 \le j < n \,\} \\
+                  \end{array}
+                  $$
+               :# }
+            }
+         }
+
+         \figure[numbered:fig_planar_pixel_storage_model] {
+
+            \figtag \s { A two-dimensional image in the planar pixel storage model. } Each square represents a pixel sample with its coordinates \im{#: \{c,i_0,i_1\} :#} written vertically, where \im c is a channel index and \im i_0 and \im i_1 are pixel coordinates. All pixel samples are stored as a single contiguous block from top to bottom and left to right (arrows indicate storage order).
+
+            \vs[length:2em]
+
+            \center \image[width:41.46em] { planar-pixel-storage-model.svg }
+         }
+      }
+
+      \subsection { Normal pixel storage model } {
+
+         In this model all pixel samples are stored in a single block:
+
+         \list[spaced] {
+
+            { In the normal storage model, all pixel samples of an image \e shall be stored as a contiguous sequence. }
+
+            { All pixels \e shall be stored in \e {pixel coordinate order}. The coordinates of the stored sequence of pixel samples can be represented as:\n\n
+
+               \equation { #:
+                  $$
+                  \begin{array}{l l l l}
+                     \{\, c = 0,   & i_j = 0          && \; | \; 0 \le j < n \,\} \\
+                     \{\, c = 1,   & i_j = 0          && \; | \; 0 \le j < n \,\} \\
+                                            && \vdots &                            \\
+                     \{\, c = m-1, & i_j = 0          && \; | \; 0 \le j < n \,\} \\
+                     \{\, c = 0,   & i_0 = 1, i_j = 0 && \; | \; 1 \le j < n \,\} \\
+                     \{\, c = 1,   & i_0 = 1, i_j = 0 && \; | \; 1 \le j < n \,\} \\
+                                            && \vdots &                            \\
+                     \{\, c = m-1, & i_0 = 1, i_j = 0 && \; | \; 1 \le j < n \,\} \\
+                                            && \vdots &                            \\
+                     \{\, c = 0,   & i_j = d_j-1      && \; | \; 0 \le j < n \,\} \\
+                     \{\, c = 1,   & i_j = d_j-1      && \; | \; 0 \le j < n \,\} \\
+                                            && \vdots &                            \\
+                     \{\, c = m-1, & i_j = d_j-1      && \; | \; 0 \le j < n \,\} \\
+                  \end{array}
+                  $$
+               :# }
+            }
+         }
+
+         \figure[numbered:fig_normal_pixel_storage_model] {
+
+            \figtag \s { A two-dimensional image in the normal pixel storage model. } As in Figure \figref fig_planar_pixel_storage_model, each square represents a pixel sample with its coordinates written vertically. Colors have been used to indicate image channels. As you can see by comparing both figures, in the normal model pixel samples are grouped by coordinates (by rows and columns in the case of a 2-D image) instead of by channels.
+
+            \vs[length:2em]
+
+            \center \image[width:34.03em] { normal-pixel-storage-model.svg }
+         }
+      }
+
+      Irrespective of the pixel storage model, the total space in bytes required to store an uncompressed image channel equals \im{#: N \times b :#}, where \im{b} is the size in bytes of a pixel sample. Similarly, the total space in bytes required to store an uncompressed image is \im{#: M \times b :#}.
+   }
+
+   \subsection { Color Spaces } {
+
+      The following color spaces are formally supported by this specification for storage of pixel data in XISF units: Grayscale (monochrome), RGB, and CIE L*a*b*.
+
+      An in-depth description of color spaces is beyond the scope of this specification. The reader should refer to the literature for further information on this subject; for example, see references \ref gonzalez_2008_color_model, \ref tkalcic_2003 and \ref www_bruce_lindbloom.
+
+      To remove any possible ambiguity in the specification of CIE L*a*b*, we'll describe the necessary color space transformation algorithms in the next sections.
+   }
+
+   \subsection { \label rgb_working_space RGB Working Space } {
+
+      All color space transformations \e shall be performed relative to a colorimetrically defined RGB working space (RGBWS) associated with the image. An RGB working space is a set \im{#: \{ \mathbf{W}, \gamma, \mathbf{x}, \mathbf{y}, \mathbf{Y} \} :#}, where:
+
+      \list[spaced] {
+
+         { \im{#: \mathbf{W} = \{x_W,y_W,Y_W\} :#} is a reference white. In this specification, all RGB working space parameters \e shall be relative to the standard D50 reference white.\ref iso_3664 }
+
+         { \im{#: \gamma :#} is an exponent for linearization of RGB components. }
+
+         { \im{#: \mathbf{x} = \{x_R,x_G,x_B\} :#} and \im{#: \mathbf{y} = \{y_R,y_G,y_B\} :#} are the chromaticity coordinates of the RGB primaries. }
+
+         { \im{#: \mathbf{Y} = \{Y_R,Y_G,Y_B\} :#} are the luminance coefficients of the RGB primaries. }
+      }
+
+      All chromaticity coordinates and luminance coefficients \e shall be represented normalized to the \[0,1\] range.
+
+      For spaces not originally defined with respect to the D50 reference white, a chromatic adaptation algorithm \e must be applied to convert coordinates and coefficients to D50. The Bradford chromatic adaptation transform\ref icc_bradford is \e recommended.
+
+      When no RGB working space is specified for a given image, the default RGBWS associated with the image \e shall be the sRGB space.\ref iec_srgb The chromaticity coordinates and luminance coefficients of sRGB relative to D50 (after chromatic adaptation from the D65 reference white with the Bradford algorithm) are the following:
+
+      \equation[unnumbered] { #:
+         $$
+         \hbox{sRGB} : \left\{ \begin{array}{l c l}
+            x_R &=& 0.648431 \\
+            x_G &=& 0.321152 \\
+            x_B &=& 0.155886 \\
+            y_R &=& 0.330856 \\
+            y_G &=& 0.597871 \\
+            y_B &=& 0.066044 \\
+            Y_R &=& 0.222491 \\
+            Y_G &=& 0.716888 \\
+            Y_B &=& 0.060621 \\
+         \end{array}
+         \right. \, .
+         $$
+      :# }
+
+      The sRGB space uses a special linearization function instead of a gamma exponent, as described below.
+   }
+
+   \subsection { RGB to CIE XYZ Conversion } {
+
+      Let R, G, B be the nominal components of a pixel in the RGB color space. The nominal components R', G', B' in the linear RGB space are
+
+      \equation { #:
+         $$
+         \begin{array}{l c l}
+            R' &=& R^{\gamma} \\
+            G' &=& G^{\gamma} \\
+            B' &=& B^{\gamma} \\
+         \end{array} \, .
+         $$
+      :# }
+
+      If the RGB working space is the sRGB space,\ref iec_srgb then a special function \e must be used instead of the equations above. Define the linearization function
+
+      \equation { #:
+         $$
+         \hbox{S}(x) = \left\{ \begin{array}{l l}
+            \displaystyle{\frac{x}{12.92}}                            & \hbox{if} \;\; x \le 0.04045 \\
+            \\
+            \left(\displaystyle{\frac{x + 0.055}{1.055}}\right)^{2.4} & \hbox{otherwise}             \\
+         \end{array}
+         \right. \, .
+         $$
+      :# }
+
+      Now we have, for the sRGB space:
+
+      \equation { #:
+         $$
+         \begin{array}{l c l}
+            R' &=& \hbox{S}(R_{\tiny\hbox{\sffamily{sRGB}}}) \\
+            G' &=& \hbox{S}(G_{\tiny\hbox{\sffamily{sRGB}}}) \\
+            B' &=& \hbox{S}(B_{\tiny\hbox{\sffamily{sRGB}}}) \\
+         \end{array} \, .
+         $$
+      :# }
+
+      The CIE XYZ components are given by
+
+      \equation { #:
+         $$
+         \left( \begin{array}{l l}
+            X \\
+            Y \\
+            Z \\
+         \end{array} \right) = \hbox{M} \left( \begin{array}{l l}
+            R' \\
+            G' \\
+            B' \\
+         \end{array} \right) \, ,
+         $$
+      :# }
+
+      with the transformation matrix
+
+      \equation { #:
+         $$
+         \hbox{M} = \left( \begin{array}{c c c}
+            Y_R \cdot x_R / y_R & Y_G \cdot x_G / y_G & Y_B \cdot x_B / y_B \\
+            Y_R & Y_G & Y_B \\
+            Y_R (1 - x_R - y_R)/y_R & Y_G (1 - x_G - y_G)/y_G & Y_B (1 - x_B - y_B)/y_B \\
+         \end{array} \right) \, .
+         $$
+      :# }
+   }
+
+   \subsection { CIE XYZ To RGB Conversion } {
+
+      Let X, Y, Z be the nominal components of a pixel in the CIE XYZ color space. The components R', G', B' in the linear RGB space can be found by multiplication with the inverse transformation matrix:
+
+      \equation { #:
+         $$
+         \left( \begin{array}{l l}
+            R' \\
+            G' \\
+            B' \\
+         \end{array} \right) = \hbox{M}^{-1} \left( \begin{array}{l l}
+            X \\
+            Y \\
+            Z \\
+         \end{array} \right) \, .
+         $$
+      :# }
+
+      Then the RGB components are given by
+
+      \equation { #:
+         $$
+         \begin{array}{l c l}
+            R &=& R'^{\,1/\gamma} \\
+            G &=& G'^{\,1/\gamma} \\
+            B &=& B'^{\,1/\gamma} \\
+         \end{array} \, .
+         $$
+      :# }
+
+      If the RGB working space is the sRGB space,\ref iec_srgb then a special function \e must be used instead of the equations above. Define the delinearization function
+
+      \equation { #:
+         $$
+         \hbox{T}(x) = \left\{ \begin{array}{l l}
+            12.92 \times x          & \hbox{if} \;\; x \le 0.0031308 \\
+            \\
+            1.055 \, x^{1/2.4} - 0.055 & \hbox{otherwise}            \\
+         \end{array}
+         \right. \, .
+         $$
+      :# }
+
+      Now we have, for the sRGB space:
+
+      \equation { #:
+         $$
+         \begin{array}{l c l}
+            R_{\tiny\hbox{\sffamily{sRGB}}} &=& \hbox{T}(R') \\
+            G_{\tiny\hbox{\sffamily{sRGB}}} &=& \hbox{T}(G') \\
+            B_{\tiny\hbox{\sffamily{sRGB}}} &=& \hbox{T}(B') \\
+         \end{array} \, .
+         $$
+      :# }
+   }
+
+   \subsection { CIE XYZ to CIE L*a*b* Conversion } {
+
+      Define the function
+
+      \equation { #:
+         $$
+         \hbox{f}(x) = \left\{ \begin{array}{l l}
+            x^{1/3}                                 & \hbox{if} \;\; x > 0.008856 \\
+            \\
+            \displaystyle{\frac{903.3 x + 16}{116}} & \hbox{otherwise}            \\
+         \end{array}
+         \right. \, .
+         $$
+      :# }
+
+      Then the CIE L*a*b* components are:
+
+      \equation { #:
+         $$
+         \begin{array}{l c l}
+            L* &=& 1.16 \times \hbox{f}(Y) - 0.16       \\
+            a* &=& 5 \times (\hbox{f}(X) - \hbox{f}(Y)) \\
+            b* &=& 2 \times (\hbox{f}(Y) - \hbox{f}(Z)) \\
+         \end{array} \, .
+         $$
+      :# }
+   }
+
+   \subsection { CIE L*a*b* to CIE XYZ Conversion } {
+
+      Define the function
+
+      \equation { #:
+         $$
+         \hbox{g}(x) = \left\{ \begin{array}{l l}
+            x^3                                     & \hbox{if} \;\; x^3 > 0.008856 \\
+            \\
+            \displaystyle{\frac{116 x - 16}{903.3}} & \hbox{otherwise}              \\
+         \end{array}
+         \right. \, .
+         $$
+      :# }
+
+      Then the CIE XYZ components are:
+
+      \equation { #:
+         $$
+         \begin{array}{l c l}
+            Y &=& \hbox{g}\left( \displaystyle{\frac{{L*} + 0.16}{1.16}} \right) \\
+            X &=& \hbox{g}\left( \displaystyle{\frac{a*}{5}} + Y \right)         \\
+            Z &=& \hbox{g}\left( Y - \displaystyle{\frac{b*}{2}} \right)         \\
+         \end{array} \, .
+         $$
+      :# }
+   }
+
+   \subsection { RGB to Grayscale Conversion } {
+
+      A colorimetrically defined grayscale component \e shall be computed as the L* component of the CIE L*a*b space.
+   }
+}

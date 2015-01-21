@@ -1,0 +1,240 @@
+
+\subsection { \label image_core_element \c Image Core Element } {
+
+   The \c Image core element serializes an \lref xisf_image {XISF image} stored in an \lref xisf_unit {XISF unit}. \c Image elements \e shall be child elements of the unique \lref root_element {XISF root element} of the XISF unit.
+
+   The entire pixel data contents of an XISF image \e shall be serialized as a single \lref data_block {XISF data block}. An \c Image element cannot serialize pixel data as an \lref inline_data_block {inline XISF data block}, this restriction obeying to the fact that \c Image elements can have child XML elements.
+
+   An \c Image element can have the following attributes:
+
+   \definition {
+
+      \c { geometry="\e{dim\sub{1}}:...:\e{dim\sub{N}}:\e{channel-count}" }
+      {
+         This attribute \e shall be specified for all \c Image elements.
+
+         Defines the geometry of an N-dimensional image. The number N \ge 1 of \c\e dim items is the \e dimensionality of the image: N=1 for a one-dimensional image, N=2 for a two-dimensional image, etc. Each \c\e {dim\sub{i}} item is a plain text representation of an unsigned integer whose value, which must be greater than zero, is the corresponding length of the image on its \e i-th axis in pixel units. The last \c\e channel-count item is a plain text representation of an unsigned integer whose value, which must be greater than zero, is the number of existing image channels or planes.
+
+         For a two-dimensional or three-dimensional image, the first dimension corresponds to the X-axis of the image and the second dimension corresponds to its Y-axis. For a three-dimensional image, the third dimension corresponds to the Z-axis.
+
+         Example:
+
+         \code[lang:xml] { #:
+<Image geometry="960:540:3" sampleFormat="Float32" bounds="0:1"
+       colorSpace="RGB" compression="zlib:6220800" location="attachment:4570:1428362" />
+         :# }
+
+         This example defines a two-dimensional image with three channels. Its width is 960 pixels and its height is 540 pixels.
+      }
+
+      \c { \label sampleformat_image_attribute sampleFormat="\e{sample-format}" }
+      {
+         This attribute \e shall be specified for all \c Image elements.
+
+         Defines the data type used to represent the pixel samples of the image, also known as the \e {sample format} of the image. \c\e sample-format \e must be one of the following literals:
+
+         \table[caption,header,width:100\%] {
+            { \c sampleFormat Attribute Values }
+            { { Sample data type }                                   { \c sampleFormat attribute value } }
+            { { Unsigned 8-bit integer }                             { \c UInt8 } }
+            { { Unsigned 16-bit integer }                            { \c UInt16 } }
+            { { Unsigned 32-bit integer }                            { \c UInt32 } }
+            { { Unsigned 64-bit integer }                            { \c UInt64 } }
+            { { Real IEEE 754\ref ieee_754 binary32 floating point } { \c Float32 } }
+            { { Real IEEE 754 binary64 floating point }              { \c Float64 } }
+            { { Complex IEEE 754 binary32 floating point }           { \c Complex32 } }
+            { { Complex IEEE 754 binary64 floating point }           { \c Complex64 } }
+         }
+      }
+
+      \c { bounds="\e{lower}:\e{upper}" }
+      {
+         This attribute \e shall be specified for all \c Image elements serializing floating point real pixel data. It is \e optional for \c Image elements serializing integer pixel data, and \e must \e not be specified for complex images. These restrictions are further described below.
+
+         The \c bounds attribute defines the \e {representable range} of a real or integer image in the grayscale or RGB color spaces. \c\e lower is a plain text representation of a floating point number, whose value is the lower bound of the representable range, or the \e {black point} of the image. \c\e upper is a plain text representation of a floating point number, whose value is the upper bound of the representable range, or the \e {white point} of the image.
+
+         Consider an output device able to generate image representations for pixel sample values in the \[v\sub{0},v\sub{1}\] range, such that v\sub{0} < v\sub{1}. We call this range the device's \e {output range}. Pixel samples outside the output range will generate \e saturated representations: Any pixel sample value \le v\sub{0} will be represented as black, while any pixel sample value \ge v\sub{1} will be represented as white. Pixel samples within the output range will generate unsaturated representations as gray levels proportional to the sample values. Assuming an image representation device so defined, the representable range of the image \e shall be applied according to the following algorithm:
+
+         \block[marginleft:3em] \c {
+            r\sub{0} &#8592; valueOf( \c\e lower )\n
+            r\sub{1} &#8592; valueOf( \c\e upper )\n
+            if r\sub{1} < r\sub{0}\n
+               \hs[length:2em] exchange( r\sub{0}, r\sub{1} )\n
+            end\n
+            for each pixel sample f\n
+               \hs[length:2em] if r\sub{1} = r\sub{0}\n
+                  \hs[length:4em] f &#8592; 0\n
+               \hs[length:2em] else\n
+                  \hs[length:4em] if f < r\sub{0}\n
+                     \hs[length:6em] f &#8592; r\sub{0}\n
+                  \hs[length:4em] else if f > r\sub{1}\n
+                     \hs[length:6em] f &#8592; r\sub{1}\n
+                  \hs[length:4em] end\n
+                  \hs[length:4em] f &#8592; (f -- r\sub{0})/(r\sub{1} -- r\sub{0})\n
+               \hs[length:2em] end\n
+               \hs[length:2em] output( v\sub{0} + (v\sub{1} -- v\sub{0})\times{f} )\n
+            end\n
+         }
+
+         where the \c output(x) abstract operation sends a pixel sample \c x for representation on the output device, as described above. This algorithm is a simple linear mapping of pixel sample values from the representable range of an image to a device's output range.
+
+         For example, for an image being deserialized to be represented on a typical 8-bit output device, such as a computer display or a printer, we would have v\sub{0} = 0 and v\sub{1} = 255. Another example is an image processing application working internally with normalized floating point pixel data in the \[0,1\] range, which would apply the above algorithm with v\sub{0} = 0 and v\sub{1} = 1 (note that in this case the algorithm can be simplified).
+
+         The \c bounds attribute is \e mandatory for floating point real images, that is, for images where the value of the \c sampleFormat attribute is either \c Float32 or \c Float64.
+
+         For integer images, where the value of the \lref sampleformat_image_attribute \c sampleFormat attribute is \c UInt8, \c UInt16, \c UInt32 or \c UInt64, the \c bounds attribute is \e optional. If the \c\e bounds attribute is not specified for an integer image, the representable range \e shall be \[0,2\sup{n}--1\], where n is the number of bits per pixel sample. For integer n-bit images using representable ranges equal to the default \[0,2\sup{n}--1\] range, the \c\e bounds attribute \e should \e not be specified.
+
+         For complex images, where the value of the \lref sampleformat_image_attribute \c sampleFormat attribute is \c Complex32 or \c Complex64, the \c bounds attribute \e must \e not be specified. The reason for this restriction is that a visually representable range, as we have described it with the above algorithm, does not really make sense for data in the frequency domain. The methods used for representation of complex-valued pixel data are left as implementation-defined by this specification.
+
+         For images expressed in color spaces different from grayscale or RGB, the representable range defined by the \c\e lower and \c\e upper bounds \e shall apply to pixel sample values \e {once converted} to the RGB color space.
+      }
+
+      \c { \label colorspace_image_attribute colorSpace="\e{color-space}" }
+      {
+         This attribute is \e optional for all \c Image elements.
+
+         Defines the color space where pixel sample values are represented for the serialized image. \c\e color-space \e must be one of the following literals:
+
+         \table[caption,header,width:100\%] {
+            { \c colorSpace Attribute Values }
+            { { Color space / color ordering system } { \c colorSpace attribute value } }
+            { { Grayscale (monochrome) }              { \c Gray } }
+            { { RGB }                                 { \c RGB } }
+            { { CIE L*a*b* }                          { \c CIELab } }
+         }
+
+         For descriptions of these color spaces and the corresponding transformation algorithms, see the \lref xisf_image {XISF Image} section.
+
+         For \c Image elements without a \c colorSpace attribute, the default grayscale color space \e shall be assumed.
+      }
+
+      \c { pixelStorage="\e{pixel-storage}" }
+      {
+         This attribute is \e optional for all \c Image elements.
+
+         Defines the \lref pixel_storage_models {pixel storage model} used to organize the stored pixel data of the image. \c\e pixel-storage \e must be one of the following literals:
+
+         \table[caption,header,width:100\%] {
+            { \c pixelStorage Attribute Values }
+            { { Pixel storage model }  { \c pixelStorage attribute value } }
+            { { Planar pixel storage model } { \c planar } }
+            { { Normal pixel storage model } { \c normal } }
+         }
+
+         For \c Image elements without a \c pixelStorage attribute, the default \lref planar_pixel_storage_model {planar pixel storage model} \e shall be assumed.
+      }
+
+      \c { cfaType="\e{cfa-spec}" }
+      {
+         This attribute \e should be specified for \c Image elements serializing images mosaiced with a Color Filter Array (CFA)\ref wikipedia_cfa, such as a Bayer filter. \ref wikipedia_bayer_filter \ref bayer_patent This attribute \e shall \e not be specified for images not mosaiced with a CFA.
+
+         The supported \c cfaType attribute values are:
+
+         \table[caption,header,width:100\%] {
+            { \c cfaType Attribute Values }
+            { { Color filter array } { \c cfaType attribute value } }
+            { { BGGR Bayer filter } { \c BGGR } }
+            { { GRBG Bayer filter } { \c GRBG } }
+            { { GBRG Bayer filter } { \c GBRG } }
+            { { RGGB Bayer filter } { \c RGGB } }
+            { { CYGM (cyan/yellow/green/magenta) filter } { \c CYGM } }
+            { { Fujifilm X-Trans filter } { \c XTrans } }
+         }
+      }
+
+      \c { orientation="\e{rotation}" }
+      {
+         This attribute is \e optional for all \c Image elements.
+
+         \c\e rotation defines geometric operations that \e should be applied to correct the default orientation of the image. \c\e rotation \e must be one of:
+
+         \definition {
+
+            \c 0
+            {
+               The default image orientation is correct, so do nothing.
+            }
+
+            \c flip
+            {
+               Flip (reflect) the image horizontally.
+            }
+
+            \c 90
+            {
+               Rotate the image by 90 degrees, counter-clockwise direction.
+            }
+
+            \c 90;flip
+            {
+               Rotate the image by 90 degrees in the counter-clockwise direction, then flip it horizontally.
+            }
+
+            \c -90
+            {
+               Rotate the image by 90 degrees, clockwise direction.
+            }
+
+            \c -90;flip
+            {
+               Rotate the image by 90 degrees in the clockwise direction, then flip it horizontally.
+            }
+
+            \c 180
+            {
+               Rotate the image by 180 degrees.
+            }
+
+            \c 180;flip
+            {
+               Rotate the image by 180 degrees, then flip it horizontally (equivalent to a vertical reflection).
+            }
+         }
+
+         A decoder supporting image orientation \e should apply the appropriate rotation and/or reflection upon loading an image to be represented visually, if the \c orientation attribute is present for the corresponding \c Image element.
+
+         However, a decoder \e must \e not apply orientation transformations to images loaded for image processing tasks that depend on the physical disposition of pixel data. For example, an image calibration process should not reorient image data, since this might invalidate the application of master calibration frames.
+      }
+
+      \c { \label iccprofileref_image_attribute iccProfileRef="#\e{element-id}" }
+      {
+         This attribute is \e optional for all \c Image elements. It associates an \lref iccprofile_core_element \c ICCProfile core element with an image through a \e {same-document reference}.\ref rfc_3986
+
+         \c\e element-id \e must be the unique identifier of an \c ICCProfile core element, which \e must be defined in the XISF unit. The referenced ICC color profile \e shall be associated with this \c Image element.
+      }
+
+      \c { \label rgbwsref_image_attribute rgbwsRef="#\e{element-id}" }
+      {
+         This attribute is \e optional for all \c Image elements. It associates an \lref rgbws_core_element \c RGBWS core element with an image through a \e {same-document reference}.\ref rfc_3986
+
+         \c\e element-id \e must be the unique identifier of an \c RGBWS core element, which \e must be defined in the XISF unit. The referenced RGBWS \e shall be associated with this \c Image element.
+      }
+
+      \c { \label resolutionref_image_attribute resolutionRef="#\e{element-id}" }
+      {
+         This attribute is \e optional for all \c Image elements. It associates a \lref resolution_core_element \c Resolution core element with an image through a \e {same-document reference}.\ref rfc_3986
+
+         \c\e element-id \e must be the unique identifier of a \c Resolution core element, which \e must be defined in the XISF unit. The referenced resolution parameters \e shall be associated with this \c Image element.
+      }
+
+      \c { \label thumbnailref_image_attribute thumbnailRef="#\e{element-id}" }
+      {
+         This attribute is \e optional for all \c Image elements. It associates a \lref thumbnail_core_element \c Thumbnail core element with an image through a \e {same-document reference}.\ref rfc_3986
+
+         \c\e element-id \e must be the unique identifier of a \c Thumbnail core element, which \e must be defined in the XISF unit. The referenced thumbnail image \e shall be associated with this \c Image element.
+      }
+
+      \c { id="\e{element-id}" }
+      {
+         This attribute is \e optional for all \c Image elements.
+
+         \c\e element-id \e must be a valid image identifier satisfying the following regular expression:\ref ecmascript_regexp
+
+         \c { \hs #: [_a-zA-Z][_a-zA-Z0-9]* :# }
+
+         Image identifiers \e shall be interpreted as case-sensitive.
+
+         Image identifiers \e must be unique in an XISF unit, that is, no other XML element can be assigned the same identifier.
+      }
+   }
+}

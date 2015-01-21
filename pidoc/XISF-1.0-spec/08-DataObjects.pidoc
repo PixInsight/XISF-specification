@@ -1,0 +1,11 @@
+
+\section { XISF Data Objects } {
+
+   Two high-level data objects have been defined in this XISF specification: \lref xisf_property Property and \lref xisf_image Image. In this section we define the structural and functional properties of these objects, independently on the structure of an \lref xisf_unit {XISF unit}. In successive sections we'll describe how these objects are represented and how they play their roles for data serialization. As a result of the extensibility of XISF, you can expect new high-level objects to be defined in future versions of this specification.
+
+   \include 08_01-DataObjects_FundamentalScalarTypes.pidoc
+   \include 08_02-DataObjects_Endianness.pidoc
+   \include 08_03-DataObjects_PlainTextSerialization.pidoc
+   \include 08_04-DataObjects_Property.pidoc
+   \include 08_05-DataObjects_Image.pidoc
+}

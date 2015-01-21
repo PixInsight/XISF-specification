@@ -1,0 +1,11 @@
+
+\section { Version History } {
+
+   \table[numbered,caption,header,width:100\%] {
+      { Version History of the XISF Specification Document }
+      { { Version } { Date }              { Description } }
+      { {         } { July-October 2014 } { First internal working documents about XISF. } }
+      { { 0.1     } { December 2014 }     { First public draft of the XISF specification. } }
+      { { 0.2     } { January 2015 }      { Second public draft of the XISF specification. } }
+   }
+}

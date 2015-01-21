@@ -1,0 +1,9 @@
+
+\subsection { \label data_block XISF Data Block } {
+
+   An XISF data block is a sequence of one or more contiguous bytes pertaining to an \lref xisf_unit {XISF unit}.
+
+   The location and role of an XISF data block \e must be completely and unambiguously defined by the unique \lref xisf_header {XISF header} of the XISF unit to which it pertains.
+
+   An XISF data block \e must be either \lref attached_data_block attached to a \lref monolithic_xisf_file {monolithic XISF file}, stored in an \lref data_blocks_file {XISF data blocks file}, serialized directly in the XISF header, or accessible as an external resource. See the section on \lref data_block_location {XISF data block location} for detailed information.
+}

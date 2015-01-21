@@ -1,0 +1,16 @@
+
+\section { XISF Structure } {
+
+   \include 09_01-Structure_XISFUnit.pidoc
+   \include 09_02-Structure_FileNameSuffixes.pidoc
+   \include 09_03-Structure_XISFHeaderFile.pidoc
+   \include 09_04-Structure_XISFDataBlock.pidoc
+   \include 09_05-Structure_AttachedXISFDataBlock.pidoc
+   \include 09_06-Structure_ExternalXISFDataBlock.pidoc
+   \include 09_07-Structure_MonolithicXISFFile.pidoc
+   \include 09_08-Structure_XISFDataBlocksFile.pidoc
+   \include 09_09-Structure_XISFHeader.pidoc
+   \include 09_10-Structure_XISFDataBlockLocation.pidoc
+   \include 09_11-Structure_XISFDataBlockChecksum.pidoc
+   \include 09_12-Structure_XISFDataBlockCompression.pidoc
+}

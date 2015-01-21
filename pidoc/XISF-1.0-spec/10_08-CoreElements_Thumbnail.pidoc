@@ -1,0 +1,25 @@
+
+\subsection { \label thumbnail_core_element \c Thumbnail Core Element } {
+
+   The \c Thumbnail core element defines a thumbnail image and associates it with an \lref xisf_image {XISF image} stored in an \lref xisf_unit {XISF unit}. A thumbnail is a two-dimensional image of relatively small dimensions providing a significant representation of a larger image. Typically, thumbnails are loaded by file browser applications to generate quick graphical previews of images stored in disk files.
+
+   A \c Thumbnail element \e shall serialize an \lref xisf_image {XISF image}, which \e must have the following properties:
+
+   \list {
+      { Two-dimensional image. }
+      { UInt8 or UInt16 sample format. }
+      { RGB or grayscale color space. }
+      { Its width and height \e must \e not be greater than 1024 pixels. }
+      { Can have one alpha channel. }
+   }
+
+   Other than its tag name, the \c Thumbnail core element \e shall be identical to the \lref image_core_element \c Image core element with the following restrictions:
+
+   \list {
+      { The \c bounds attribute \e must \e not exist. This implies that the representable range of a thumbnail image is always \[0,2\sup{n}--1\], where n is either 8 or 16 (bits). }
+      { The \c cfaType attribute \e must \e not exist. This implies that thumbnail images associated with mosaiced images \e should be already demosaiced versions. }
+      { The \c thumbnailRef attribute \e must \e not exist. }
+   }
+
+   A \c Thumbnail element \e must be either a child element of an \lref image_core_element \c Image core element, or a child element of the unique \lref xisf_root_element {XISF root element}. In the latter case, an \c id attribute \e should be used to reference the \c Thumbnail element from the  \lref thumbnailref_image_attribute \c thumbnailRef attribute of an \c Image element.
+}

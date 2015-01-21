@@ -1,0 +1,133 @@
+
+\section { Definitions } {
+
+   The following sub-sections form a collection of important terms and concepts identified during the production of this document. They are included here for informational/reference purposes only.
+
+   \definition {
+
+      { Byte }
+      {
+         An 8-bit unsigned binary integer.
+      }
+
+      { File }
+      {
+         A file is a sequence of \e N 8-bit contiguous bytes, where \e N is the file length and bytes are numbered from 0 to \e{N}--1. The \e theoretical maximum file length is 2\sup{64}--1 = 18,446,744,073,709,551,615 bytes.
+      }
+
+      { Byte offset / byte position }
+      {
+         Number of bytes from the beginning of a file, or from the beginning of a given section of a file.
+      }
+
+      { File system }
+      {
+         A file system allows software applications to store and retrieve files on storage devices. Files are usually organized in a hierarchical structure of \e directories (also known as \e {folders}). Files and directories can be accessed through identifying \e {names}.
+      }
+
+      { Storage unit }
+      {
+         A file or a set of files storing an XISF unit or part of an XISF unit.
+      }
+
+      { \lref xisf_unit {XISF unit} }
+      {
+         A set of one or more files defining contents in the XISF format.
+      }
+
+      { Monolithic XISF unit }
+      {
+         An XISF unit structured following the monolithic storage model.
+      }
+
+      { Distributed XISF unit }
+      {
+         An XISF unit structured following the distributed storage model.
+      }
+
+      { \lref xisf_header {XISF header} }
+      {
+         A valid XML 1.0\ref xml_1_0 document encoded in UTF-8\ref unicode_encoding_forms \ref unicode_encoding_schemes that describes and locates the entire contents of an \lref xisf_unit {XISF unit}.
+      }
+
+      { \lref xisf_header_file {XISF header file} }
+      {
+         An \lref xisf_header {XISF header} stored as a single file.
+      }
+
+      { \lref data_block {XISF data block} }
+      {
+         A file or a subset of a file storing data that can be accessed through an \lref xisf_unit {XISF unit}.
+      }
+
+      { \lref data_blocks_file {XISF data blocks file} }
+      {
+         A file that allows indexed access to XISF data blocks, available as a local or a remote resource.
+      }
+
+      { Encoder }
+      {
+         Any system, application, utility or device able to generate \lref xisf_unit {XISF units} according to this specification.
+      }
+
+      { Decoder }
+      {
+         Any system, application, utility or device able to read and interpret the contents of an \lref xisf_unit {XISF unit} according to this specification.
+      }
+
+      { Scalar }
+      {
+         A single value without internal structure, such as an integer or floating point number.
+      }
+
+      { Complex number }
+      {
+         A number that can be expressed in the form \im{a + bi}, where \im{a} and \im{b} are real numbers and \im{i} is the \e {imaginary unit}, which is defined by the equation \im{#: i^2 = -1 :#}. The components \im{a} and \im{b} of a complex number are called its \e real and \e imaginary parts or components.
+      }
+
+      { Vector }
+      {
+         A homogeneous sequence of zero or more contiguous scalars or complex numbers.
+      }
+
+      { Matrix }
+      {
+         A homogeneous set of contiguous scalars or complex numbers, structured as a two-dimensional array with a fixed number of rows and columns.
+      }
+
+      { String }
+      {
+         A homogeneous sequence of zero or more contiguous Unicode or ASCII code points represented as integer scalars.
+      }
+
+      { Array }
+      {
+         A contiguous sequence of zero or more objects, where any object can be accessed through an \e {array index}.
+      }
+
+      { Homogeneous structure }
+      {
+         A structure that can only store objects of the same class or data type.
+      }
+
+      { Heterogeneous structure }
+      {
+         A structure that can store objects of different classes or data types.
+      }
+
+      { Contiguous sequence / contiguous objects }
+      {
+         Zero or more objects stored consecutively without any gaps.
+      }
+
+      { Little-endian }
+      {
+         A data encoding where the bytes within a 16-bit, 32-bit or 64-bit value are addressed from the least significant to the most significant as the byte address increases.
+      }
+
+      { Big-endian }
+      {
+         A data encoding where the bytes within a 16-bit, 32-bit or 64-bit value are addressed from the most significant to the least significant as the byte address increases.
+      }
+   }
+}

@@ -1,0 +1,142 @@
+
+\subsection { \label data_block_location XISF Data Block Location } {
+
+   The location---and, when necessary, also the \e {dimensions}---of an \lref data_block {XISF data block} \e must be completely defined in the \lref xisf_header {XISF header} of the \lref xisf_unit {XISF unit} where the block is serialized. The \c location XML attribute defines the location of an XISF data block and a number of related properties. The values of a \c location attribute can be:
+
+   \definition {
+
+      { \label inline_data_block \c { location="inline:\e{encoding}" } }
+      {
+         Defines an \e {inline XISF data block}. An inline data block is serialized in the character contents of an XML element, encoded as plain ASCII\ref unicode_ascii_subset text. \e\c encoding defines the data encoding used, which \e must be either \c base64 or \c hex, corresponding to the Base64 and Base16 (or hexadecimal) encodings,\ref rfc_4648 respectively. For data encoded in Base16, the digit symbols 'a', 'b', 'c', 'd', 'e' and 'f' \e shall be used to represent the nibble values 10\sub{10}, 11\sub{10}, 12\sub{10}, 13\sub{10}, 14\sub{10} and 15\sub{10}, respectively; in other words, a lowercase hexadecial representation \e shall be used for Base16 encoding.
+
+         Example of inline XISF data block:
+
+         \code[lang:xml] { #:
+<Property id="TestProperty" type="ByteArray" length="34" location="inline:base64">
+   VGhpcyBpcyBhIHRlc3QgLSBURVNUIC0gMTIzNDU2Nzg5MA==
+</Property>
+         :# }
+
+         Note that white space is irrelevant and \e must be ignored for Base64 and Base16 encoded data.
+
+         XML elements serializing inline XISF data blocks \e shall \e not have child XML elements.
+      }
+
+      { \label embedded_data_block \c { location="embedded" } }
+      {
+         Defines an \e {embedded XISF data block}. An embedded block \e shall be serialized in the character contents of a \c Data child element, encoded as plain ASCII\ref unicode_ascii_subset text. The \c Data child element \e must have an \c encoding attribute, with the same meaning and rules as for \lref inline_data_block {inline data blocks}.
+
+         Example of embedded XISF data block:
+
+         \code[lang:xml] { #:
+<Image geometry="6:6:3" sampleFormat="UInt8" colorSpace="RGB" location="embedded">
+   <Data encoding="base64">
+      AAAAAP8A/wD/AAAAAAAAAP8AAP8AAAAAAAAA/wD/AP8AAAAA/wD//wD/AP8AAP8A/wD//wD//
+      wD//wD/AP8AAP8A/wD//wD/AP8AAAAAAAAA/wD/AP8AAAAAAAAAAP8A/wD/AAAAAAAAAP8A
+   </Data>
+</Image>
+         :# }
+
+         Note that white space is irrelevant and \e must be ignored for Base64 and Base16 encoded data.
+
+         The \c Data child element serializing an embedded data block \e shall \e not have child elements or additional character data contents.
+
+         Embedded data blocks are necessary for blocks that have to be serialized within XML elements that can have child elements or character data contents. In these cases an inline serialization is \e forbidden by this specification.
+      }
+
+      \c { \label attachment_data_block location="attachment:\e{position}:\e{size}" }
+      {
+         Defines an \e {attached XISF data block} in a \lref monolithic_xisf_file {monolithic XISF file}. \c\e position and \c\e size \e must be plain text representations of unsigned integers. The value of \c\e position is the byte position of the first byte of the XISF data block from the beginning of the monolithic XISF file where it is stored. The value of \c\e size is the size in bytes of the XISF data block.
+
+         Example of attached XISF data block:
+
+         \code[lang:xml] { #:
+<Image geometry="960:540:3" sampleFormat="Float32" bounds="0:1" colorSpace="RGB"
+                  location="attachment:4096:6220800" />
+         :# }
+      }
+
+      \c { \label url_data_block location="external:url(\e{URL})"\n
+           location="external:\e{index-id}:url(\e{URL})" }
+      {
+         Defines an \e {external XISF data block} in a distributed \lref xisf_unit {XISF unit}.
+
+         \c\e URL \e must be a valid \e {uniform resource locator}\ref rfc_3986 specification for a local or remote file where the XISF data block should be available.
+
+         In the first form, the data block \e shall start at byte position zero of the specified file, and its size in bytes \e must be the total size of the specified file, whose value \e must be retrievable by some means that are beyond the scope of this specification; for example, by reading the properties of a local directory entry, or by fetching the total length of the data downloaded from a remote server.
+
+         In the second form, the specified file \e must be an \lref data_blocks_file {XISF data blocks file}. \c\e index-id \e must be a plain text representation of an unsigned integer, whose value \e must be the unique identifier of a \lref block_index_element {block index element} in the XISF data blocks file. \c\e index-id \e should be represented as an hexadecimal number. The referenced block index element \e must define the position and size of the XISF data block being located.
+
+         Example of external XISF data block stored on a remote server:
+
+         \code[lang:xml] { #:
+<Image geometry="4096:4096:1" sampleFormat="UInt16"
+                  location="external:url(http://mysite.example.com/myfile.bin)" />
+         :# }
+
+         Example of XISF data block stored in an XISF data blocks file:
+
+         \code[lang:xml] { #:
+<Property id="AHugeOne" type="F32Matrix" rows="100000" columns="25000"
+                  location="external:0x7a73526b584c6167:url(file:///data/huge-things.xisb)" />
+         :# }
+
+         Parentheses appearing in a URL \e must be written as percent-encoded octets,\ref rfc_3986 so that the resulting \c location attribute value can be parsed correctly. For example:
+
+         \code[import] example-with-percent-encodings.xml
+
+         In the above example the file name being referenced is \c "example(2015).dat".
+      }
+
+      \c { \label absolute_path_data_block location="external:path(\e{abs-file-path})"\n
+           location="external:\e{index-id}:path(\e{abs-file-path})" }
+      {
+         Defines an external XISF data block stored in a local file with an \e {absolute file path specification}.
+
+         \c\e {abs-file-path} is an absolute path\ref open_group_posix_absolute_pathname to a file located on, or accessible from, the local file system. File path specifications \e shall follow standard UNIX pathname syntax rules\ref open_group_posix_pathname and pathname resolution\ref open_group_posix_pathname_resolution on all platforms. In particular, \e only slash '/' characters \e shall be used as directory separators.
+
+         In the first form, the data block \e shall start at byte position zero of the specified file, and its size in bytes \e must be the total size of the file, whose value \e must be retrievable by some means that are beyond the scope of this specification; for example, by reading the properties of a local directory entry.
+
+         In the second form, the specified file \e must be an \lref data_blocks_file {XISF data blocks file}. \c\e index-id \e must be a plain text representation of an unsigned integer, whose value \e must be the unique identifier of a \lref block_index_element {block index element} in the XISF data blocks file. \c\e index-id \e should be represented as an hexadecimal number. The referenced block index element \e must define the position and size of the XISF data block being located.
+
+         In general, absolute paths are \e not \e recommended and \e should be avoided, since they tend to prevent distributed XISF units from being relocatable. If a unit with absolute path names is moved or copied to a different file system or machine, it will cease to be valid unless the original directory tree exists on the target file system.
+
+         In some special cases, however, absolute paths can be useful. For example, a virtualized file system can be based on absolute paths to symbolic links\ref open_group_posix_symbolic_link pointing to actual directories. In this case a distributed XISF unit with absolute paths to external resources can be made relocatable by emulating the required directory tree structure through symbolic links on the deployment file system.
+
+         Parentheses appearing in a path specification \e must be escaped with a backslash, so that the resulting \c location attribute value can be parsed correctly. For example:
+
+         \code[lang:xml] { #:
+<Property id="DescriptionDocument" type="String8"
+                  location="external:path(/Documents/description\(draft\).txt)" />
+         :# }
+      }
+
+      \c { \label relative_path_data_block location="external:@header_path/\e{rel-file-path}"\n
+           location="external:\e{index-id}:@header_path/\e{rel-file-path}" }
+      {
+         Defines an external XISF data block stored in a local file with a \e {relative directory path specification}.
+
+         \c\e {rel-file-path} is a path to a file, relative\ref open_group_posix_relative_pathname to the directory where the file containing the XISF header is located on, or accessible from, the local file system. Directory path specifications \e shall follow standard UNIX pathname syntax rules\ref open_group_posix_pathname and pathname resolution\ref open_group_posix_pathname_resolution on all platforms. In particular, \e only slash '/' characters \e shall be used as directory separators.
+
+         In the first form, the data block \e shall start at byte position zero of the specified file, and its size in bytes \e must be the total size of the file, whose value \e must be retrievable by some means that are beyond the scope of this specification; for example, by reading the properties of a local directory entry.
+
+         In the second form, the specified file \e must be an \lref data_blocks_file {XISF data blocks file}. \c\e index-id \e must be a plain text representation of an unsigned integer, whose value \e must be the unique identifier of a \lref block_index_element {block index element} in the XISF data blocks file. \c\e index-id \e should be represented as an hexadecimal number. The referenced block index element \e must define the position and size of the XISF data block being located.
+
+         The following \c Image element shows an example of XISF data block located with a relative directory specification. The \c sample-screenshots.xisb data blocks file should be on the same directory as the XISF header file being decoded:
+
+         \code[lang:xml] { #:
+<Image geometry="1024:768:3" sampleFormat="UInt8" colorSpace="RGB"
+               location="external:0x4d373e33756e480f:@header_path/sample-screenshots.xisb" />
+         :# }
+
+         The following example assumes that an \c astrometry sub-directory exists on the local directory represented by \c @header_path:
+
+         \code[lang:xml] { #:
+<Property id="AstrometricSolution" type="F64Matrix" rows="428" columns="16"
+               location="external:@header_path/astrometry/solution.dat" />
+         :# }
+
+         Relative file paths are the best option to build relocatable distributed XISF units. A distributed unit that locates all of its external data blocks through relative paths can be transferred to any location on any file system, including multiple machines, without breaking its validity. This can't be ensured for blocks located by absolute paths.
+      }
+   }
+}

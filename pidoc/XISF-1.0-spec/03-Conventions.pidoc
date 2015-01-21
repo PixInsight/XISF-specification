@@ -1,0 +1,48 @@
+
+\section { Terminology and Conventions } {
+
+   \subsection { Requirement Levels } {
+
+      The key words \e must, \e {must not}, \e required, \e shall, \e {shall not}, \e should, \e {should not}, \e recommended, \e may, and \e optional in this document are to be interpreted as described in RFC 2119.\ref rfc_2119
+   }
+
+   \subsection { Typographical Conventions } {
+
+      \c {Monospaced text} represents literal source code fragments.
+
+      \c\e {Italicized monospace text} represents metalanguage fragments describing source code fragments:
+
+         \block[marginLeft:3em] {
+            \c { \hs\hs\hs name="\e{value}" }
+
+            In this example, the word \c\e value is a \e metasymbol used to describe the value of a \c name XML attribute.
+         }
+
+      In code fragments, an ellipsis represents a variable-length list of items:
+
+         \block[marginLeft:3em] {
+            \c { \hs\hs\hs \e{item}\sub{1}:...:\e{item}\sub{N} }
+
+            This example shows a list of N items separated by literal colon '\c{:}' characters. Note that the \c\e{item}\sub{i} elements are metasymbols in this case, not literal fragments.
+         }
+
+      Portions of this document enclosed by gray dashed lines represent literal source code examples:
+
+         \block[marginLeft:3em] {
+            \code {
+   This is a source code example.
+            }
+
+            Note that literal source code fragments not necessarily correspond to working code examples. When necessary or not obvious, this is indicated in the text describing the examples.
+         }
+
+      The subindexes \sub{2} \sub{8} \sub{10} and \sub{16} indicate base 2 (or binary), base 8 (octal), base 10 (decimal), and base 16 (hexadecimal) integers, respectively. For example:
+
+         \block[marginLeft:3em] {
+
+            76\sub{10} = 4C\sub{16}
+         }
+
+      Figures are for illustration only; unless explicitly stated, they are not reference renderings.
+   }
+}

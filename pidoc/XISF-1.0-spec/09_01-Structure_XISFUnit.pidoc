@@ -1,0 +1,34 @@
+
+\subsection { \label xisf_unit XISF Unit } {
+
+   An \s {XISF unit} \e shall consist of a \e unique \lref xisf_header {XISF header} and zero or more \lref data_block {XISF data blocks}. Two storage models are supported and formally defined: \e monolithic and \e distributed:
+
+   \list[spaced] {
+
+      { The contents of a \s {monolithic XISF unit} (Figure \figref fig_monolithic_XISF_unit_structure) \e shall be distributed as a single \lref monolithic_xisf_file {monolithic XISF file}, which \e must include a unique \lref xisf_header {XISF header} and zero or more \lref attached_data_block {attached XISF data blocks}. }
+
+      { The contents of a \s {distributed XISF unit} (Figure \figref fig_distributed_XISF_unit_structure) \e shall be distributed as a unique \lref xisf_header_file {XISF header file} plus zero or more \lref external_data_block {external XISF data blocks}, available as local or remote resources. External XISF data blocks \e may be stored either in \lref data_blocks_file {XISF data blocks files} or in generic files. }
+   }
+
+   The difference between the monolithic and distributed storage models is that a monolithic XISF unit \e must store the header and all of the data pertaining to the XISF unit in a single file, while a distributed XISF unit \e must store the header and the data separately in different files.
+
+   \figure[numbered:fig_monolithic_XISF_unit_structure] {
+
+      \figtag \s { Structure of a monolithic XISF unit. }
+
+      \vs[length:2em]
+
+      \center \image[width:40.85em] { monolithic-XISF-unit.svg }
+   }
+
+   \vs
+
+   \figure[numbered:fig_distributed_XISF_unit_structure] {
+
+      \figtag \s { Structure of a distributed XISF unit. }
+
+      \vs[length:2em]
+
+      \center \image[width:40.85em] { distributed-XISF-unit.svg }
+   }
+}
