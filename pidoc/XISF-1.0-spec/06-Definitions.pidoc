@@ -1,7 +1,7 @@
 
 \section { Definitions } {
 
-   The following sub-sections form a collection of important terms and concepts identified during the production of this document. They are included here for informational/reference purposes only.
+   The following subsections form a collection of important terms and concepts identified during the production of this document. They are included here for informational/reference purposes only.
 
    \definition {
 
@@ -77,7 +77,7 @@
 
       { Scalar }
       {
-         A single value without internal structure, such as an integer or floating point number.
+         A single value without internal structure, such as an integer or a floating point number.
       }
 
       { Complex number }
@@ -97,7 +97,7 @@
 
       { String }
       {
-         A homogeneous sequence of zero or more contiguous Unicode or ASCII code points represented as integer scalars.
+         A homogeneous sequence of zero or more contiguous Unicode code points represented as integer scalars.
       }
 
       { Array }
@@ -117,7 +117,17 @@
 
       { Contiguous sequence / contiguous objects }
       {
-         Zero or more objects stored consecutively without any gaps.
+         Zero or more objects or structures stored consecutively without any gaps.
+      }
+
+      { Case-sensitive }
+      {
+         A text property, such as the name or identifier of an object or data item, which distinguishes between uppercase and lowercase letters. For example, the words "thisIsFoo" and "thisisfoo" are different if considered as case-sensitive.
+      }
+
+      { Case-insensitive }
+      {
+         A text property, such as the name or identifier of an object or data item, which does not distinguish between uppercase and lowercase letters. For example, the words "FooBar" and "foobar" are equivalent if considered as case-insensitive.
       }
 
       { Little-endian }

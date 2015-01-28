@@ -1,7 +1,7 @@
 
 \subsection { \label image_core_element \c Image Core Element } {
 
-   The \c Image core element serializes an \lref xisf_image {XISF image} stored in an \lref xisf_unit {XISF unit}. \c Image elements \e shall be child elements of the unique \lref root_element {XISF root element} of the XISF unit.
+   The \c Image core element defines an \lref xisf_image {XISF image} serialized in an \lref xisf_unit {XISF unit}. \c Image elements \e shall be child elements of the unique \lref root_element {XISF root element} of the XISF unit.
 
    The entire pixel data contents of an XISF image \e shall be serialized as a single \lref data_block {XISF data block}. An \c Image element cannot serialize pixel data as an \lref inline_data_block {inline XISF data block}, this restriction obeying to the fact that \c Image elements can have child XML elements.
 
@@ -47,17 +47,17 @@
          }
       }
 
-      \c { bounds="\e{lower}:\e{upper}" }
+      \c { \label bounds_image_attribute bounds="\e{lower}:\e{upper}" }
       {
-         This attribute \e shall be specified for all \c Image elements serializing floating point real pixel data. It is \e optional for \c Image elements serializing integer pixel data, and \e must \e not be specified for complex images. These restrictions are further described below.
+         This attribute \e shall be specified for all \c Image elements serializing floating point real pixel data. It is \e optional for \c Image elements serializing integer pixel data, and \e must \e not be specified for complex images. These restrictions are further described and explained below.
 
          The \c bounds attribute defines the \e {representable range} of a real or integer image in the grayscale or RGB color spaces. \c\e lower is a plain text representation of a floating point number, whose value is the lower bound of the representable range, or the \e {black point} of the image. \c\e upper is a plain text representation of a floating point number, whose value is the upper bound of the representable range, or the \e {white point} of the image.
 
-         Consider an output device able to generate image representations for pixel sample values in the \[v\sub{0},v\sub{1}\] range, such that v\sub{0} < v\sub{1}. We call this range the device's \e {output range}. Pixel samples outside the output range will generate \e saturated representations: Any pixel sample value \le v\sub{0} will be represented as black, while any pixel sample value \ge v\sub{1} will be represented as white. Pixel samples within the output range will generate unsaturated representations as gray levels proportional to the sample values. Assuming an image representation device so defined, the representable range of the image \e shall be applied according to the following algorithm:
+         Consider an output device able to generate image representations for pixel sample values in the \[v\sub{0},v\sub{1}\] range, such that v\sub{0} < v\sub{1}. We call this range the device's \e {output range}. Pixel samples outside the output range will generate \e saturated representations: Any pixel sample value \le v\sub{0} will be represented as black, while any pixel sample value \ge v\sub{1} will be represented as white. Pixel samples within the output range will generate unsaturated representations as gray levels directly proportional to the sample values. Assuming an image representation device so defined, the representable range of the image \e shall be applied according to the following algorithm:
 
          \block[marginleft:3em] \c {
-            r\sub{0} &#8592; valueOf( \c\e lower )\n
-            r\sub{1} &#8592; valueOf( \c\e upper )\n
+            r\sub{0} &#8592; valueOf( \e lower )\n
+            r\sub{1} &#8592; valueOf( \e upper )\n
             if r\sub{1} < r\sub{0}\n
                \hs[length:2em] exchange( r\sub{0}, r\sub{1} )\n
             end\n
@@ -89,18 +89,29 @@
          For images expressed in color spaces different from grayscale or RGB, the representable range defined by the \c\e lower and \c\e upper bounds \e shall apply to pixel sample values \e {once converted} to the RGB color space.
       }
 
+      \c { offset="\e{sample-value}" }
+      {
+         This attribute is \e optional for all \c Image elements.
+
+         Defines a positive pixel sample value that has been added to every pixel sample in the image. An offset value (also known as \e pedestal) is necessary sometimes to ensure positivity of pixel data, mainly because of noise variations.
+
+         \c\e sample-value \e must be a plain text representation of a floating point scalar. Its value \e must be greater than or equal to zero, and can be subtracted from each pixel sample in the image to obtain zero-based pixel sample values. This operation is critical for image calibration and integration processes.
+
+         For \c Image elements without an \c offset attribute, the default offset value \e shall be zero.
+      }
+
       \c { \label colorspace_image_attribute colorSpace="\e{color-space}" }
       {
          This attribute is \e optional for all \c Image elements.
 
-         Defines the color space where pixel sample values are represented for the serialized image. \c\e color-space \e must be one of the following literals:
+         Defines the color model or color space where pixel sample values are represented for the serialized image. \c\e color-space \e must be one of the following literals:
 
          \table[caption,header,width:100\%] {
             { \c colorSpace Attribute Values }
-            { { Color space / color ordering system } { \c colorSpace attribute value } }
-            { { Grayscale (monochrome) }              { \c Gray } }
-            { { RGB }                                 { \c RGB } }
-            { { CIE L*a*b* }                          { \c CIELab } }
+            { { Color space }            { \c colorSpace attribute value } }
+            { { Grayscale (monochrome) } { \c Gray } }
+            { { RGB }                    { \c RGB } }
+            { { CIE L*a*b* }             { \c CIELab } }
          }
 
          For descriptions of these color spaces and the corresponding transformation algorithms, see the \lref xisf_image {XISF Image} section.
@@ -117,11 +128,43 @@
          \table[caption,header,width:100\%] {
             { \c pixelStorage Attribute Values }
             { { Pixel storage model }  { \c pixelStorage attribute value } }
-            { { Planar pixel storage model } { \c planar } }
-            { { Normal pixel storage model } { \c normal } }
+            { { Planar pixel storage model } { \c Planar } }
+            { { Normal pixel storage model } { \c Normal } }
          }
 
          For \c Image elements without a \c pixelStorage attribute, the default \lref planar_pixel_storage_model {planar pixel storage model} \e shall be assumed.
+      }
+
+      \c { imageType="\e{type-spec}" }
+      {
+         This attribute \e must be generated by encoders---typically, by image acquisition applications---producing raw frames of the bias, dark, flat field and science/light types (see the table below). For the rest of image types this property is optional, but generating it is strongly \e recommended when appropriate.
+
+         \c\e type-spec \e shall be one of the following literals:
+
+         \table[caption,header,width:100\%] {
+            { \c imageType Attribute Values }
+            { { Image type }                        { \c imageType attribute value } }
+            { { Bias frame }                        { \c Bias } }
+            { { Dark frame }                        { \c Dark } }
+            { { Flat field }                        { \c Flat } }
+            { { Light or science frame }            { \c Light } }
+            { { Integrated bias frame }             { \c MasterBias } }
+            { { Integrated dark frame }             { \c MasterDark } }
+            { { Integrated flat field }             { \c MasterFlat } }
+            { { Integrated light or science image } { \c MasterLight } }
+            { { Defect map }                        { \c DefectMap } }
+            { { Pixel rejection map, high values  } { \c RejectionMapHigh } }
+            { { Pixel rejection map, low values  }  { \c RejectionMapLow } }
+            { { Slope map }                         { \c SlopeMap } }
+         }
+
+         A \e {master frame} is the result of the integration of two or more individual frames or images of the same type.
+
+         A \e {defect map} is an integer or floating point real image where nonzero pixel sample values represent invalid or defective pixels. Defective pixels are typically ignored or replaced with plausible statistical estimates, such as robust averages of neighbor pixels.
+
+         \e {Rejection maps} are integer or floating point real images where each pixel sample value is proportional to the number of rejected pixels in an integration process at the corresponding pixel coordinates. Low and high rejection maps correspond, respectively, to rejected pixels below and above a central reference value (typically a robust location estimate such as the median of a set of integrated pixels). A rejection map sample value equal to the lower bound of the \lref bounds_image_attribute {representable range} corresponds to zero rejected pixels, while the upper bound indicates that all integrated pixels have been rejected.
+
+         \e {Slope maps} are integer or floating point real images where each pixel sample value is proportional to the slope of a straight line fitted to a set of integrated pixels at the corresponding pixel coordinates. A slope map value equal to the lower bound of the \lref bounds_image_attribute {representable range} corresponds to a horizontal line (or a slope of zero degrees), while the upper bound represents a vertical line (infinite slope).
       }
 
       \c { cfaType="\e{cfa-spec}" }
@@ -142,17 +185,41 @@
          }
       }
 
+      \c { id="\e{image-id}" }
+      {
+         This attribute is \e optional for all \c Image elements. \c\e image-id \e shall be a sequence of ASCII characters satisfying the following regular expression:\ref ecmascript_regexp
+
+         \c { \hs #: [_a-zA-Z][_a-zA-Z0-9]* :# }
+
+         This attribute \e may be used by a decoder to identify images in a software application. \c\e image-id \e must be considered as case-sensitive.
+      }
+
+      \c { uuid="\e{uuid}" }
+      {
+         This attribute is \e optional for all \c Image elements. It \e may be generated to uniquely identify (with overwhelming probability) an XISF image object.
+
+         \c\e uuid \e must be a plain text representation of a Universally Unique Identifier (UUID)\ref rfc_4122 in canonical form. Version 4 UUIDs \e must be used with a pseudo-random number generator of cryptographic quality. The XorShift1024* algorithm\ref vigna_2014 \ref vigna_2014_1 \ref www_xorshift is \e recommended by this specification.
+
+         Example:
+
+         \code[lang:xml] { #:
+<Image uuid="c5c93b6d-9072-4e85-9548-1a5391377683"
+       geometry="960:540:3" sampleFormat="Float32" bounds="0:1"
+       colorSpace="RGB" compression="zlib:6220800" location="attachment:4570:1428362" />
+      :# }
+      }
+
       \c { orientation="\e{rotation}" }
       {
          This attribute is \e optional for all \c Image elements.
 
-         \c\e rotation defines geometric operations that \e should be applied to correct the default orientation of the image. \c\e rotation \e must be one of:
+         \c\e rotation defines geometric operations that can be applied to change the default orientation of the image. \c\e rotation \e must be one of:
 
          \definition {
 
             \c 0
             {
-               The default image orientation is correct, so do nothing.
+               The default image orientation should be preserved, so do nothing.
             }
 
             \c flip
@@ -191,50 +258,378 @@
             }
          }
 
-         A decoder supporting image orientation \e should apply the appropriate rotation and/or reflection upon loading an image to be represented visually, if the \c orientation attribute is present for the corresponding \c Image element.
+         If the \c orientation attribute is present for an \c Image element, a decoder supporting image orientation \e should apply the appropriate rotation and/or reflection upon loading an image to be represented visually.
 
          However, a decoder \e must \e not apply orientation transformations to images loaded for image processing tasks that depend on the physical disposition of pixel data. For example, an image calibration process should not reorient image data, since this might invalidate the application of master calibration frames.
       }
+   }
 
-      \c { \label iccprofileref_image_attribute iccProfileRef="#\e{element-id}" }
-      {
-         This attribute is \e optional for all \c Image elements. It associates an \lref iccprofile_core_element \c ICCProfile core element with an image through a \e {same-document reference}.\ref rfc_3986
+   \subsection { Astronomical Image Properties } {
 
-         \c\e element-id \e must be the unique identifier of an \c ICCProfile core element, which \e must be defined in the XISF unit. The referenced ICC color profile \e shall be associated with this \c Image element.
-      }
+      In this subsection we formalize a reduced set of \lref property_core_element \c Property core elements designed specifically to support astronomical image data. The \c Property elements described here \e may be generated by encoders as child XML elements of \lref image_core_element \c Image core elements. They \e may also be associated with images by means of \c uid attributes and child \lref reference_core_element \c Reference elements.
 
-      \c { \label rgbwsref_image_attribute rgbwsRef="#\e{element-id}" }
-      {
-         This attribute is \e optional for all \c Image elements. It associates an \lref rgbws_core_element \c RGBWS core element with an image through a \e {same-document reference}.\ref rfc_3986
+      The identifiers of these properties use namespaces to organize them into several fundamental categories: \c Observer, \c Organization, \c Observation, \c Instrument, and \c Processing. These properties have reserved identifiers that \e must \e not be used for purposes different from the ones described herein.
 
-         \c\e element-id \e must be the unique identifier of an \c RGBWS core element, which \e must be defined in the XISF unit. The referenced RGBWS \e shall be associated with this \c Image element.
-      }
+      All of these properties are optional. However, all encoders---especially image acquisition applications---\e should implement them as necessary and appropriate, following the norms and recommendations given in the list below.
 
-      \c { \label resolutionref_image_attribute resolutionRef="#\e{element-id}" }
-      {
-         This attribute is \e optional for all \c Image elements. It associates a \lref resolution_core_element \c Resolution core element with an image through a \e {same-document reference}.\ref rfc_3986
+      \definition {
 
-         \c\e element-id \e must be the unique identifier of a \c Resolution core element, which \e must be defined in the XISF unit. The referenced resolution parameters \e shall be associated with this \c Image element.
-      }
+%%%%%%%%% Observer namespace
 
-      \c { \label thumbnailref_image_attribute thumbnailRef="#\e{element-id}" }
-      {
-         This attribute is \e optional for all \c Image elements. It associates a \lref thumbnail_core_element \c Thumbnail core element with an image through a \e {same-document reference}.\ref rfc_3986
+         { \c Observer:Name }
+         {
+            A \lref string_property_type String property. The name or identification of the person or group that acquired the image or carried out the observation.
 
-         \c\e element-id \e must be the unique identifier of a \c Thumbnail core element, which \e must be defined in the XISF unit. The referenced thumbnail image \e shall be associated with this \c Image element.
-      }
+            Example:
 
-      \c { id="\e{element-id}" }
-      {
-         This attribute is \e optional for all \c Image elements.
+            \code[lang:xml] { #:
+<Property id="Observer:Name" type="String">Nyota Uhura</Property>
+            :# }
+         }
 
-         \c\e element-id \e must be a valid image identifier satisfying the following regular expression:\ref ecmascript_regexp
+%%%%%%%%% Organization namespace
 
-         \c { \hs #: [_a-zA-Z][_a-zA-Z0-9]* :# }
+         { \c Organization:Name }
+         {
+            A \lref string_property_type String property. The name or identification of the organization (such as a company, institution, etc.) responsible for the data acquired during this observation.
+         }
 
-         Image identifiers \e shall be interpreted as case-sensitive.
+%%%%%%%%% Observation namespace
 
-         Image identifiers \e must be unique in an XISF unit, that is, no other XML element can be assigned the same identifier.
+         { \c Observation:Equinox }
+         {
+            A \lref float64_property_type Float64 property. The equinox of equatorial coordinates expressed in years. A value before 1984 is a Besselian epoch; otherwise it is a Julian epoch.
+
+            This property applies to the coordinates given by the following properties: \c Observation:Object:RA, \c Observation:Object:Dec, \c Observation:Center:RA, and \c Observation:Center:Dec.
+
+            If this property is not specified, the default value \e shall be 2000.0 (J2000.0 = JD 2451545.0).
+
+            Example:
+
+            \code[lang:xml] { #:
+<Property id="Observation:Equinox" type="Float64" value="1991.25" />
+            :# }
+         }
+
+         { \c Observation:CelestialReferenceSystem }
+         {
+            A \lref string_property_type String property. Identifies the coordinate reference system to which celestial equatorial coordinates are referred.
+
+            This property applies to the coordinates given by the following properties: \c Observation:Object:RA, \c Observation:Object:Dec, \c Observation:Center:RA, and \c Observation:Center:Dec.
+
+            If this property is not specified, the default reference system \e shall be the International Celestial Reference System (ICRS).\ref www_icrs
+
+            Example:
+
+            \code[lang:xml] { #:
+<Property id="Observation:CelestialReferenceSystem" type="String">FK5</Property>
+            :# }
+         }
+
+         { \c Observation:GeodeticReferenceSystem }
+         {
+            A \lref string_property_type String property. Identifies the geodetic system or datum to which geographic coordinates are referred.
+
+            This property applies to the coordinates given by the following properties: \c Observation:Location:Longitude, \c Observation:Location:Latitude, and \c Observation:Location:Elevation.
+
+            If this property is not specified, the default datum \e shall be the World Geodetic System, WGS 84.\ref wikipedia_wgs
+
+            Example:
+
+            \code[lang:xml] { #:
+<Property id="Observation:GeodeticReferenceSystem" type="String">NAD83</Property>
+            :# }
+         }
+
+         { \c Observation:Center:RA }
+         {
+            A \lref float64_property_type Float64 property. The Right Ascension equatorial coordinate of the center of the image, expressed in degrees. This property refers to the coordinates the telescope has been aimed at in the sky, \e not to an astrometric solution of the image.
+
+            Example:
+
+            \code[lang:xml] { #:
+<Property id="Observation:Center:RA" type="Float64" value="195.4997911" />
+            :# }
+         }
+
+         { \c Observation:Center:Dec }
+         {
+            A \lref float64_property_type Float64 property. The Declination equatorial coordinate of the center of the image, expressed in degrees. This property refers to the coordinates the telescope has been aimed at in the sky, \e not to an astrometric solution of the image.
+
+            Example:
+
+            \code[lang:xml] { #:
+<Property id="Observation:Center:Dec" type="Float64" value="47.2661464" />
+            :# }
+         }
+
+         { \c Observation:Object:Name }
+         {
+            A \lref string_property_type String property. The name of the observed object. The value of this property \e must follow the IAU recommendations for nomenclature of astronomical objects.\ref www_iau_nomenclature
+
+            Example:
+
+            \code[lang:xml] { #:
+<Property id="Observation:Object:Name" type="String">NGC 5195</Property>
+            :# }
+         }
+
+         { \c Observation:Object:RA }
+         {
+            A \lref float64_property_type Float64 property. The Right Ascension equatorial coordinate of the observed object, expressed in degrees.
+         }
+
+         { \c Observation:Object:Dec }
+         {
+            A \lref float64_property_type Float64 property. The Declination equatorial coordinate of the observed object, expressed in degrees.
+         }
+
+         { \c Observation:Location:Name }
+         {
+            A \lref string_property_type String property. The name or identification of the observation location.
+
+            Example:
+
+            \code[lang:xml] { #:
+<Property id="Observation:Location:Name"
+          type="String">Observatorio de Aras de los Olmos (OAO)</Property>
+            :# }
+         }
+
+         { \c Observation:Location:Longitude }
+         {
+            A \lref float64_property_type Float64 property. The geographic longitude of the observation location in degrees.
+         }
+
+         { \c Observation:Location:Latitude }
+         {
+            A \lref float64_property_type Float64 property. The geographic latitude of the observation location in degrees.
+         }
+
+         { \c Observation:Location:Elevation }
+         {
+            A \lref float64_property_type Float64 property. The geographic elevation of the observation location in meters.
+         }
+
+         { \c Observation:Time:Start }
+         {
+            A \lref time_point_property_type TimePoint property. The date and time on which the observation started in the UTC time scale.
+
+            \code[lang:xml] { #:
+<Property id="Observation:Time:Start" type="TimePoint" value="2015-01-23T19:52:31.46Z" />
+            :# }
+         }
+
+         { \c Observation:Time:End }
+         {
+            A \lref time_point_property_type TimePoint property. The date and time on which the observation ended in the UTC time scale.
+         }
+
+         { \c Observation:Title }
+         {
+            A \lref string_property_type String property. A text fragment suitable to be included as a title in tables or graphical representations.
+
+            Example:
+
+            \code[lang:xml] { #:
+<Property id="Observation:Title" type="String">CCD Observations of WY Cyg</Property>
+            :# }
+         }
+
+         { \c Observation:Description }
+         {
+            A \lref string_property_type String property. A brief description of the observation.
+         }
+
+         { \c Observation:BibliographicReference }
+         {
+            A \lref string_property_type String property. A bibliographic reference associated with the data acquired during this observation.
+         }
+
+%%%%%%%%% Instrument namespace
+
+         { \c Instrument:ExposureTime }
+         {
+            A \lref float32_property_type Float32 property. Total effective exposure time in seconds.
+         }
+
+         { \c Instrument:Telescope:Name }
+         {
+            A \lref string_property_type String property. The name of the telescope or main instrument used for this observation.
+         }
+
+         { \c Instrument:Telescope:Aperture }
+         {
+            A \lref float32_property_type Float32 property. The aperture diameter of the optical system expressed in meters.
+         }
+
+         { \c Instrument:Telescope:FocalLength }
+         {
+            A \lref float32_property_type Float32 property. The effective focal length of the optical system expressed in meters.
+         }
+
+         { \c Instrument:Telescope:CollectingArea }
+         {
+            A \lref float32_property_type Float32 property. The effective aperture area of the optical system in square meters. The value of this property \e must exclude any obstruction present in the optical path, such as central obstructions caused by secondary mirrors.
+         }
+
+         { \c Instrument:Sensor:XPixelSize }
+         {
+            A \lref float32_property_type Float32 property. Length of a sensor pixel on the X axis of the image, in microns. The value of this property refers to the actual region of the sensor that has accumulated light for an image pixel, that is, it \e must account for pixel binning if it has been used on the X axis (see the \c Instrument:Camera:XBinning property).
+         }
+
+         { \c Instrument:Sensor:YPixelSize }
+         {
+            A \lref float32_property_type Float32 property. Length of a sensor pixel on the Y axis of the image, in microns. The value of this property refers to the actual region of the sensor that has accumulated light for an image pixel, that is, it \e must account for pixel binning if it has been used on the Y axis (see the \c Instrument:Camera:YBinning property).
+         }
+
+         { \c Instrument:Sensor:Temperature }
+         {
+            A \lref float32_property_type Float32 property. Temperature of the sensor during the observation in degrees Celsius.
+         }
+
+         { \c Instrument:Filter:Name }
+         {
+            A \lref string_property_type String property. The name or identifier of the filter used to acquire the image.
+
+            If this property is not specified the image \e shall be assumed to have been acquired through no filter.
+
+            Example:
+
+            \code[lang:xml] { #:
+<Property id="Instrument:Filter:Name" type="String">Sloan r</Property>
+            :# }
+         }
+
+         { \c Instrument:Camera:Name }
+         {
+            A \lref string_property_type String property. The name of the camera or acquisition system used for this observation.
+
+            Example:
+
+            \code[lang:xml] { #:
+<Property id="Instrument:Camera:Name" type="String">Canon EOS 7D</Property>
+            :# }
+         }
+
+         { \c Instrument:Camera:XBinning }
+         {
+            An \lref int32_property_type Int32 property. Pixel binning factor (\ge 1) applied in the horizontal (X-axis) direction.
+         }
+
+         { \c Instrument:Camera:YBinning }
+         {
+            An \lref int32_property_type Int32 property. Pixel binning factor (\ge 1) applied in the vertical (Y-axis) direction.
+         }
+
+         { \c Instrument:Camera:ISOSpeed }
+         {
+            An \lref int32_property_type Int32 property. Sensitivity of the camera in ISO speed units.\ref iso_12232
+
+            Example:
+
+            \code[lang:xml] { #:
+<Property id="Instrument:Camera:ISOSpeed" type="Int" value="3200" />
+            :# }
+         }
+
+%%%%%%%%% Processing namespace
+
+         { \c Processing:History }
+         {
+            A \lref string_property_type String property. The value of this property should be a human-readable description of the image processing algorithms and procedures applied to the image, from the initial raw data to its current state, in chronological order. The role of this property is merely informative; a decoder \e must \e not rely on its contents to modify its own behavior or the way it interprets an image.
+
+            The format used to generate this property is application-dependent. However, a few guidelines \e should be observed by encoders to produce useful and reliable information:
+
+            \list[spaced] {
+
+               { An application that processes an existing image \e must preserve the existing processing history information and append its own data at the end of the property value. }
+
+               { An application adding new processing history information \e must identify itself with its name and version, as well as the name(s) and version(s) of the module(s) or subsystem(s) used to process the image, as appropriate. }
+
+               { Processing history items, such as processing algorithms, tasks or steps, \e should be specified as single text lines separated by line feed characters (ASCII code point 10\sub{10} = 0A\sub{16}). }
+
+               { When possible, a timestamp \e should be prepended to each processing history item. Timestamps \e must adopt the format of \lref time_point_property_type TimePoint XISF properties. }
+            }
+
+            Example:
+
+            \code[lang:xml] { #:
+<Property id="Processing:History" type="String">
+2015-01-25T23:55:16Z // Acquisition with Pixel-O-Matic Software version 123.4
+2015-01-25T23:55:16Z Acquisition.exposure: 600s
+2015-01-25T23:55:16Z Acquisition.filter: Clear
+2015-01-25T23:55:16Z Acquisition.format: XISF
+
+2015-01-26T11:10:23Z // Calibration with PixInsight 01.08.03.1123
+2015-01-26T11:10:23Z // Calibration with ImageCalibration module version 01.03.00.0196
+2015-01-26T11:10:23Z // Calibration with ImageCalibration process
+2015-01-26T11:10:23Z ImageCalibration.inputHints: fits-keywords normalize raw cfa
+   signed-is-physical up-bottom
+2015-01-26T11:10:23Z ImageCalibration.outputHints: properties fits-keywords
+   no-compress-data block-alignment 4096 max-inline-block-size 3072
+   no-embedded-data no-resolution up-bottom
+2015-01-26T11:10:23Z ImageCalibration.overscan.enabled: false
+2015-01-26T11:10:23Z ImageCalibration.masterBias.enabled: true
+2015-01-26T11:10:23Z ImageCalibration.masterBias.fileName: bias-BINNING_1.xisf
+2015-01-26T11:10:23Z ImageCalibration.masterBias.calibrate: true
+2015-01-26T11:10:23Z ImageCalibration.masterDark.enabled: true
+2015-01-26T11:10:23Z ImageCalibration.masterDark.fileName: dark-BINNING_1-EXPTIME_300.xisf
+2015-01-26T11:10:23Z ImageCalibration.masterDark.calibrate: true
+2015-01-26T11:10:23Z ImageCalibration.masterDark.scalingFactors: 0.464
+2015-01-26T11:10:23Z ImageCalibration.masterDark.optimizationThreshold: 0.00000
+2015-01-26T11:10:23Z ImageCalibration.masterDark.optimizationWindow: 1024 px
+2015-01-26T11:10:23Z ImageCalibration.masterFlat.enabled: true
+2015-01-26T11:10:23Z ImageCalibration.masterFlat.fileName: flat-FILTER_Green-BINNING_1.xisf
+2015-01-26T11:10:23Z ImageCalibration.masterFlat.calibrate: false
+2015-01-26T11:10:23Z ImageCalibration.masterFlat.scalingFactors: 0.538888
+2015-01-26T11:10:31Z ImageCalibration.noiseEstimates: 3.062e-04
+
+2015-01-26T11:12:17Z // Cosmetic correction with PixInsight 01.08.03.1123
+2015-01-26T11:12:17Z // Cosmetic correction with CosmeticCorrection module 01.02.04.0080
+2015-01-26T11:12:17Z CosmeticCorrection: Total corrected pixels: 603
+
+2015-01-26T11:13:05Z // Registration with PixInsight 01.08.03.1123
+2015-01-26T11:13:05Z // Registration with ImageRegistration module version 01.10.02.0440
+2015-01-26T11:13:05Z // Registration with StarAlignment process
+2015-01-26T11:13:05Z StarAlignment.pairMatches: 464
+2015-01-26T11:13:05Z StarAlignment.inliers: 1.000
+2015-01-26T11:13:05Z StarAlignment.overlapping: 1.000
+2015-01-26T11:13:05Z StarAlignment.regularity: 0.981
+2015-01-26T11:13:05Z StarAlignment.quality: 0.983
+2015-01-26T11:13:05Z StarAlignment.rmsError: 0.097
+2015-01-26T11:13:05Z StarAlignment.rmsErrorDev: 0.044
+2015-01-26T11:13:05Z StarAlignment.peakErrorX: 0.262
+2015-01-26T11:13:05Z StarAlignment.peakErrorY: 0.313
+2015-01-26T11:13:05Z StarAlignment.H11: 1.0
+2015-01-26T11:13:05Z StarAlignment.H12: 0.0003
+2015-01-26T11:13:05Z StarAlignment.H13: -4.4337
+2015-01-26T11:13:05Z StarAlignment.H21: -0.0003
+2015-01-26T11:13:05Z StarAlignment.H22: 0.9999
+2015-01-26T11:13:05Z StarAlignment.H23: 17.6277
+2015-01-26T11:13:05Z StarAlignment.H31: 0.0
+2015-01-26T11:13:05Z StarAlignment.H32: 0.0
+2015-01-26T11:13:05Z StarAlignment.H33: 1.0
+</Property>
+            :# }
+
+            In this example, the \c Processing:History property has been generated by several applications and subsystems responsible for image acquisition and some preprocessing steps. Software names and versions have been prefixed with slash characters and processing tasks have been separated with empty lines, which improves readability.
+         }
+
+         { \c Processing:Description }
+         {
+            A \lref string_property_type String property. A description of the processing techniques and procedures that have been applied to the image.
+
+            Example:
+
+            \code[lang:xml] { #:
+<Property id="Processing:Description" type="String">
+This image is an example result of the noise reduction techniques we described in the
+January 2015 Athens workshop.
+...
+</Property>
+            :# }
+         }
       }
    }
 }

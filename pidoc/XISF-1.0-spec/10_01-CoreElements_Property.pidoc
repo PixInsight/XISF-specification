@@ -9,16 +9,16 @@
 
       { An \lref xisf_header {XISF header} \e may contain multiple \c Property core elements. }
 
-      { A \c Property element \e may be a child element of the unique \lref root_element {XISF root element} to serialize a standalone property. }
-
       { A \c Property element \e may be a child element of a \lref metadata_core_element \c Metadata core element to serialize a property of the \lref xisf_unit {XISF unit}. }
 
       { A \c Property element \e may be a child element of an \lref image_core_element \c Image core element to serialize a property of an \lref xisf_image {XISF image}. }
 
-      { The names of all attributes of the \c Property element \e shall be interpreted as case-sensitive. }
+      { A \c Property element \e may be a child element of the unique \lref root_element {XISF root element} to serialize a standalone property. }
+
+      { A \c Property element can be associated with \c Metadata or \c Image core elements by means of a \c uid attribute and child \lref reference_core_element \c Reference elements. }
    }
 
-   \subsection { \c Property element attributes required for all properties } {
+   \subsection { \c Property Attributes Required for All Properties } {
 
       Every \c Property element \e shall have the following attributes:
 
@@ -28,11 +28,11 @@
          { The value of this attribute \e shall be the identifier of the \lref xisf_property {XISF Property} being serialized. }
 
          { \c type }
-         { The value of this attribute \e shall identify the name of a \lref property_types {XISF property type}, which \e shall be the data type of the XISF Property being serialized. }
+         { The value of this attribute \e shall identify the name of an \lref property_types {XISF property type}, which \e shall be the data type of the XISF Property being serialized. }
       }
    }
 
-   \subsection { \c Property \c format attribute (optional) } {
+   \subsection { \c Property \c format Attribute (Optional) } {
 
       A \c Property element \e may have a \c format attribute. If present, the value of a \c format attribute \e must be a \lref property_format_specifier {property format specifier}.
 
@@ -57,10 +57,10 @@
 
       In the last example, note that the \c {float:auto} format token is implicitly being used by default. Only the first two vector components are shown, and in this example we assume that the decoder application is representing vectors as comma-separated lists of components, which is not part of this specification and hence is not mandatory.
 
-      XISF decoders supporting property format specifiers \e should apply them, as appropriate, to generate plain text representations of scalar values. This includes all \lref scalar_property_types {scalar property types}, the components of \lref complex_property_types {complex properties}, \lref string_property_types {string properties} (where only \c width and \c align format tokens should be taken into account), the components of \lref vector_property_types {vector properties}, and the elements of \lref matrix_property_types {matrix properties}.
+      XISF decoders supporting property format specifiers \e should apply them, as appropriate, to generate plain text representations of scalar values. This includes all \lref scalar_property_types {scalar property types}, the components of \lref complex_property_types {complex properties}, \lref string_property_type {string properties} (where only \c width and \c align format tokens should be taken into account), the components of \lref vector_property_types {vector properties}, and the elements of \lref matrix_property_types {matrix properties}.
    }
 
-   \subsection { Serialization of scalar properties } {
+   \subsection { Serialization of Scalar Properties } {
 
       A \c Property element serializing a \lref scalar_property_types {scalar XISF property} \e shall have a \c value attribute, whose value \e shall be a valid \lref scalars_serializations {plain text serialization} of the property value. Typically, in these cases the \c Property element is an empty XML element.
 
@@ -73,7 +73,7 @@
       :# }
    }
 
-   \subsection { Serialization of complex properties } {
+   \subsection { Serialization of Complex Properties } {
 
       A \c Property element serializing a \lref complex32_property_type Complex32 or \lref complex64_property_type Complex64 property \e shall have a \c value attribute, whose value \e shall serialize the value of the XISF property as follows:
 
@@ -88,26 +88,39 @@
       :# }
    }
 
-   \subsection { Serialization of string properties } {
+   \subsection { Serialization of String Properties } {
 
-      A \c Property element serializing a \lref string16_property_type String16 or \lref string8_property_type String8 property \e shall \e not have a \c value attribute, and \e must serialize the property value either directly in its character data contents, or as an \lref data_block {XISF data block}.
+      A \c Property element serializing a \lref string_property_type String property \e shall \e not have a \c value attribute, and \e must serialize the property value either directly in its character data contents, or as an \lref data_block {XISF data block}.
 
       Examples:
 
       \code[lang:xml] { #:
-<Property id="Description" type="String16">This is one of my very best images.</Property>
-<Property id="CreationTime" type="String8">2014-12-01T18:07:54Z</Property>
-<Property id="ALongString" type="String16" location="attached:17600:8192" />
-<Property id="AnEncodedString" type="String16"
+<Property id="XISF:BriefDescription" type="String">Definitely one of my very best images.</Property>
+<Property id="ALongString" type="String" location="attached:17600:8192" />
+<Property id="AnEncodedString" type="String"
                location="inline:base64">VGhlIHF1aWNrIGJyb3duIGZveA==</Property>
-<Property id="AnExternalDocument" type="String8"
+<Property id="AnExternalDocument" type="String"
                location="external:url(http://mysite.example.com/MyTextDocument.txt)" />
       :# }
 
-      When a string is serialized unencoded, directly in the character contents of a \c Property element, keep in mind that all of the white space between the starting and ending tags \e is significant and a compliant decoder \e must preserve it. To prevent unwanted leading and trailing spaces, the \c Property element \e should be generated as a single text line in the XISF header in these cases.
+      When a string is serialized unencoded directly in the character contents of a \c Property element, keep in mind that all of the white space between the starting and ending tags \e is significant and a compliant decoder \e must preserve it. To prevent unwanted leading and trailing spaces, the \c Property element \e should be generated as a single text line in these cases.
    }
 
-   \subsection { Serialization of vector properties } {
+   \subsection { Serialization of TimePoint Properties } {
+
+      A \c Property element serializing a \lref time_point_property_type TimePoint property \e shall have a \c value attribute, whose value \e shall be the plain text representation of the TimePoint value. Typically, in these cases the \c Property element is an empty XML element.
+
+      Examples:
+
+      \code[lang:xml] { #:
+<Property id="CreationTime" type="TimePoint" value="2014-12-01T18:07:54Z" />
+<Property id="Observation:StartTime" type="TimePoint" value="2015-01-23T19:52:31.46Z" />
+      :# }
+
+      White space is irrelevant in a TimePoint serialization, so it \e should \e not be generated by encoders and \e must be ignored by decoders.
+   }
+
+   \subsection { Serialization of Vector Properties } {
 
       A \c Property element serializing a \lref vector_property_types vector property:
 
@@ -126,7 +139,7 @@
       :# }
    }
 
-   \subsection { Serialization of matrix properties } {
+   \subsection { Serialization of Matrix Properties } {
 
       A \c Property element serializing a \lref matrix_property_types matrix property:
 

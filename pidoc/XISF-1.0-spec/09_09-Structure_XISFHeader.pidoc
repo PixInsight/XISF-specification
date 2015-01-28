@@ -93,7 +93,7 @@ Created with TheMagicImagingSoftware - http://reallymagic.com/
 
          If the XISF unit is digitally signed with an XML signature, then the \lref data_block_checksum \c checksum attribute \e must be included and correctly implemented for every data block not serialized directly in the XISF header, including all blocks with \lref attachment_data_block attachment, \lref url_data_block url, \lref absolute_path_data_block {absolute path} and \lref relative_path_data_block {relative path} block locations. With a digital signature and data checksums correctly implemented, a signed XISF unit effectively seals all of its contents and guarantees data integrity.
 
-         The XML signature of an XISF unit \e must be implemented as a detached signature in the header XML document. The \lref root_element {XISF root element}, which \e shall be the object being signed, must be specified through an \c id attribute in the \e Reference element of the signature. The following example carifies these concepts (some parts of the code replaced with \c ... to shorten the example):
+         The XML signature of an XISF unit \e must be implemented as a detached signature in the header XML document. The \lref root_element {XISF root element}, which \e shall be the object being signed, must be specified through an \c id attribute in the \c Reference element of the signature. The following example clarifies these concepts (some parts of the code replaced with \c ... to shorten the example):
 
          \code[lang:xml] { #:
 <?xml version="1.0" encoding="UTF-8"?>

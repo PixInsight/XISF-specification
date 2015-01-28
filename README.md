@@ -15,4 +15,4 @@ http://pixinsight.com/doc/docs/XISF-1.0-spec/XISF-1.0-spec.html
 
 For discussion on the XISF specification, please join us at PixInsight Forum:
 
-http://pixinsight.com/forum/index.php?topic=8098.0
+http://pixinsight.com/forum/index.php?board=20.0

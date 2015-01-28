@@ -37,7 +37,7 @@
          Uncompressed XISF data blocks support sequential and random access to read or write individual pixel sample rows or sets of contiguous rows.
       }
 
-      { Seven pixel sample data types }
+      { Eight pixel sample data types }
       {
          XISF supports integer pixel samples stored as unsigned 8-bit, 16-bit, 32-bit and 64-bit integers, plus real and complex samples in 32-bit and 64-bit IEEE 754 floating point format.
       }
@@ -84,7 +84,7 @@
 
       { Properties }
       {
-         An XISF property is a data block accessible through a unique identifier (name-value pairs). Properties can be associated with images, with the whole XISF unit, or be serialized as standalone elements. XISF properties are typed objects of scalar, complex, string, vector and matrix types.
+         An XISF property is a data block accessible through a unique identifier (name-value pairs). Properties can be associated with images, with the whole XISF unit, or be serialized as standalone elements. XISF properties are typed objects of scalar, complex, string, time point, vector and matrix types.
       }
 
       { FITS format compatibility }

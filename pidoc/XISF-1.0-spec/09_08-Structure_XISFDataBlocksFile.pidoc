@@ -9,7 +9,7 @@
 
       { Signature }
       {
-         A sequence of eight contiguous bytes whose values \e must form the set \c 'XISB0100' of ASCII characters,\ref unicode_ascii_subset that is, the sequence 88\sub{10}, 73\sub{10}, 83\sub{10}, 66\sub{10}, 48\sub{10}, 49\sub{10}, 48\sub{10}, 48\sub{10} of unsigned 8-bit integers.
+         A sequence of eight contiguous bytes whose values \e must form the set \c 'XISB0100' of ASCII characters,\ref unicode_ascii_subset that is, the sequence 88\sub{10} 73\sub{10} 83\sub{10} 66\sub{10} 48\sub{10} 49\sub{10} 48\sub{10} 48\sub{10} of unsigned 8-bit integers.
       }
 
       { Reserved field }
@@ -50,7 +50,7 @@
 
                   { Unique Identifier }
                   {
-                     An unsigned 64-bit integer. This identifier \e must be unique in the XISF data blocks file, that is, no two index elements can have the same identifier.
+                     An unsigned 64-bit integer. This identifier \e must be unique in the XISF data blocks file, that is, no two index elements can have the same identifier in a given data blocks file.
                   }
 
                   { Block position }

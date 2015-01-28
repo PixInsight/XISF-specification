@@ -3,15 +3,15 @@
 \document XISF-1.0-spec
 
 \keywords {
-   XISF, image serialization, image file format, data serialization, file format
+   XISF, image serialization, image file format, file format, serialization, formal specification
 }
 
 \title {
-   XISF Version 1.0 Specification (DRAFT)
+   XISF Version 1.0 Specification (DRAFT 3)
 }
 
 \author {
-   Juan Conejero, PTeam
+   Juan Conejero (PixInsight Development Team)
 }
 
 \copyright {
@@ -27,7 +27,7 @@
 \pragma[numberequations]
 \pragma[numberfigures]
 \pragma[numbertables]
-%\pragma[noequations]
+\pragma[noequations]
 
 \include 01-Introduction.pidoc
 \include 02-VersionHistory.pidoc

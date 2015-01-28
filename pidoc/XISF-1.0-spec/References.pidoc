@@ -5,11 +5,13 @@
 
 \reference rfc_2119 { Scott Bradner (1997), RFC 2119: \xref {https://tools.ietf.org/html/rfc2119} \e {Key words for use in RFCs to Indicate Requirement Levels}. }
 
-\reference rfc_3174 { Donald E. Eastlake, 3rd, Paul E. Jones (2001), RFC3174: \xref {http://tools.ietf.org/html/rfc3174} \e {US Secure Hash Algorithm 1 (SHA1)}. }
+\reference rfc_3174 { Donald E. Eastlake, 3rd, Paul E. Jones (2001), RFC 3174: \xref {http://tools.ietf.org/html/rfc3174} \e {US Secure Hash Algorithm 1 (SHA1)}. }
 
 \reference rfc_3339 { Chris Newman, Graham Klyne (2002), RFC 3339: \xref {http://tools.ietf.org/html/rfc3339} \e {Date and Time on the Internet: Timestamps} }
 
 \reference rfc_3986 { Tim Berners-Lee, Roy T. Fielding, Larry Masinter (2005), RFC 3986: \xref {https://tools.ietf.org/html/rfc3986} \e {Uniform Resource Identifier (URI): Generic Syntax}. }
+
+\reference rfc_4122 { Paul J. Leach, Michael Mealling, Rich Salz (2005), RFC 4122: \xref {http://tools.ietf.org/html/rfc4122} \e {A Universally Unique IDentifier (UUID) URN Namespace}. }
 
 \reference rfc_4648 { Simon Josefsson (2006), RFC 4648: \xref {https://tools.ietf.org/html/rfc4648} \e {The Base16, Base32, and Base64 Data Encodings}. }
 
@@ -63,6 +65,8 @@
 
 \reference iso_iec_8859_1 { International Organization for Standardization, \xref {http://www.iso.org/iso/catalogue_detail?csnumber=28245} \e {ISO/IEC 8859-1:1998 -- Information technology -- 8-bit single-byte coded graphic character sets -- Part 1: Latin alphabet No. 1} }
 
+\reference iso_12232 { International Organization for Standardization, \xref {http://www.iso.org/iso/catalogue_detail?csnumber=37777} \e {ISO 12232:2006 -- Photography -- Digital still cameras -- Determination of exposure index, ISO speed ratings, standard output sensitivity, and recommended exposure index} }
+
 \reference nist_sha3 { National Institute of Standards and Technology (2014) \xref {http://csrc.nist.gov/groups/ST/hash/sha-3/sha-3_standard_fips202.html} \e {Draft FIPS 202, SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions}. }
 
 \reference wikipedia_cfa { Wikipedia article: \xref {http://en.wikipedia.org/wiki/Color_filter_array} \e {Color filter array} }
@@ -70,6 +74,10 @@
 \reference wikipedia_bayer_filter { Wikipedia article: \xref {http://en.wikipedia.org/wiki/Bayer_filter} \e {Bayer filter} }
 
 \reference wikipedia_color_model { Wikipedia article: \xref {http://en.wikipedia.org/wiki/Color_model} \e {Color model} }
+
+\reference wikipedia_utc { Wikipedia article: \xref {http://en.wikipedia.org/wiki/Coordinated_Universal_Time} \e {Coordinated Universal Time} }
+
+\reference wikipedia_wgs { Wikipedia article: \xref {http://en.wikipedia.org/wiki/World_Geodetic_System} \e {World Geodetic System} }
 
 \reference bayer_patent { Bayer, B. E., \e {Color Image Array}. \xref {http://www.google.com/patents/US3971065} {U.S. Patent 3971065, July 1976}. }
 
@@ -104,3 +112,7 @@
 \reference www_keccak { Guido Bertoni, Joan Daemen, Michaël Peeters and Gilles Van Assche, \xref {http://keccak.noekeon.org/} { The Keccak sponge function family (Keccak Website) } }
 
 \reference www_zlib { Greg Roelofs, Mark Adler, \xref {http://www.zlib.net/} { Zlib Home Site } }
+
+\reference www_icrs { International Earth Rotation and Reference Systems Service, \xref {http://www.iers.org/IERS/EN/Science/ICRS/ICRS.html} { The International Celestial Reference System (ICRS) } }
+
+\reference www_iau_nomenclature { Strasbourg Astronomical Data Center, \xref {http://cdsweb.u-strasbg.fr/Dic/iau-spec.htx} { IAU Recommendations for Nomenclature } }

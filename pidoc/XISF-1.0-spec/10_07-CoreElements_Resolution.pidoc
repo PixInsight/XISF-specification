@@ -1,9 +1,9 @@
 
 \subsection { \label resolution_core_element \c Resolution Core Element } {
 
-   The \c Resolution core element serializes the data necessary to control the \e resolution of an \lref xisf_image {XISF image} stored in an \lref xisf_unit {XISF unit}. Resolution defines the amount of pixels represented per unit of surface on a display medium, such as a printer or a computer monitor, and can be measured either in pixels per inch or in pixels per centimeter.
+   The \c Resolution core element defines the data necessary to control the \e resolution of an \lref xisf_image {XISF image} stored in an \lref xisf_unit {XISF unit}. Resolution defines the amount of pixels represented per unit of surface on a display medium, such as a printer or a computer monitor, and can be measured either in pixels per inch or in pixels per centimeter.
 
-   The \c Resolution element \e shall have the following mandatory attributes:
+   A \c Resolution core element \e shall define the following mandatory attributes:
 
    \definition {
 
@@ -18,7 +18,7 @@
       }
    }
 
-   The following attributes are \e optional for the \c Resolution core element:
+   The following attribute is \e optional for a \c Resolution core element:
 
    \definition {
 
@@ -41,20 +41,31 @@
 
          When no \c unit attribute is specified, image resolution \e shall be expressed in pixels per inch by default.
       }
-
-      \c { id="\e{element-id}" }
-      {
-         \c\e element-id \e must be a unique identifier that \e may be used to reference this \c Resolution element. \c\e element-id \e must be a sequence of ASCII characters satisfying the following regular expression:\ref ecmascript_regexp
-
-         \c { \hs #: [_a-zA-Z][_a-zA-Z0-9]* :# }
-
-         \c Resolution identifiers \e shall be interpreted as case-sensitive.
-
-         \c Resolution identifiers \e must be unique in an XISF unit, that is, no other XML element can be assigned the same identifier.
-      }
    }
 
-   A \c Resolution element \e must be either a child element of an \lref image_core_element \c Image core element, or a child element of the unique \lref root_element {XISF root element}. In the latter case, an \c id attribute \e should be used to reference the \c Resolution element from the  \lref resolutionref_image_attribute \c resolutionRef attributes of one or more \c Image elements.
+   A \c Resolution element \e must be either a child element of an \lref image_core_element \c Image core element, or a child element of the unique \lref root_element {XISF root element}. In the former case, the resolution parameters \e shall be associated with the corresponding image. In the latter case, a \c uid attribute \e should be defined to associate the resolution parameters with one or more \c Image elements by means of child \lref reference_core_element \c Reference elements.
 
    When no \c Resolution element is specified for an \c Image core element, the default image resolution \e shall be 72.0 pixels per inch.
+
+   Examples (some parts of the code replaced with \c ... to shorten the examples):
+
+   \code[lang:xml] { #:
+<Image ... >
+...
+   <Resolution horizontal="120" vertical="120" unit="cm" />
+...
+</Image>
+   :# }
+
+   In the next example, a \c Resolution element has been defined somewhere in the \lref xisf_header {XISF header} with \c uid="PrintingResolution", and has been associated with an image through a \lref reference_core_element \c Reference element:
+
+   \code[lang:xml] { #:
+<Image ... >
+...
+   <Reference ref="PrintingResolution" />
+...
+</Image>
+...
+<Resolution ... uid="PrintingResolution" ... />
+   :# }
 }

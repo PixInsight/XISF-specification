@@ -9,12 +9,12 @@
 
    For \lref embedded_data_block {embedded XISF data blocks}, the \c compression attribute \e shall be an attribute of the \c Data child element serializing the block's contents, \e not of the element that serializes the block. For the rest of \lref data_block_location {block location modes}, the \c compression attribute \e shall be included in the element that serializes the block.
 
-   \subsection { \label checksums_of_compressed_blocks Checksums of compressed blocks } {
+   \subsection { \label checksums_of_compressed_blocks Checksums of Compressed Blocks } {
 
       When a \lref data_block_checksum \c checksum attribute is included in the XML element serializing a compressed data block, an encoder \e shall compute the corresponding cryptoghraphic digest for the compressed data, and \e never from the original, uncompressed data. If a checksum verification fails for a compressed data block, a decoder \e must \e not attempt to decompress the altered data, as this might cause a vulnerability that could be exploited.
    }
 
-   \subsection { Zlib compression } {
+   \subsection { Zlib Compression } {
 
       The deflate compression algorithm\ref rfc_1951 and the standard zlib format\ref rfc_1950 are formally supported by this first XISF specification as the standard XISF compression codec. Future revisions of XISF will include more compression methods.
 

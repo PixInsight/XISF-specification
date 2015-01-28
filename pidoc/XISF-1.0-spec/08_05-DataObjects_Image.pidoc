@@ -69,9 +69,11 @@
 
    \subsection { \label pixel_storage_models Pixel Storage Models } {
 
-      Two pixel storage models are formalized by this specification:
+      Two pixel storage models are formalized by this specification: \e planar and \e normal. The planar storage model is appropriate for applications that store and organize images by separate channels in memory. The normal storage model is best suited for applications that organize images by pixels, that is, applications that store the components of each pixel at consecutive memory locations.
 
-      \subsection { \label planar_pixel_storage_model Planar pixel storage model } {
+      Irrespective of the pixel storage model, the total space in bytes required to store an uncompressed image channel equals \im{#: N \times b :#}, where \im{b} is the size in bytes of a pixel sample. Similarly, the total space in bytes required to store an uncompressed image is \im{#: M \times b :#}.
+
+      \subsection { \label planar_pixel_storage_model Planar Pixel Storage Model } {
 
          In this model each channel is stored in a separate block:
 
@@ -105,7 +107,7 @@
          }
       }
 
-      \subsection { Normal pixel storage model } {
+      \subsection { Normal Pixel Storage Model } {
 
          In this model all pixel samples are stored in a single block:
 
@@ -146,8 +148,6 @@
             \center \image[width:34.03em] { normal-pixel-storage-model.svg }
          }
       }
-
-      Irrespective of the pixel storage model, the total space in bytes required to store an uncompressed image channel equals \im{#: N \times b :#}, where \im{b} is the size in bytes of a pixel sample. Similarly, the total space in bytes required to store an uncompressed image is \im{#: M \times b :#}.
    }
 
    \subsection { Color Spaces } {
@@ -156,232 +156,232 @@
 
       An in-depth description of color spaces is beyond the scope of this specification. The reader should refer to the literature for further information on this subject; for example, see references \ref gonzalez_2008_color_model, \ref tkalcic_2003 and \ref www_bruce_lindbloom.
 
-      To remove any possible ambiguity in the specification of CIE L*a*b*, we'll describe the necessary color space transformation algorithms in the next sections.
-   }
+      To remove any possible ambiguity in the specification of CIE L*a*b*, we'll describe the necessary color space transformation algorithms in the next subsections.
 
-   \subsection { \label rgb_working_space RGB Working Space } {
+      \subsection { \label rgb_working_space RGB Working Space } {
 
-      All color space transformations \e shall be performed relative to a colorimetrically defined RGB working space (RGBWS) associated with the image. An RGB working space is a set \im{#: \{ \mathbf{W}, \gamma, \mathbf{x}, \mathbf{y}, \mathbf{Y} \} :#}, where:
+         All color space transformations \e shall be performed relative to a colorimetrically defined RGB working space (RGBWS) associated with the image. An RGB working space is a set \im{#: \{ \mathbf{W}, \gamma, \mathbf{x}, \mathbf{y}, \mathbf{Y} \} :#}, where:
 
-      \list[spaced] {
+         \list[spaced] {
 
-         { \im{#: \mathbf{W} = \{x_W,y_W,Y_W\} :#} is a reference white. In this specification, all RGB working space parameters \e shall be relative to the standard D50 reference white.\ref iso_3664 }
+            { \im{#: \mathbf{W} = \{x_W,y_W,Y_W\} :#} is a reference white. In this specification, all RGB working space parameters \e shall be relative to the standard D50 reference white.\ref iso_3664 }
 
-         { \im{#: \gamma :#} is an exponent for linearization of RGB components. }
+            { \im{#: \gamma :#} is an exponent for linearization of RGB components. }
 
-         { \im{#: \mathbf{x} = \{x_R,x_G,x_B\} :#} and \im{#: \mathbf{y} = \{y_R,y_G,y_B\} :#} are the chromaticity coordinates of the RGB primaries. }
+            { \im{#: \mathbf{x} = \{x_R,x_G,x_B\} :#} and \im{#: \mathbf{y} = \{y_R,y_G,y_B\} :#} are the chromaticity coordinates of the RGB primaries. }
 
-         { \im{#: \mathbf{Y} = \{Y_R,Y_G,Y_B\} :#} are the luminance coefficients of the RGB primaries. }
+            { \im{#: \mathbf{Y} = \{Y_R,Y_G,Y_B\} :#} are the luminance coefficients of the RGB primaries. }
+         }
+
+         All chromaticity coordinates and luminance coefficients \e shall be represented normalized to the \[0,1\] range.
+
+         For spaces not originally defined with respect to the D50 reference white, a chromatic adaptation algorithm \e must be applied to convert coordinates and coefficients to D50. The Bradford chromatic adaptation transform\ref icc_bradford is \e recommended.
+
+         When no RGB working space is specified for a given image, the default RGBWS associated with the image \e shall be the sRGB space.\ref iec_srgb The chromaticity coordinates and luminance coefficients of sRGB relative to D50 (after chromatic adaptation from the D65 reference white with the Bradford algorithm) are the following:
+
+         \equation[unnumbered] { #:
+            $$
+            \hbox{sRGB} : \left\{ \begin{array}{l c l}
+               x_R &=& 0.648431 \\
+               x_G &=& 0.321152 \\
+               x_B &=& 0.155886 \\
+               y_R &=& 0.330856 \\
+               y_G &=& 0.597871 \\
+               y_B &=& 0.066044 \\
+               Y_R &=& 0.222491 \\
+               Y_G &=& 0.716888 \\
+               Y_B &=& 0.060621 \\
+            \end{array}
+            \right. \, .
+            $$
+         :# }
+
+         The sRGB space uses a special linearization function instead of a gamma exponent, as described below.
       }
 
-      All chromaticity coordinates and luminance coefficients \e shall be represented normalized to the \[0,1\] range.
+      \subsection { RGB to CIE XYZ Conversion } {
 
-      For spaces not originally defined with respect to the D50 reference white, a chromatic adaptation algorithm \e must be applied to convert coordinates and coefficients to D50. The Bradford chromatic adaptation transform\ref icc_bradford is \e recommended.
+         Let R, G, B be the nominal components of a pixel in the RGB color space. The nominal components R', G', B' in the linear RGB space are
 
-      When no RGB working space is specified for a given image, the default RGBWS associated with the image \e shall be the sRGB space.\ref iec_srgb The chromaticity coordinates and luminance coefficients of sRGB relative to D50 (after chromatic adaptation from the D65 reference white with the Bradford algorithm) are the following:
+         \equation { #:
+            $$
+            \begin{array}{l c l}
+               R' &=& R^{\gamma} \\
+               G' &=& G^{\gamma} \\
+               B' &=& B^{\gamma} \\
+            \end{array} \, .
+            $$
+         :# }
 
-      \equation[unnumbered] { #:
-         $$
-         \hbox{sRGB} : \left\{ \begin{array}{l c l}
-            x_R &=& 0.648431 \\
-            x_G &=& 0.321152 \\
-            x_B &=& 0.155886 \\
-            y_R &=& 0.330856 \\
-            y_G &=& 0.597871 \\
-            y_B &=& 0.066044 \\
-            Y_R &=& 0.222491 \\
-            Y_G &=& 0.716888 \\
-            Y_B &=& 0.060621 \\
-         \end{array}
-         \right. \, .
-         $$
-      :# }
+         If the RGB working space is the sRGB space,\ref iec_srgb then a special function \e must be used instead of the equations above. Define the linearization function
 
-      The sRGB space uses a special linearization function instead of a gamma exponent, as described below.
-   }
+         \equation { #:
+            $$
+            \hbox{S}(x) = \left\{ \begin{array}{l l}
+               \displaystyle{\frac{x}{12.92}}                            & \hbox{if} \;\; x \le 0.04045 \\
+               \\
+               \left(\displaystyle{\frac{x + 0.055}{1.055}}\right)^{2.4} & \hbox{otherwise}             \\
+            \end{array}
+            \right. \, .
+            $$
+         :# }
 
-   \subsection { RGB to CIE XYZ Conversion } {
+         Now we have, for the sRGB space:
 
-      Let R, G, B be the nominal components of a pixel in the RGB color space. The nominal components R', G', B' in the linear RGB space are
+         \equation { #:
+            $$
+            \begin{array}{l c l}
+               R' &=& \hbox{S}(R_{\tiny\hbox{\sffamily{sRGB}}}) \\
+               G' &=& \hbox{S}(G_{\tiny\hbox{\sffamily{sRGB}}}) \\
+               B' &=& \hbox{S}(B_{\tiny\hbox{\sffamily{sRGB}}}) \\
+            \end{array} \, .
+            $$
+         :# }
 
-      \equation { #:
-         $$
-         \begin{array}{l c l}
-            R' &=& R^{\gamma} \\
-            G' &=& G^{\gamma} \\
-            B' &=& B^{\gamma} \\
-         \end{array} \, .
-         $$
-      :# }
+         The CIE XYZ components are given by
 
-      If the RGB working space is the sRGB space,\ref iec_srgb then a special function \e must be used instead of the equations above. Define the linearization function
+         \equation { #:
+            $$
+            \left( \begin{array}{l l}
+               X \\
+               Y \\
+               Z \\
+            \end{array} \right) = \hbox{M} \left( \begin{array}{l l}
+               R' \\
+               G' \\
+               B' \\
+            \end{array} \right) \, ,
+            $$
+         :# }
 
-      \equation { #:
-         $$
-         \hbox{S}(x) = \left\{ \begin{array}{l l}
-            \displaystyle{\frac{x}{12.92}}                            & \hbox{if} \;\; x \le 0.04045 \\
-            \\
-            \left(\displaystyle{\frac{x + 0.055}{1.055}}\right)^{2.4} & \hbox{otherwise}             \\
-         \end{array}
-         \right. \, .
-         $$
-      :# }
+         with the transformation matrix
 
-      Now we have, for the sRGB space:
+         \equation { #:
+            $$
+            \hbox{M} = \left( \begin{array}{c c c}
+               Y_R \cdot x_R / y_R & Y_G \cdot x_G / y_G & Y_B \cdot x_B / y_B \\
+               Y_R & Y_G & Y_B \\
+               Y_R (1 - x_R - y_R)/y_R & Y_G (1 - x_G - y_G)/y_G & Y_B (1 - x_B - y_B)/y_B \\
+            \end{array} \right) \, .
+            $$
+         :# }
+      }
 
-      \equation { #:
-         $$
-         \begin{array}{l c l}
-            R' &=& \hbox{S}(R_{\tiny\hbox{\sffamily{sRGB}}}) \\
-            G' &=& \hbox{S}(G_{\tiny\hbox{\sffamily{sRGB}}}) \\
-            B' &=& \hbox{S}(B_{\tiny\hbox{\sffamily{sRGB}}}) \\
-         \end{array} \, .
-         $$
-      :# }
+      \subsection { CIE XYZ To RGB Conversion } {
 
-      The CIE XYZ components are given by
+         Let X, Y, Z be the nominal components of a pixel in the CIE XYZ color space. The components R', G', B' in the linear RGB space can be found by multiplication with the inverse transformation matrix:
 
-      \equation { #:
-         $$
-         \left( \begin{array}{l l}
-            X \\
-            Y \\
-            Z \\
-         \end{array} \right) = \hbox{M} \left( \begin{array}{l l}
-            R' \\
-            G' \\
-            B' \\
-         \end{array} \right) \, ,
-         $$
-      :# }
+         \equation { #:
+            $$
+            \left( \begin{array}{l l}
+               R' \\
+               G' \\
+               B' \\
+            \end{array} \right) = \hbox{M}^{-1} \left( \begin{array}{l l}
+               X \\
+               Y \\
+               Z \\
+            \end{array} \right) \, .
+            $$
+         :# }
 
-      with the transformation matrix
+         Then the RGB components are given by
 
-      \equation { #:
-         $$
-         \hbox{M} = \left( \begin{array}{c c c}
-            Y_R \cdot x_R / y_R & Y_G \cdot x_G / y_G & Y_B \cdot x_B / y_B \\
-            Y_R & Y_G & Y_B \\
-            Y_R (1 - x_R - y_R)/y_R & Y_G (1 - x_G - y_G)/y_G & Y_B (1 - x_B - y_B)/y_B \\
-         \end{array} \right) \, .
-         $$
-      :# }
-   }
+         \equation { #:
+            $$
+            \begin{array}{l c l}
+               R &=& R'^{\,1/\gamma} \\
+               G &=& G'^{\,1/\gamma} \\
+               B &=& B'^{\,1/\gamma} \\
+            \end{array} \, .
+            $$
+         :# }
 
-   \subsection { CIE XYZ To RGB Conversion } {
+         If the RGB working space is the sRGB space,\ref iec_srgb then a special function \e must be used instead of the equations above. Define the delinearization function
 
-      Let X, Y, Z be the nominal components of a pixel in the CIE XYZ color space. The components R', G', B' in the linear RGB space can be found by multiplication with the inverse transformation matrix:
+         \equation { #:
+            $$
+            \hbox{T}(x) = \left\{ \begin{array}{l l}
+               12.92 \times x          & \hbox{if} \;\; x \le 0.0031308 \\
+               \\
+               1.055 \, x^{1/2.4} - 0.055 & \hbox{otherwise}            \\
+            \end{array}
+            \right. \, .
+            $$
+         :# }
 
-      \equation { #:
-         $$
-         \left( \begin{array}{l l}
-            R' \\
-            G' \\
-            B' \\
-         \end{array} \right) = \hbox{M}^{-1} \left( \begin{array}{l l}
-            X \\
-            Y \\
-            Z \\
-         \end{array} \right) \, .
-         $$
-      :# }
+         Now we have, for the sRGB space:
 
-      Then the RGB components are given by
+         \equation { #:
+            $$
+            \begin{array}{l c l}
+               R_{\tiny\hbox{\sffamily{sRGB}}} &=& \hbox{T}(R') \\
+               G_{\tiny\hbox{\sffamily{sRGB}}} &=& \hbox{T}(G') \\
+               B_{\tiny\hbox{\sffamily{sRGB}}} &=& \hbox{T}(B') \\
+            \end{array} \, .
+            $$
+         :# }
+      }
 
-      \equation { #:
-         $$
-         \begin{array}{l c l}
-            R &=& R'^{\,1/\gamma} \\
-            G &=& G'^{\,1/\gamma} \\
-            B &=& B'^{\,1/\gamma} \\
-         \end{array} \, .
-         $$
-      :# }
+      \subsection { CIE XYZ to CIE L*a*b* Conversion } {
 
-      If the RGB working space is the sRGB space,\ref iec_srgb then a special function \e must be used instead of the equations above. Define the delinearization function
+         Define the function
 
-      \equation { #:
-         $$
-         \hbox{T}(x) = \left\{ \begin{array}{l l}
-            12.92 \times x          & \hbox{if} \;\; x \le 0.0031308 \\
-            \\
-            1.055 \, x^{1/2.4} - 0.055 & \hbox{otherwise}            \\
-         \end{array}
-         \right. \, .
-         $$
-      :# }
+         \equation { #:
+            $$
+            \hbox{f}(x) = \left\{ \begin{array}{l l}
+               x^{1/3}                                 & \hbox{if} \;\; x > 0.008856 \\
+               \\
+               \displaystyle{\frac{903.3 x + 16}{116}} & \hbox{otherwise}            \\
+            \end{array}
+            \right. \, .
+            $$
+         :# }
 
-      Now we have, for the sRGB space:
+         Then the CIE L*a*b* components are:
 
-      \equation { #:
-         $$
-         \begin{array}{l c l}
-            R_{\tiny\hbox{\sffamily{sRGB}}} &=& \hbox{T}(R') \\
-            G_{\tiny\hbox{\sffamily{sRGB}}} &=& \hbox{T}(G') \\
-            B_{\tiny\hbox{\sffamily{sRGB}}} &=& \hbox{T}(B') \\
-         \end{array} \, .
-         $$
-      :# }
-   }
+         \equation { #:
+            $$
+            \begin{array}{l c l}
+               L* &=& 1.16 \times \hbox{f}(Y) - 0.16       \\
+               a* &=& 5 \times (\hbox{f}(X) - \hbox{f}(Y)) \\
+               b* &=& 2 \times (\hbox{f}(Y) - \hbox{f}(Z)) \\
+            \end{array} \, .
+            $$
+         :# }
+      }
 
-   \subsection { CIE XYZ to CIE L*a*b* Conversion } {
+      \subsection { CIE L*a*b* to CIE XYZ Conversion } {
 
-      Define the function
+         Define the function
 
-      \equation { #:
-         $$
-         \hbox{f}(x) = \left\{ \begin{array}{l l}
-            x^{1/3}                                 & \hbox{if} \;\; x > 0.008856 \\
-            \\
-            \displaystyle{\frac{903.3 x + 16}{116}} & \hbox{otherwise}            \\
-         \end{array}
-         \right. \, .
-         $$
-      :# }
+         \equation { #:
+            $$
+            \hbox{g}(x) = \left\{ \begin{array}{l l}
+               x^3                                     & \hbox{if} \;\; x^3 > 0.008856 \\
+               \\
+               \displaystyle{\frac{116 x - 16}{903.3}} & \hbox{otherwise}              \\
+            \end{array}
+            \right. \, .
+            $$
+         :# }
 
-      Then the CIE L*a*b* components are:
+         Then the CIE XYZ components are:
 
-      \equation { #:
-         $$
-         \begin{array}{l c l}
-            L* &=& 1.16 \times \hbox{f}(Y) - 0.16       \\
-            a* &=& 5 \times (\hbox{f}(X) - \hbox{f}(Y)) \\
-            b* &=& 2 \times (\hbox{f}(Y) - \hbox{f}(Z)) \\
-         \end{array} \, .
-         $$
-      :# }
-   }
+         \equation { #:
+            $$
+            \begin{array}{l c l}
+               Y &=& \hbox{g}\left( \displaystyle{\frac{{L*} + 0.16}{1.16}} \right) \\
+               X &=& \hbox{g}\left( \displaystyle{\frac{a*}{5}} + Y \right)         \\
+               Z &=& \hbox{g}\left( Y - \displaystyle{\frac{b*}{2}} \right)         \\
+            \end{array} \, .
+            $$
+         :# }
+      }
 
-   \subsection { CIE L*a*b* to CIE XYZ Conversion } {
+      \subsection { RGB to Grayscale Conversion } {
 
-      Define the function
-
-      \equation { #:
-         $$
-         \hbox{g}(x) = \left\{ \begin{array}{l l}
-            x^3                                     & \hbox{if} \;\; x^3 > 0.008856 \\
-            \\
-            \displaystyle{\frac{116 x - 16}{903.3}} & \hbox{otherwise}              \\
-         \end{array}
-         \right. \, .
-         $$
-      :# }
-
-      Then the CIE XYZ components are:
-
-      \equation { #:
-         $$
-         \begin{array}{l c l}
-            Y &=& \hbox{g}\left( \displaystyle{\frac{{L*} + 0.16}{1.16}} \right) \\
-            X &=& \hbox{g}\left( \displaystyle{\frac{a*}{5}} + Y \right)         \\
-            Z &=& \hbox{g}\left( Y - \displaystyle{\frac{b*}{2}} \right)         \\
-         \end{array} \, .
-         $$
-      :# }
-   }
-
-   \subsection { RGB to Grayscale Conversion } {
-
-      A colorimetrically defined grayscale component \e shall be computed as the L* component of the CIE L*a*b space.
+         A colorimetrically defined grayscale component \e shall be computed as the L* component of the CIE L*a*b space.
+      }
    }
 }

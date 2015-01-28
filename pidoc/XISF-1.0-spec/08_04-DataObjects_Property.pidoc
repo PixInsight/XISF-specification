@@ -3,250 +3,252 @@
 
    An XISF property is an association of two data structures, \e identifier and \e value. A property \e may also have an optional associated \e {format specifier} to control its representation as readable text. An XISF property \e may be associated, either with an object stored in an \lref xisf_unit {XISF unit}, or with an XISF unit as a whole. An XISF property \e may also be stored in an XISF unit as a standalone object. Valid associations between properties and objects will be defined later in this document.
 
-   \definition {
+   \subsection { Property Identifier } {
 
-      { Property identifier }
-      {
-         A property identifier \e must be a sequence of one or more 8-bit ASCII characters\ref unicode_ascii_subset satisfying the following regular expression:\ref ecmascript_regexp
+      A property identifier \e must be a sequence of one or more 8-bit ASCII characters\ref unicode_ascii_subset satisfying the following regular expression:\ref ecmascript_regexp
 
-         \block[marginleft:2em] \c {
-            #:[_a-zA-Z][_a-zA-Z0-9]*(:([_a-zA-Z][_a-zA-Z0-9])+)*:#
-         }
-
-         Examples:
-
-         \block[marginleft:2em] \c {
-            MyFirstProperty\n
-            mySecondOne234\n
-            _this_1_is_a_test\n
-            Namespace:Property\n
-            foo:bar:Foo2_Bar3
-         }
-
-         The colon separator (':', ASCII code point 58\sub{10} = 3A\sub{16}) \e may be used to organize a set of properties into customary groups known as \e namespaces. Namespaces can be useful to improve structuration of properties by defining logical and semantic categories.
-
-         A property identifier \e must be unique for the object with which the property is associated. For example, all the properties of a given image must have unique identifiers, but two properties associated with different images may have the same identifier, or a property associated with the whole \lref xisf_unit {XISF unit} may have the same identifier as another property associated with an image.
-
-         There is no specific limit for the length of a property identifier.
+      \block[marginleft:2em] \c {
+         #:[_a-zA-Z][_a-zA-Z0-9]*(:([_a-zA-Z][_a-zA-Z0-9])+)*:#
       }
 
-      { Property value }
-      {
-         A property value is a data object associated with a property identifier. A property value has a predefined \lref property_types {XISF property type}, which determines its structure and behavior.
+      Examples:
+
+      \block[marginleft:2em] \c {
+         MyFirstProperty\n
+         mySecondOne234\n
+         _this_1_is_a_test\n
+         Namespace:Property\n
+         foo:bar:Foo2_Bar3
       }
 
-      { \label property_format_specifier Property format specifier }
-      {
-         A property format specifier \e may be associated with a property to control generation of readable plain text representations of the property value in a standardized way.
+      The colon separator (':', ASCII code point 58\sub{10} = 3A\sub{16}) \e may be used to organize a set of properties into customary groups known as \e namespaces. Namespaces can be useful to improve structuration of properties by defining logical and semantic categories.
 
-         A property format specifier is a list of one or more \e {format tokens} separated by semicolon ASCII characters (';', ASCII code point 59\sub{10} = 3B\sub{16}):
+      A property identifier \e must be unique for the object with which the property is associated. For example, all the properties of a given image must have unique identifiers, but two properties associated with different images may have the same identifier, or a property associated with the whole \lref xisf_unit {XISF unit} may have the same identifier as another property associated with an image.
 
-         \block[marginleft:2em] \c {
-            \e{token}\sub{1};\e{token}\sub{2};...;\e{token}\sub{n}
+      There is no specific limit for the length of a property identifier.
+   }
+
+   \subsection { Property Value } {
+
+      A property value is a data object associated with a property identifier. A property value has a predefined \lref property_types {XISF property type}, which determines its structure and behavior.
+   }
+
+   \subsection { \label property_format_specifier Property Format Specifier } {
+
+      A property format specifier \e may be associated with a property to control generation of readable plain text representations of the property value in a standardized way.
+
+      A property format specifier is a list of one or more \e {format tokens} separated by semicolon ASCII characters (';', ASCII code point 59\sub{10} = 3B\sub{16}):
+
+      \block[marginleft:2em] \c {
+         \e{token}\sub{1};\e{token}\sub{2};...;\e{token}\sub{n}
+      }
+
+      White space is irrelevant in a property format specifier and \e must be ignored. The following format tokens are supported by this specification:
+
+      \definition {
+
+         \c { width:\e{count} }
+         {
+            \c\e count is a plain text representation of an unsigned integer. If the length \e n in characers of the represented value is less than the value of \c\e count, the represented value \e shall be padded with (\e n -- \c\e count) padding characters---see the \c fill token below. The location of padding characters depends on the current alignment---see the \c align token below.
+
+            If no \c width token is specified, the value \e shall be represented using the minimum number of characters necessary, that is, no padding will be used by default.
          }
 
-         White space is irrelevant in a property format specifier and \e must be ignored. The following format tokens are supported by this specification:
+         \c { fill:\e{char} }
+         {
+            \c\e char is a single ASCII character that \e shall be used as a filling character for padded representations---see the \c width token above.
 
-         \definition {
-
-            \c { width:\e{count} }
-            {
-               \c\e count is a plain text representation of an unsigned integer. If the length \e n in characers of the represented value is less than the value of \c\e count, the represented value \e shall be padded with (\e n -- \c\e count) padding characters---see the \c fill token below. The location of padding characters depends on the current alignment---see the \c align token below.
-
-               If no \c width token is specified, the value \e shall be represented using the minimum number of characters necessary, that is, no padding will be used by default.
-            }
-
-            \c { fill:\e{char} }
-            {
-               \c\e char is a single ASCII character that \e shall be used as a filling character for padded representations---see the \c width token above.
-
-               When no \c fill token is specified, the default padding character \e shall be the ASCII space character (ASCII code point 32\sub{10} = 20\sub{16}).
-            }
-
-            \c { align:\e{mode} }
-            {
-               \c\e mode defines the \e alignment used for padded representations of all scalar types (see the \c width token above). \c\e mode \e must be one of:
-
-               \definition {
-
-                  \c left
-                  {
-                     Padding characters \e shall be appended at the end of the represented value.
-                  }
-
-                  \c right
-                  {
-                     Padding characters \e shall be prepended at the beginning of the represented value.
-                  }
-
-                  \c center
-                  {
-                     If the length \e n of the padding space is even, the same number \e{n}/2 of padding characters \e shall be prepended and appended at the beginning and the end of the represented value, respectively. If the padding length \e n is odd, \e{n}/2+1 padding characters \e shall be prepended at the beginning and \e{n}/2 padding characters \e shall be appended at the end of the represented value.
-                  }
-               }
-
-               When not specified, the default alignment \e shall be \c right, as described above.
-            }
-
-            \c { sign:\e{mode} }
-            {
-               \c\e mode defines how a sign character is used for representations of numeric values. \c\e mode \e must be one of:
-
-               \definition {
-
-                  \c auto
-                  {
-                     A minus sign ASCII character ('-', ASCII code point 45\sub{10} = 2D\sub{16}) \e shall be prepended to a representation of a scalar if the represented value is less than zero. If the represented value is zero or greater than zero, a sign character \e shall \e not be prepended.
-                  }
-
-                  \c force
-                  {
-                     A minus sign ASCII character ('-', ASCII code point 45\sub{10} = 2D\sub{16}) \e shall be prepended to a representation of a scalar if the represented value is less than zero, and a plus sign ASCII character ('+', ASCII code point 43\sub{10} = 2B\sub{16}) \e shall be prepended if the value is greater than zero.
-                  }
-               }
-
-               In all cases, if the numeric value is being represented as zero (after a possible truncation or rounding operation), a sign character \e must \e not be prepended to the represented value.
-
-               When not specified, the default \c sign \c\e mode \e shall be \c auto, as described above.
-
-               A decoder \e must ignore the \c sign format token for representations of non-numeric values.
-            }
-
-            \c { precision:\e{count} }
-            {
-               \c\e count is a plain text representation of an unsigned integer, whose value is the \e precision of the representation of a floating point value. The precision \e shall be interpreted according to the current floating point mode (see the \c float token below):
-
-               \list {
-                  { For a representation of a floating point scalar when the floating point mode is \c\e scientific or \c\e fixed, the precision is the minimum number of digits to appear after the decimal separator. }
-                  { For a representation of a floating point scalar when the floating point mode is \c\e auto, the precision is the maximum number of significant digits. }
-               }
-
-               The represented floating point scalar \e shall be rounded to the nearest value with the required number of decimal digits.
-
-               If no \c precision token is specified, the default precision \e shall be 6.
-
-               A decoder \e must ignore the \c precision format token for representations of non-numeric or integer numeric values.
-            }
-
-            \c { float:\e{mode} }
-            {
-               \c\e mode defines the \e {floating point mode} used for representations of floating point numeric scalars. \c\e mode \e must be one of:
-
-               \definition {
-
-                  \c auto
-                  {
-                     The floating point value \e shall be represented using \e {printf's 'g' mode}.\ref open_group_printf The floating-point value \e shall be represented in \c scientific or \c fixed floating point mode, depending on the value being converted and the current precision, to generate the shortest possible text representation.
-                  }
-
-                  \c scientific
-                  {
-                     The floating point value \e shall be represented in exponential notation. Ignoring possible padding characters, the representation \e shall satisfy the following regular expression:\ref ecmascript_regexp
-
-                     \block[marginleft:2em] \c {
-                        #:[-+]?[0-9]+\.[0-9]+[eE][-+][0-9]+:#
-                     }
-                  }
-
-                  \c fixed
-                  {
-                     The floating point value \e shall be represented in fixed-point decimal notation. Ignoring possible padding characters, the representation \e shall satisfy the following regular expression:
-
-                     \block[marginleft:2em] \c {
-                        #:[-+]?[0-9]+(\.[0-9]+)?:#
-                     }
-                  }
-               }
-
-               When not specified, the default floating point mode \e shall be \c auto, as described above.
-
-               A decoder \e must ignore the \c float format token for representations of non-numeric or integer numeric values.
-            }
-
-            \c { bool:\e{mode} }
-            {
-               \c\e mode defines how Boolean values are represented. \c\e mode \e must be one of:
-
-               \definition {
-
-                  \c alpha
-                  {
-                     Boolean values \e shall be represented as the plain text words \c false and \c true.
-                  }
-
-                  \c numeric
-                  {
-                     The integers \c 0 and \c 1 \e shall be used to represent the Boolean values false and true, respectively.
-                  }
-               }
-
-               When not specified, the default \c\e mode \e shall be \c alpha.
-
-               A decoder \e must ignore the \c bool format token for representations of non-Boolean values.
-            }
-
-            \c { base:\e{radix} }
-            {
-               \c\e radix defines the numeric base for the representation of an integer value. \c\e radix \e must be one of:
-
-               \definition {
-
-                  \c bin
-                  {
-                     The integer value \e shall be represented as a binary number using exclusively the digits '0' and '1'.
-                  }
-
-                  \c oct
-                  {
-                     The integer value \e shall be represented as an octal (base 8) number using the digits from '0' to '7'.
-                  }
-
-                  \c dec
-                  {
-                     The integer value \e shall be represented as a decimal number using the digits from '0' to '9'.
-                  }
-
-                  \c hex
-                  {
-                     The integer value \e shall be represented as an hexadecimal (base 16) number using the digits from '0' to '9' and from 'a' to 'f' to represent the numbers from 0 to 9 and from 10 to 15, respectively.
-                  }
-               }
-
-               When not specified, the default value of \c\e radix \e shall be \c dec, that is, decimal representations \e shall be generated for integer numbers by default.
-
-               A decoder \e must ignore the \c base format token for representations of non-integer values.
-            }
-
-            \c { unit:\e{text} }
-            {
-               \c\e text is a Unicode text fragment that, if present, \e must represent the unit in which the property value is expressed. The multiplication, division and raise operators, '*', '/' and '^' respectively, can be used to represent units. For example:
-
-               \block[marginleft:2em] \c {
-                  "unit:m/s"\n
-                  "unit:erg*s^−1*cm^2*Hz^−1"
-               }
-
-               In the second example the represented unit \e must be interpreted as \im {#: \hbox{erg} \cdot \hbox{s}^{-1} \cdot \hbox{cm}^{2} \cdot \hbox{Hz}^{-1} :#}.
-            }
+            When no \c fill token is specified, the default padding character \e shall be the ASCII space character (ASCII code point 32\sub{10} = 20\sub{16}).
          }
 
-         A decoder \e shall follow these rules to apply a format specifier to structured numeric properties:
+         \c { align:\e{mode} }
+         {
+            \c\e mode defines the \e alignment used for padded representations of all scalar types (see the \c width token above). \c\e mode \e must be one of:
 
-         \list {
-            { A format specifier applied to a \lref complex_property_types {complex property} \e shall apply to the individual complex and imaginary parts. }
-            { A format specifier applied to a \lref vector_property_types {vector property} \e shall apply to all vector components. }
-            { A format specifier applied to a \lref matrix_property_types {matrix property} \e shall apply to all matrix elements. }
+            \definition {
+
+               \c left
+               {
+                  Padding characters \e shall be appended at the end of the represented value.
+               }
+
+               \c right
+               {
+                  Padding characters \e shall be prepended at the beginning of the represented value.
+               }
+
+               \c center
+               {
+                  If the length \e n of the padding space is even, the same number \e{n}/2 of padding characters \e shall be prepended and appended at the beginning and the end of the represented value, respectively. If the padding length \e n is odd, \e{n}/2+1 padding characters \e shall be prepended at the beginning and \e{n}/2 padding characters \e shall be appended at the end of the represented value.
+               }
+            }
+
+            When not specified, the default alignment \e shall be \c right, as described above.
          }
 
-         For examples of property format specifiers, see the \lref property_core_element \c Property core element.
+         \c { sign:\e{mode} }
+         {
+            \c\e mode defines how a sign character is used for representations of numeric values. \c\e mode \e must be one of:
+
+            \definition {
+
+               \c auto
+               {
+                  A minus sign ASCII character ('-', ASCII code point 45\sub{10} = 2D\sub{16}) \e shall be prepended to a representation of a scalar if the represented value is less than zero. If the represented value is zero or greater than zero, a sign character \e shall \e not be prepended.
+               }
+
+               \c force
+               {
+                  A minus sign ASCII character ('-', ASCII code point 45\sub{10} = 2D\sub{16}) \e shall be prepended to a representation of a scalar if the represented value is less than zero, and a plus sign ASCII character ('+', ASCII code point 43\sub{10} = 2B\sub{16}) \e shall be prepended if the value is greater than zero.
+               }
+            }
+
+            In all cases, if the numeric value is being represented as zero (after a possible truncation or rounding operation), a sign character \e must \e not be prepended to the represented value.
+
+            When not specified, the default \c sign \c\e mode \e shall be \c auto, as described above.
+
+            A decoder \e must ignore the \c sign format token for representations of non-numeric values.
+         }
+
+         \c { precision:\e{count} }
+         {
+            \c\e count is a plain text representation of an unsigned integer, whose value is the \e precision of the representation of a floating point value. The precision \e shall be interpreted according to the current floating point mode (see the \c float token below):
+
+            \list {
+               { For a representation of a floating point scalar when the floating point mode is \c\e scientific or \c\e fixed, the precision is the minimum number of digits to appear after the decimal separator. }
+               { For a representation of a floating point scalar when the floating point mode is \c\e auto, the precision is the maximum number of significant digits. }
+            }
+
+            The represented floating point scalar \e shall be rounded to the nearest value with the required number of decimal digits.
+
+            If no \c precision token is specified, the default precision \e shall be 6.
+
+            A decoder \e must ignore the \c precision format token for representations of non-numeric or integer numeric values.
+         }
+
+         \c { float:\e{mode} }
+         {
+            \c\e mode defines the \e {floating point mode} used for representations of floating point numeric scalars. \c\e mode \e must be one of:
+
+            \definition {
+
+               \c auto
+               {
+                  The floating point value \e shall be represented using \e {printf's 'g' mode}.\ref open_group_printf The floating-point value \e shall be represented in \c scientific or \c fixed floating point mode, depending on the value being converted and the current precision, to generate the shortest possible text representation.
+               }
+
+               \c scientific
+               {
+                  The floating point value \e shall be represented in exponential notation. Ignoring possible padding characters, the representation \e shall satisfy the following regular expression:\ref ecmascript_regexp
+
+                  \block[marginleft:2em] \c {
+                     #:[-+]?[0-9]+\.[0-9]+[eE][-+][0-9]+:#
+                  }
+               }
+
+               \c fixed
+               {
+                  The floating point value \e shall be represented in fixed-point decimal notation. Ignoring possible padding characters, the representation \e shall satisfy the following regular expression:
+
+                  \block[marginleft:2em] \c {
+                     #:[-+]?[0-9]+(\.[0-9]+)?:#
+                  }
+               }
+            }
+
+            When not specified, the default floating point mode \e shall be \c auto, as described above.
+
+            A decoder \e must ignore the \c float format token for representations of non-numeric or integer numeric values.
+         }
+
+         \c { bool:\e{mode} }
+         {
+            \c\e mode defines how Boolean values are represented. \c\e mode \e must be one of:
+
+            \definition {
+
+               \c alpha
+               {
+                  Boolean values \e shall be represented as the plain text words \c false and \c true.
+               }
+
+               \c numeric
+               {
+                  The integers \c 0 and \c 1 \e shall be used to represent the Boolean values false and true, respectively.
+               }
+            }
+
+            When not specified, the default \c\e mode \e shall be \c alpha.
+
+            A decoder \e must ignore the \c bool format token for representations of non-Boolean values.
+         }
+
+         \c { base:\e{radix} }
+         {
+            \c\e radix defines the numeric base for the representation of an integer value. \c\e radix \e must be one of:
+
+            \definition {
+
+               \c bin
+               {
+                  The integer value \e shall be represented as a binary number using exclusively the digits '0' and '1'.
+               }
+
+               \c oct
+               {
+                  The integer value \e shall be represented as an octal (base 8) number using the digits from '0' to '7'.
+               }
+
+               \c dec
+               {
+                  The integer value \e shall be represented as a decimal number using the digits from '0' to '9'.
+               }
+
+               \c hex
+               {
+                  The integer value \e shall be represented as an hexadecimal (base 16) number using the digits from '0' to '9' and from 'a' to 'f' to represent the numbers from 0 to 9 and from 10 to 15, respectively.
+               }
+            }
+
+            When not specified, the default value of \c\e radix \e shall be \c dec, that is, decimal representations \e shall be generated for integer numbers by default.
+
+            A decoder \e must ignore the \c base format token for representations of non-integer values.
+         }
+
+         \c { unit:\e{text} }
+         {
+            \c\e text is a Unicode text fragment that, if present, \e must represent the unit in which the property value is expressed. The multiplication, division and raise operators, '*', '/' and '^' respectively, can be used to represent units. For example:
+
+            \block[marginleft:2em] \c {
+               "unit:m/s"\n
+               "unit:erg*s^−1*cm^2*Hz^−1"
+            }
+
+            In the second example the represented unit \e must be interpreted as \im {#: \hbox{erg} \cdot \hbox{s}^{-1} \cdot \hbox{cm}^{2} \cdot \hbox{Hz}^{-1} :#}.
+         }
+      }
+
+      A decoder \e shall follow these rules to apply a format specifier to structured numeric properties:
+
+      \list {
+         { A format specifier applied to a \lref complex_property_types {complex property} \e shall apply to the individual complex and imaginary parts. }
+         { A format specifier applied to a \lref vector_property_types {vector property} \e shall apply to all vector components. }
+         { A format specifier applied to a \lref matrix_property_types {matrix property} \e shall apply to all matrix elements. }
+      }
+
+      For examples of property format specifiers, see the \lref property_core_element \c Property core element.
+
+      \subsection { \label date_and_time_format Date and Time Format } {
+
+         Property format specifiers are not applicable to \lref time_point_property_type TimePoint XISF properties. Representation of dates and times is left as implementation-defined in this version of the XISF specification.
       }
    }
 
-   \subsection { \label property_types XISF Property Types } {
+   \subsection { \label property_types Property Types } {
 
-      XISF property types are organized into five categories: \e scalar, \e complex, \e string, \e vector and \e matrix properties.\n\n
+      XISF property types are organized into six categories: \e scalar, \e complex, \e string, \e {time point}, \e vector and \e matrix properties.\n\n
 
-      \subsection { \label scalar_property_types XISF Scalar Property Types } {
+      \subsection { \label scalar_property_types Scalar Property Types } {
 
          A scalar is a single numeric value without internal structuration.
 
@@ -267,7 +269,7 @@
          }
       }
 
-      \subsection { \label complex_property_types XISF Complex Property Types } {
+      \subsection { \label complex_property_types Complex Property Types } {
 
          A complex number is a homogeneous, ordered sequence of two contiguous scalars:
 
@@ -285,26 +287,44 @@
          }
       }
 
-      \subsection { \label string_property_types XISF String Property Types } {
+      \subsection { \label string_property_type String Property Type } {
 
-         A string is a homogeneous sequence of zero or more contiguous Unicode\ref unicode_standard or ASCII\ref unicode_ascii_subset code points represented as unsigned integer scalars.
+         A string is a homogeneous sequence of zero or more contiguous Unicode\ref unicode_standard code points encoded as unsigned integer scalars.
 
          \list {
-            { The scalars contained in a string are \e {string elements} or \e characters. }
-            { The number of elements in a string is the string's \e length. }
+            { The Unicode code points contained in a string are \e {string elements} or \e characters. }
+            { The number of elements or characters in a string is the string's \e length. }
             { An \e {empty string} is a string with zero length. }
             { There is no specific limit for the length of a string. }
          }
 
          \table[caption,header,width:100\%] {
-            { XISF String Property Types }
+            { XISF String Property Type }
             { \nowrap{ Type name } \nowrap{ Alternate name } { Description } }
-            { { \label string16_property_type String16 } { String } { A Unicode string encoded in UTF-16,\ref unicode_encoding_forms \ref unicode_encoding_schemes whose elements are \lref uint16_property_type UInt16 values. } }
-            { { \label string8_property_type String8 } {  } { A Unicode string encoded in UTF-8,\ref unicode_encoding_forms \ref unicode_encoding_schemes whose elements are \lref uint8_property_type UInt8 values. } }
+            { { String } {  } { A Unicode string encoded in UTF-8,\ref unicode_encoding_forms \ref unicode_encoding_schemes whose elements are \lref uint8_property_type UInt8 scalars. Can be also a sequence of characters in an 8-bit encoding compatible with Unicode, such as ASCII\ref unicode_ascii_subset or ISO/IEC 8859-1.\ref iso_iec_8859_1 } }
          }
+
+         It must be pointed out that the length of a string is in general \e not the same as (and usually smaller than) the length in bytes of the data block required to store it. This happens because UTF-8 is a variable-length encoding scheme where a single code point may require from one to four bytes to be represented.
       }
 
-      \subsection { \label vector_property_types XISF Vector Property Types } {
+      \subsection { \label time_point_property_type TimePoint Property Type } {
+
+         In the context of this specification, a time point is an instant in the Coordinated Universal Time (UTC)\ref wikipedia_utc time scale.
+
+         \table[caption,header,width:100\%] {
+            { XISF Time Point Property Type }
+            { \nowrap{ Type name } \nowrap{ Alternate name } { Description } }
+            { { TimePoint } {  } { A time point encoded as an ASCII\ref unicode_ascii_subset string that \e shall comply with the ISO 8601 extended specification for representations of dates and times.\ref iso_8601 \ref rfc_3339 } }
+         }
+
+         In ISO 8601 extended representations of time points, decimal fractions \e shall be divided from integer parts \e exclusively by the full stop or dot character ('.', ASCII code point 46\sub{10} = 2E\sub{16}).
+
+         A time zone \e should always be specified in a time point representation to eliminate any possible ambiguity about the difference of a time point with respect to UTC. If no time zone is specified in the ISO 8601 extended representation, the time point \e shall be assumed to be UTC, that is, the "Z" time zone \e shall be assumed by default.
+
+         TimePoint properties don't have a \lref property_format_specifier {property format specifier}. As \lref date_and_time_format {stated above}, representation of dates and times is left as implementation-defined in this version of the XISF specification.
+      }
+
+      \subsection { \label vector_property_types Vector Property Types } {
 
          A vector is a homogeneous sequence of zero or more contiguous scalars or complex numbers.
 
@@ -333,7 +353,7 @@
          }
       }
 
-      \subsection { \label matrix_property_types XISF Matrix Property Types } {
+      \subsection { \label matrix_property_types Matrix Property Types } {
 
          A matrix is a homogeneous set of contiguous scalars or complex numbers, structured as a two-dimensional array with a fixed number of rows and columns.
 

@@ -7,7 +7,7 @@
 
       { Signature }
       {
-         A sequence of eight contiguous bytes whose values \e must form the set \c 'XISF0100' of ASCII characters,\ref unicode_ascii_subset that is, the sequence 88\sub{10}, 73\sub{10}, 83\sub{10}, 70\sub{10}, 48\sub{10}, 49\sub{10}, 48\sub{10}, 48\sub{10} of unsigned 8-bit integers.
+         A sequence of eight contiguous bytes whose values \e must form the set \c 'XISF0100' of ASCII characters,\ref unicode_ascii_subset that is, the sequence 88\sub{10} 73\sub{10} 83\sub{10} 70\sub{10} 48\sub{10} 49\sub{10} 48\sub{10} 48\sub{10} of unsigned 8-bit integers.
       }
 
       { Header length }
