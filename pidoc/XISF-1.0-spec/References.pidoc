@@ -17,6 +17,8 @@
 
 \reference rfc_5280 { David Cooper, Stefan Santesson, Stephen Farrell, Sharon Boeyen, Russell Housley, Tim Polk (2008), RFC 5280: \xref {http://tools.ietf.org/html/rfc5280} \e {Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile}. }
 
+\reference rfc_5321 { John C. Klensin (2008), RFC 5321: \xref {http://tools.ietf.org/html/rfc5321} \e {Simple Mail Transfer Protocol}. }
+
 \reference rfc_6234 { Donald Eastlake, Tony Hansen (2011), RFC 6234: \xref {http://tools.ietf.org/html/rfc6234} \e {US Secure Hash Algorithms (SHA and SHA-based HMAC and HKDF)}. }
 
 \reference xml_1_0 { W3C Recommendation: \xref {http://www.w3.org/TR/REC-xml/} \e {Extensible Markup Language (XML) 1.0}. }

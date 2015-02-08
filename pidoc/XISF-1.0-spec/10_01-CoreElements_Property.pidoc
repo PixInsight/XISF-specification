@@ -98,9 +98,9 @@
 <Property id="XISF:BriefDescription" type="String">Definitely one of my very best images.</Property>
 <Property id="ALongString" type="String" location="attached:17600:8192" />
 <Property id="AnEncodedString" type="String"
-               location="inline:base64">VGhlIHF1aWNrIGJyb3duIGZveA==</Property>
+                  location="inline:base64">VGhlIHF1aWNrIGJyb3duIGZveA==</Property>
 <Property id="AnExternalDocument" type="String"
-               location="external:url(http://mysite.example.com/MyTextDocument.txt)" />
+                  location="url(http://mysite.example.com/MyTextDocument.txt)" />
       :# }
 
       When a string is serialized unencoded directly in the character contents of a \c Property element, keep in mind that all of the white space between the starting and ending tags \e is significant and a compliant decoder \e must preserve it. To prevent unwanted leading and trailing spaces, the \c Property element \e should be generated as a single text line in these cases.
@@ -154,7 +154,7 @@
 
       \code[lang:xml] { #:
 <Property id="AstrometricSolution" type="F64Matrix" rows="428" columns="16"
-                        location="external:@header_path/astrometry/solution.dat" />
+                           location="path(@header_dir/astrometry/solution.dat)" />
       :# }
    }
 }

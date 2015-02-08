@@ -1,20 +1,21 @@
 
 \section { Overview of XISF 1.0 Features } {
 
-   The following is an informal overview of features in the initial XISF version 1.0 specification---not all parts of the specification are described, and this overview is not part of the specification proper.
+   The following is an informal overview of features in the XISF version 1.0 specification---not all parts of the specification are described, and this overview is not part of the specification proper.
 
    \definition {
+
       { Two storage models }
       {
          \list[spaced] {
-            { \e { Monolithic model }, where all image metadata, pixel sample data and image properties are stored in a single file. }
-            { \e { Distributed model }, where image definitions and metadata are stored in a single header file, while pixel sample data and image properties are stored as separate units, including local and remote files. }
+            { \e { Monolithic model }, where all image metadata, pixel data and image properties are stored in a single, self-contained file. }
+            { \e { Distributed model }, where metadata are stored in a single header file, while pixel data and image properties are stored as separate files, including local and remote files. }
          }
       }
 
       { Relocatable distributed units }
       {
-         A distributed XISF unit can be built so that it can be moved or copied to any location in a local file system and across different machines.
+         An XISF unit is a set of files storing data and metadata in the XISF format, following one of the storage models described above. A distributed XISF unit can be built so that it can be moved or copied to any location in a local file system and across different machines. A monolithic XISF unit is a single file and thus relocatable.
       }
 
       { Multiple images, metadata and image properties }
@@ -34,7 +35,7 @@
 
       { Sequential and random access }
       {
-         Uncompressed XISF data blocks support sequential and random access to read or write individual pixel sample rows or sets of contiguous rows.
+         Uncompressed XISF images support sequential and random access to read or write individual pixel samples.
       }
 
       { Eight pixel sample data types }
@@ -54,7 +55,7 @@
 
       { ICC color profiles }
       {
-         XISF can store standard ICC color profiles associated with stored images.
+         XISF can embed standard ICC color profiles associated with stored images.
       }
 
       { Unambiguous floating point data ranges }
@@ -89,7 +90,7 @@
 
       { FITS format compatibility }
       {
-         FITS header keywords can be stored in XISF files and retrieved from XISF files as if the reader were working with actual FITS files.
+         FITS header keywords can be stored in XISF units and retrieved as if the reader were working with actual FITS files.
       }
    }
 }

@@ -22,7 +22,7 @@
 
       { \c XISF:CreatorApplication }
       {
-         A \lref string_property_type String property, whose value \e must be a plain text readable identification of the software application that has created the XISF header. The format and contents of this property are implementation-dependent, but it \e should contain the name and version of the application in readable form.
+         A \lref string_property_type String property, whose value \e must be a plain text readable identification of the software application that has created the XISF header. The value of this property \e must contain the name and version of the application in human-readable form.
 
          Example:
 
@@ -38,7 +38,7 @@
 
       { \c XISF:CreatorModule }
       {
-         A \lref string_property_type String property. If the software that has created the XISF header (\c XISF:CreatorApplication) is a modular system where the XISF format has been implemented by a versioned subsystem or module, this property \e should be defined to provide a plain text readable identification of the subsystem or module that has created the XISF header. The format and contents of this property are implementation-dependent, but it \e should contain the name and version of the subsystem or module in readable form.
+         A \lref string_property_type String property. If the software that has created the XISF header (\c XISF:CreatorApplication) is a modular system where the XISF format has been implemented by a versioned subsystem or module, this property \e should be defined to provide a plain text readable identification of the subsystem or module that has created the XISF header. If defined, the value of this property \e must contain the name and version of the subsystem or module in human-readable form.
 
          Example:
 

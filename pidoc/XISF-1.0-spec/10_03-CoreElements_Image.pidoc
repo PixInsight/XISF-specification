@@ -287,11 +287,41 @@
             :# }
          }
 
+         { \c Observer:EmailAddress }
+         {
+            A \lref string_property_type String property. An email address\ref rfc_5321 associated with the person or group identified by \c Observer:Name.
+         }
+
+         { \c Observer:PostalAddress }
+         {
+            A \lref string_property_type String property. The postal address of the person or group identified by \c Observer:Name.
+         }
+
+         { \c Observer:Website }
+         {
+            A \lref string_property_type String property. The URL\ref rfc_3986 of a website associated with the person or group identified by \c Observer:Name.
+         }
+
 %%%%%%%%% Organization namespace
 
          { \c Organization:Name }
          {
             A \lref string_property_type String property. The name or identification of the organization (such as a company, institution, etc.) responsible for the data acquired during this observation.
+         }
+
+         { \c Organization:EmailAddress }
+         {
+            A \lref string_property_type String property. An email address\ref rfc_5321 associated with the organization identified by \c Organization:Name.
+         }
+
+         { \c Organization:PostalAddress }
+         {
+            A \lref string_property_type String property. The postal address of the organization identified by \c Organization:Name.
+         }
+
+         { \c Organization:Website }
+         {
+            A \lref string_property_type String property. The URL\ref rfc_3986 of a website associated with the organization identified by \c Organization:Name.
          }
 
 %%%%%%%%% Observation namespace
