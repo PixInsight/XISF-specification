@@ -97,7 +97,7 @@
 
       { String }
       {
-         A homogeneous sequence of zero or more contiguous Unicode code points represented as integer scalars.
+         A homogeneous sequence of zero or more contiguous Unicode\ref unicode_standard code points represented as integer scalars.
       }
 
       { Array }

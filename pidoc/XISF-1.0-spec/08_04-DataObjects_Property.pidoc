@@ -289,7 +289,7 @@
 
       \subsection { \label string_property_type String Property Type } {
 
-         A string is a homogeneous sequence of zero or more contiguous Unicode\ref unicode_standard code points encoded as unsigned integer scalars.
+         A string is a sequence of zero or more Unicode\ref unicode_standard code points encoded as a homogeneous set of contiguous unsigned integer scalars.
 
          \list {
             { The Unicode code points contained in a string are \e {string elements} or \e characters. }
@@ -304,7 +304,9 @@
             { { String } {  } { A Unicode string encoded in UTF-8,\ref unicode_encoding_forms \ref unicode_encoding_schemes whose elements are \lref uint8_property_type UInt8 scalars. Can be also a sequence of characters in an 8-bit encoding compatible with Unicode, such as ASCII\ref unicode_ascii_subset or ISO/IEC 8859-1.\ref iso_iec_8859_1 } }
          }
 
-         It must be pointed out that the length of a string is in general \e not the same as (and usually smaller than) the length in bytes of the data block required to store it. This happens because UTF-8 is a variable-length encoding scheme where a single code point may require from one to four bytes to be represented.
+         Strings \e shall use Unicode version 5.1 or later. All Unicode code point values from U+0001 to U+10FFFF, including surrogate code points, may occur in a string property. The Unicode code point U+0000 (nul control character) \e shall \e not occur in a string property.
+
+         It must be pointed out that the length of a string is in general not the same as (and usually smaller than) the length in bytes of the data block required to store it. This happens because UTF-8 is a variable-length encoding scheme where a single code point may require from one to four bytes to be represented.
       }
 
       \subsection { \label time_point_property_type TimePoint Property Type } {
