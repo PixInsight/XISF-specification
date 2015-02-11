@@ -1,7 +1,7 @@
 
 \subsection { \label rgbws_core_element \c RGBWS Core Element } {
 
-   The \c RGBWS core element defines the parameters of a colorimetrically-defined \lref rgb_working_space {RGB working color space} (RGBWS) serialized in an \lref xisf_unit {XISF unit}. From the referenced section, recall that the parameters of an RGBWS are:
+   The \c RGBWS core element defines the parameters of a colorimetrically-defined \lref rgb_working_space {RGB working color space} (RGBWS) and associates it with an \lref xisf_image {XISF image} serialized in an \lref xisf_unit {XISF unit}. From the referenced \lref rgb_working_space {section}, recall that the parameters of an RGBWS are:
 
    \definition[marginleft:2em] {
 

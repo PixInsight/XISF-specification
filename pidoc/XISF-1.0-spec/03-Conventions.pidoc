@@ -8,41 +8,55 @@
 
    \subsection { Typographical Conventions } {
 
-      \c {Monospaced text} represents literal source code fragments.
-
-      \c\e {Italicized monospace text} represents metalanguage fragments describing source code elements:
-
-         \block[marginLeft:3em] {
-            \c { \hs\hs\hs name="\e{value}" }
-
-            In this example, the word \c\e value is a metasymbol used to describe the value of a \c name XML attribute.
+      \list[spaced] {
+         {
+            \c {Monospaced text} represents literal source code fragments.
          }
 
-      In code fragments, an ellipsis represents a variable-length list of items:
+         {
+            \c\e {Italicized monospace text} represents metalanguage fragments describing source code elements:
 
-         \block[marginLeft:3em] {
-            \c { \hs\hs\hs \e{item}\sub{1}:...:\e{item}\sub{N} }
+               \block[marginLeft:2em] {
+                  \c { \hs\hs\hs name="\e{value}" }
 
-            This example shows a list of N items separated by literal colon '\c{:}' characters. Note that the \c\e{item}\sub{i} elements are metasymbols in this case, not literal fragments.
+                  In this example, the word \c\e value is a metasymbol used to describe the value of a \c name XML attribute.
+               }
          }
 
-      Portions of this document enclosed by gray dashed lines represent literal source code examples:
+         {
+            In code fragments, an ellipsis represents a variable-length list of items:
 
-         \block[marginLeft:3em] {
-            \code {
-   This is a source code example.
-            }
+               \block[marginLeft:2em] {
+                  \c { \hs\hs\hs \e{item}\sub{1}:...:\e{item}\sub{N} }
 
-            Literal source code fragments not necessarily correspond to working code examples. When necessary or not obvious, this is indicated in the text describing the examples.
+                  This example shows a list of N items separated by literal colon '\c{:}' characters. Note that the \c\e{item}\sub{i} elements are metasymbols in this case, not literal fragments.
+               }
          }
 
-      The subindexes \sub{2} \sub{8} \sub{10} and \sub{16} indicate base 2 (or binary), base 8 (octal), base 10 (decimal), and base 16 (hexadecimal) integers, respectively. For example:
+         {
+            Portions of this document enclosed by gray dashed lines represent literal source code examples:
 
-         \block[marginLeft:3em] {
+               \block[marginLeft:2em] {
+                  \code {
+         This is a source code example.
+                  }
 
-            76\sub{10} = 4C\sub{16}
+                  Literal source code fragments do not necessarily correspond to working code examples. When necessary or not obvious, this is indicated in the text describing the examples.
+               }
          }
 
-      Figures are for illustration only; unless explicitly stated, they are not reference renderings.
+         {
+            The subindexes \sub{2} \sub{8} \sub{10} and \sub{16} indicate base 2 (or binary), base 8 (octal), base 10 (decimal), and base 16 (hexadecimal) integers, respectively. For example:
+
+               \block[marginLeft:2em] {
+
+                  76\sub{10} = 4C\sub{16}
+               }
+         }
+
+         {
+            Figures are for illustration only; unless explicitly stated, they are not reference renderings.
+         }
+      }
    }
 }

@@ -150,7 +150,7 @@
       }
    }
 
-   \subsection { Color Spaces } {
+   \subsection { \label image_color_spaces Color Spaces } {
 
       The following color spaces are formally supported by this specification for storage of pixel data in XISF units: Grayscale (monochrome), RGB, and CIE L*a*b*.
 
@@ -197,6 +197,8 @@
          :# }
 
          The sRGB space uses a special linearization function instead of a gamma exponent, as described below.
+
+         The RGBWS associated with a color image, either explicitly or by default, \e shall be used for all required color space transformations when the image is serialized encoded in a color space different from RGB. For example, if a color image is being stored encoded in the CIE L*a*b* space, an encoder \e must convert its pixel sample values from RGB to CIE L*a*b* using its associated RGBWS and the corresponding color space conversion algorithm, as described below. Conversely, if an image has been stored encoded in CIE L*a*b*, a decoder \e must use its associated RGBWS and the appropriate algorithm to convert pixel samples from CIE L*a*b* to RGB.
       }
 
       \subsection { RGB to CIE XYZ Conversion } {
@@ -330,11 +332,23 @@
          \equation { #:
             $$
             \hbox{f}(x) = \left\{ \begin{array}{l l}
-               x^{1/3}                                 & \hbox{if} \;\; x > 0.008856 \\
+               x^{1/3}                                  & \hbox{if} \;\; x > \epsilon \\
                \\
-               \displaystyle{\frac{903.3 x + 16}{116}} & \hbox{otherwise}            \\
+               \displaystyle{\frac{\kappa x + 16}{116}} & \hbox{otherwise}            \\
             \end{array}
-            \right. \, .
+            \right. \, ,
+            $$
+         :# }
+
+         with
+
+         \equation[numbered:eqn_cie_epsilon_kappa] { #:
+            $$
+            \begin{array}{l c l}
+               \epsilon &=& \displaystyle{\frac{216}{24389}} \\
+               \\
+               \kappa   &=& \displaystyle{\frac{24389}{27}}  \\
+            \end{array} \, .
             $$
          :# }
 
@@ -358,15 +372,15 @@
          \equation { #:
             $$
             \hbox{g}(x) = \left\{ \begin{array}{l l}
-               x^3                                     & \hbox{if} \;\; x^3 > 0.008856 \\
+               x^3                                      & \hbox{if} \;\; x^3 > \epsilon \\
                \\
-               \displaystyle{\frac{116 x - 16}{903.3}} & \hbox{otherwise}              \\
+               \displaystyle{\frac{116 x - 16}{\kappa}} & \hbox{otherwise}              \\
             \end{array}
-            \right. \, .
+            \right. \, ,
             $$
          :# }
 
-         Then the CIE XYZ components are:
+         with \im{ \\epsilon } and \im{ \\kappa } as defined in Equation \eqnref eqn_cie_epsilon_kappa. Then the CIE XYZ components are:
 
          \equation { #:
             $$
