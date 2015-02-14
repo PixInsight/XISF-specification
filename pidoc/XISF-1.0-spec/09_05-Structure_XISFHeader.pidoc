@@ -1,0 +1,144 @@
+
+\subsection { \label xisf_header XISF Header } {
+
+   An XISF header \e shall be a valid XML 1.0 document\ref xml_1_0 encoded in UTF-8\ref unicode_encoding_forms \ref unicode_encoding_schemes, with strict compliance of the syntax and properties described in this document. The functional roles of an XISF header \e shall be at least the following:
+
+   \list {
+      { Define a number of elements and properties describing an \lref xisf_unit {XISF unit} as a whole. }
+      { Define a number of elements and properties describing every object and data structure contained in an XISF unit. }
+      { Define the location and length of every \lref data_block {XISF data block} stored in an XISF unit. }
+   }
+
+   A valid XISF header \e shall have the following structure:
+
+   \definition {
+
+      { XML declaration }
+      {
+         A valid XISF header \e must begin with the following XML declaration:
+
+         \block[marginleft:2em] \c {
+            <?xml version="1.0" encoding="UTF-8"?>
+         }
+      }
+
+      { Initial comment (\e recommended) }
+      {
+         An XISF header \e should include a brief comment after the XML declaration. This initial comment \e should (1) specify that the XML document pertains to an \lref xisf_unit {XISF unit} by declaring the XISF format and its version, and (2) identify the software which has created the XISF unit. The following example shows the starting lines of an XISF header with the XML declaration followed by a valid initial comment:
+
+         \code[lang:xml] { #:
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Extensible Image Serialization Format - XISF version 1.0
+Created with TheMagicImagingSoftware - http://reallymagic.com/
+-->
+         :# }
+
+         An XISF encoder should replace "TheMagicImagingSoftware" and "http://reallymagic.com/" in the comment above with the name of the software application that has created the XISF unit and a relevant URL, respectively.
+
+         An XISF decoder \e must \e not rely on the information included in the initial comment of an XISF header to modify its behavior in any way.
+      }
+
+      { \label root_element XISF root element }
+      {
+         The XISF root element is the top-level XML element that defines the entire contents of an \lref xisf_unit {XISF unit}. A \e unique instance of the XISF root element \e shall be present in every XISF header, following the XML declaration and, when it exists, the initial comment. The XISF root element has the following properties:
+
+         \list[spaced] {
+
+            { Its name \e shall be \c xisf and \e shall be interpreted as case-sensitive. }
+
+            { \e Must have the \c version attribute, whose value \e shall be \c "1.0". }
+
+            { \e Should have the following namespace\ref xml_namespaces and schema\ref xml_schema attributes:\n\n
+
+               \block[marginleft:2em] \c {
+                  xmlns="http://www.pixinsight.com"\n
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n
+                  xsi:schemaLocation="http://www.pixinsight.com/xisf http://pixinsight.com/xsd/xisf-1.0.xsd"
+               }
+            }
+
+            { \e May have child XML elements describing the objects and data structures contained in an \lref xisf_unit {XISF unit}. }
+
+            { If the XISF unit contains some data structures or objects, then the XISF root element \e must have the necessary child elements to describe them. }
+
+            { \e Must \e not have character data contents. }
+         }
+
+         The following example shows the initial lines of a valid XISF header with the start-tag of its XISF root element:
+
+         \code[lang:xml] { #:
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Extensible Image Serialization Format - XISF version 1.0
+Created with TheMagicImagingSoftware - http://reallymagic.com/
+-->
+<xisf version="1.0"
+   xmlns="http://www.pixinsight.com"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://www.pixinsight.com/xisf http://pixinsight.com/xsd/xisf-1.0.xsd">
+         :# }
+      }
+
+      { XISF child elements (\e optional) }
+      {
+         XISF child elements are child XML elements of the unique \lref root_element {XISF root element} in an XISF header. XISF child elements \e shall describe data structures and objects stored in an \lref xisf_unit {XISF unit}. A reduced number of XISF child elements have been formalized in this specification to support essential data structures; we call these elements \lref core_elements {XISF core elements}.
+
+         XISF is an extensible format mainly because new child elements \e may be defined as necessary to describe new data structures and objects stored in XISF units, which have not been formalized in this specification.
+      }
+
+      { \label xml_signature XML signature (\e optional) }
+      {
+         After the XISF root element, an XML signature\ref xml_signature \e may be included to provide data integrity and authentication. The signed data \e shall be the XISF root element and its entire contents, including the whole XML tree: All child XML elements of the root element and their contents.
+
+         If the XISF unit is digitally signed with an XML signature, then the \lref data_block_checksum \c checksum attribute \e must be included and correctly implemented for every data block not serialized directly in the XISF header, including all blocks with \lref attachment_data_block attachment, \lref url_data_block url, \lref absolute_path_data_block {absolute path} and \lref relative_path_data_block {relative path} block locations. With a digital signature and data checksums correctly implemented, a signed XISF unit effectively seals all of its contents and guarantees data integrity.
+
+         The XML signature of an XISF unit \e must be implemented as a detached signature in the header XML document. The \lref root_element {XISF root element}, which \e shall be the object being signed, must be specified through an \c id attribute in the \c Reference element of the signature. The following example clarifies these concepts (some parts of the code replaced with \c ... to shorten the example):
+
+         \code[lang:xml] { #:
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Extensible Image Serialization Format - XISF version 1.0
+Created with TheMagicImagingSoftware - http://reallymagic.com/
+-->
+<xisf version="1.0" id="XISFRootElement"
+   xmlns="http://www.pixinsight.com"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://www.pixinsight.com/xisf http://pixinsight.com/xsd/xisf-1.0.xsd">
+   ...
+   ...
+   ...
+</xisf>
+<Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+<SignedInfo>
+   <CanonicalizationMethod Algorithm="http://www.w3.org/2006/12/xml-c14n11"/>
+   <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#dsa-sha1"/>
+   <Reference URI="#XISFRootElement">
+      <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+      <DigestValue>...</DigestValue>
+   </Reference>
+</SignedInfo>
+<SignatureValue>...</SignatureValue>
+<KeyInfo>
+   <KeyValue>
+      <RSAKeyValue>
+         <Modulus>...</Modulus>
+         <Exponent>...</Exponent>
+      </RSAKeyValue>
+   </KeyValue>
+   <X509Data>
+      <X509SubjectName>...</X509SubjectName>
+      <X509IssuerSerial>
+         <X509IssuerName>...</X509IssuerName>
+         <X509SerialNumber>...</X509SerialNumber>
+      </X509IssuerSerial>
+      <X509Certificate>...</X509Certificate>
+   </X509Data>
+</KeyInfo>
+</Signature>
+      :# }
+
+         In this example, the XISF root element being signed is selected with the "XISFRootElement" identifier through a \e {same-document reference}.\ref rfc_3986 The root element is signed with a SHA-1 digest\ref rfc_3174 and the RSA public key of an X.509 certificate.\ref rfc_5280
+      }
+   }
+}

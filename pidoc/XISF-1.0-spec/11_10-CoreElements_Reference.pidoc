@@ -1,0 +1,117 @@
+
+\subsection { \label reference_core_element \c Reference Core Element } {
+
+   The \c Reference core element associates an \lref core_elements {XISF core element} with a data object serialized in an \lref xisf_unit {XISF unit}.
+
+   A \c Reference core element \e shall define a unique XML attribute, namely:
+
+   \definition {
+
+      \c { ref="\e{unique-elem-id}" }
+      {
+         where \c\e{unique-elem-id} is the unique element identifier of an existing XISF core element, which \e must be defined in the same XISF unit. \c\e unique-elem-id \e shall be the value of the \c uid attribute of the referenced XISF core element.
+      }
+   }
+
+   Note that the \c Reference element is the only XISF core element that cannot have a \c uid attribute. This obeys to the fact that chained references, that is, references to references, are not permitted in this specification.
+
+   \c Reference core elements \e should be used, when possible, to prevent duplicate object serializations in XISF units. \c Reference elements can also be used to reduce the volume of markup required to associate a core element with several objects, and/or to improve structuration of XISF headers. Consider an example where three images have been serialized as follows:
+
+   \code[lang:xml] { #:
+<Image id="IMG7953" geometry="4096:4096:4" sampleFormat="Float32" bounds="0:1"
+                              colorSpace="RGB" location="attachment:4096:268435456">
+   <RGBWS x="0.648431:0.230154:0.155886"
+          y="0.330856:0.701572:0.066044"
+          Y="0.311114:0.625662:0.063224" gamma="2.2"
+          name="Adobe RGB (1998)" />
+</Image>
+<Image id="IMG7954" geometry="4096:4096:4" sampleFormat="Float32" bounds="0:1"
+                              colorSpace="RGB" location="attachment:268439552:268435456">
+   <RGBWS x="0.648431:0.230154:0.155886"
+          y="0.330856:0.701572:0.066044"
+          Y="0.311114:0.625662:0.063224" gamma="2.2"
+          name="Adobe RGB (1998)" />
+</Image>
+<Image id="IMG7955" geometry="4096:4096:4" sampleFormat="Float32" bounds="0:1"
+                              colorSpace="RGB" location="attachment:536875008:268435456">
+   <RGBWS x="0.648431:0.230154:0.155886"
+          y="0.330856:0.701572:0.066044"
+          Y="0.311114:0.625662:0.063224" gamma="2.2"
+          name="Adobe RGB (1998)" />
+</Image>
+   :# }
+
+   As you see, the three images have been associated with identical RGB working spaces. Instead of repeating the same \c RGBWS element three times, we can simplify the markup considerably with \c Reference elements:
+
+   \code[lang:xml] { #:
+<Image id="IMG7953" geometry="4096:4096:4" sampleFormat="Float32" bounds="0:1"
+                              colorSpace="RGB" location="attachment:4096:268435456">
+   <Reference ref="RGBWS001" />
+</Image>
+<Image id="IMG7954" geometry="4096:4096:4" sampleFormat="Float32" bounds="0:1"
+                              colorSpace="RGB" location="attachment:268439552:268435456">
+   <Reference ref="RGBWS001" />
+</Image>
+<Image id="IMG7955" geometry="4096:4096:4" sampleFormat="Float32" bounds="0:1"
+                              colorSpace="RGB" location="attachment:536875008:268435456">
+   <Reference ref="RGBWS001" />
+</Image>
+<RGBWS uid="RGBWS001"
+       x="0.648431:0.230154:0.155886"
+       y="0.330856:0.701572:0.066044"
+       Y="0.311114:0.625662:0.063224" gamma="2.2"
+       name="Adobe RGB (1998)" />
+   :# }
+
+   Let's put a slightly less evident example:
+
+   \code[lang:xml] { #:
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Extensible Image Serialization Format - XISF version 1.0
+Created with TheMagicImagingSoftware - http://reallymagic.com/
+-->
+<xisf version="1.0"
+   xmlns="http://www.pixinsight.com"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://www.pixinsight.com/xisf http://pixinsight.com/xsd/xisf-1.0.xsd">
+
+   <Image geometry="4096:4096:4" sampleFormat="Float32" bounds="0:1"
+                                 colorSpace="RGB" location="attachment:4096:268435456" />
+   <Image geometry="4096:4096:4" sampleFormat="Float32" bounds="0:1"
+                                 colorSpace="RGB" location="attachment:4096:268435456" />
+   <Image geometry="4096:4096:4" sampleFormat="Float32" bounds="0:1"
+                                 colorSpace="RGB" location="attachment:4096:268435456" />
+   <Image geometry="4096:4096:4" sampleFormat="Float32" bounds="0:1"
+                                 colorSpace="RGB" location="attachment:4096:268435456" />
+   ...
+   ...
+   ...
+</xisf>
+   :# }
+
+   In the above example we have four images serialized in an XISF header. Note that these images are identical; in fact, all of them have been serialized as the same attached XISF data block (see the \c location attributes), so fortunately there is no quadruplication of pixel data. However, the markup clearly leaves room for improvement. The same result can be achieved with \c Reference elements in a much cleaner way:
+
+   \code[lang:xml] { #:
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Extensible Image Serialization Format - XISF version 1.0
+Created with TheMagicImagingSoftware - http://reallymagic.com/
+-->
+<xisf version="1.0"
+   xmlns="http://www.pixinsight.com"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://www.pixinsight.com/xisf http://pixinsight.com/xsd/xisf-1.0.xsd">
+
+   <Image uid="foo_bar"
+          geometry="4096:4096:4" sampleFormat="Float32" bounds="0:1"
+                                 colorSpace="RGB" location="attachment:4096:268435456" />
+   <Reference ref="foo_bar" />
+   <Reference ref="foo_bar" />
+   <Reference ref="foo_bar" />
+   ...
+   ...
+   ...
+</xisf>
+   :# }
+}
