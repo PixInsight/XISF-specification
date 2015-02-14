@@ -1,85 +1,36 @@
 
 \section { Conformance } {
 
-   We define several conformance levels for any encoder or decoder that claims conformance with this XISF specification:
+   Encoders and decoders implementing XISF can support a partial subset of the data objects and features described in this specification, since many of these objects and features are optional and/or have default values and behaviors. For many applications, some XISF objects may be unnecessary and some default settings may be suitable.
 
-   \subsection { Level 1 XISF Conformance } {
+   To ensure minimum functionality and interoperability for all applications implementing XISF, we define a \e {baseline XISF conformance} level. Any encoder or decoder that claims conformance with this XISF specification \e shall comply with the requirements of a baseline encoder or decoder, as described in the following subsections.
 
-      A \s {level 1 XISF decoder} \e shall implement this specification to read \lref xisf_unit {XISF units}, including all optional components and features, with the following allowed \s exception:
+   \subsection { Baseline XISF Encoder } {
 
-      \list {
-         { Read pixel data in the UInt64 \lref sampleformat_image_attribute {pixel sample format}. }
-      }
-
-      A \s {level 1 XISF encoder} \e shall implement this specification to generate XISF units, including all optional components and features, with the following allowed \s exception:
+      A baseline XISF encoder \e shall have \e {at least} the following abilities to generate \lref xisf_unit {XISF units}:
 
       \list {
-         { Write pixel data in the UInt64 \lref sampleformat_image_attribute {pixel sample format}. }
-      }
-   }
-
-   \subsection { Level 2 XISF Conformance } {
-
-      A \s {level 2 XISF decoder} \e shall implement this specification to read \lref xisf_unit {XISF units}, including all optional components and features, with the following allowed \s exceptions:
-
-      \list {
-         { Read pixel data in the UInt64, Complex32 and Complex64 \lref sampleformat_image_attribute {pixel sample formats}. }
-         { Read and process \lref xml_signature {XML signatures} to verify the integrity and authenticity of the data in an XISF unit. }
-      }
-
-      A \s {level 2 XISF encoder} \e shall implement this specification to generate XISF units, including all optional components and features, with the following allowed \s exceptions:
-
-      \list {
-         { Write pixel data in the UInt64, Complex32 and Complex64 \lref sampleformat_image_attribute {pixel sample formats}. }
-         { Write \lref xml_signature {XML signatures} to guarantee the integrity and authenticity of the data in an XISF unit. }
+         { Write \lref monolithic_xisf_file {monolithic XISF files}. }
+         { Write a single \lref image_core_element \c Image core element to a monolithic XISF file. }
+         { Write pixel data as an \lref data_block {XISF block} with attachment \lref data_block_location {block location}. }
+         { Write pixel data in the planar \lref pixel_storage_models {pixel storage model}. }
+         { Write pixel data in the UInt16 \lref sampleformat_image_attribute {pixel sample format}. }
+         { Write pixel data encoded in the grayscale and RGB \lref image_color_spaces {color spaces}. }
       }
    }
 
-   \subsection { Level 3 XISF Conformance } {
+   \subsection { Baseline XISF Decoder } {
 
-      A \s {level 3 XISF decoder} \e shall implement this specification to read \lref xisf_unit {XISF units} with the following allowed \s exceptions:
-
-      \list {
-         { Read files and \lref data_block blocks not stored in the local file system. }
-         { Read pixel data in the UInt64, Complex32 and Complex64 \lref sampleformat_image_attribute {pixel sample formats}. }
-         { Read and process \lref xml_signature {XML signatures} to verify the integrity and authenticity of the data in an XISF unit. }
-      }
-
-      A \s {level 3 XISF encoder} \e shall implement this specification to generate XISF units with the following allowed \s exceptions:
-
-      \list {
-         { Write files and \lref data_block blocks outside the local file system. }
-         { Write pixel data in the normal \lref pixel_storage_models {pixel storage model}. }
-         { Write pixel data in the UInt64, Complex32 and Complex64 \lref sampleformat_image_attribute {pixel sample formats}. }
-         { Write \lref xml_signature {XML signatures} to guarantee the integrity and authenticity of the data in an XISF unit. }
-      }
-
-      In addition, other optional features and components of the specification \e may be excluded in a level 3 XISF encoder or decoder.
-   }
-
-   \subsection { Baseline XISF Conformance } {
-
-      A \s {baseline XISF decoder} \e shall have \s {at least} the following abilities to read \lref xisf_unit {XISF units}:
+      A baseline XISF decoder \e shall have \e {at least} the following abilities to read \lref xisf_unit {XISF units}:
 
       \list {
          { Read \lref monolithic_xisf_file {monolithic XISF files}. }
          { Read multiple \lref image_core_element \c Image core elements from a monolithic XISF file. }
          { Support \lref data_block_compression {zlib decompression}. }
-         { Read pixel data from \lref data_block {XISF blocks} with inline, embedded and attachment \lref data_block_location locations. }
-         { Read pixel data in the planar \lref pixel_storage_models {pixel storage model}. }
-         { Read pixel data in the following \lref sampleformat_image_attribute {pixel sample formats}: UInt8, UInt16, Float32. }
-         { Read pixel data represented in the following \lref colorspace_image_attribute {color spaces}: Grayscale, RGB. }
-      }
-
-      A \s {baseline XISF encoder} \e shall have \s {at least} the following abilities to generate XISF units:
-
-      \list {
-         { Write \lref monolithic_xisf_file {monolithic XISF files}. }
-         { Write a single \c Image core element in a monolithic XISF file. }
-         { Write pixel data as \lref data_block {XISF blocks} with attachment \lref data_block_location location. }
-         { Write pixel data in the planar \lref pixel_storage_models {pixel storage model}. }
-         { Write pixel data in the UInt16 \lref sampleformat_image_attribute {pixel sample format}. }
-         { Write pixel data represented in the grayscale and RGB \lref colorspace_image_attribute {color spaces}. }
+         { Read pixel data from \lref data_block {XISF blocks} with inline, embedded and attachment \lref data_block_location {block locations}. }
+         { Read pixel data in the planar and normal \lref pixel_storage_models {pixel storage models}. }
+         { Read pixel data in the UInt8, UInt16 and Float32 \lref sampleformat_image_attribute {pixel sample formats}. }
+         { Read pixel data encoded in the grayscale and RGB \lref image_color_spaces {color spaces}. }
       }
    }
 }

@@ -3,7 +3,7 @@
 
    An XISF property is an association of two data structures, \e identifier and \e value. A property \e may also have an optional associated \e {format specifier} to control its representation as readable text. An XISF property \e may be associated, either with an object stored in an \lref xisf_unit {XISF unit}, or with an XISF unit as a whole. An XISF property \e may also be stored in an XISF unit as a standalone object. Valid associations between properties and objects will be defined later in this document.
 
-   \subsection { Property Identifier } {
+   \subsection { \label property_identifier Property Identifier } {
 
       A property identifier \e must be a sequence of one or more 8-bit ASCII characters\ref unicode_ascii_subset satisfying the following regular expression:\ref ecmascript_regexp
 

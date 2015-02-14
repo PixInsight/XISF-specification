@@ -99,6 +99,8 @@
 
 \reference gonzalez_2008_color_model { R. C. González and R.E. Woods (2008), \e { Digital Image Processing, Third Edition }, Pearson / Prentice Hall, \sect 6.2, pp. 401--414 }
 
+\reference bulirsch_2010 { R. Bulirsch, J. Stoer et al. (2010), \e { Introduction to Numerical Analysis, Third Edition }, Springer, \sect 2.2 }
+
 \reference tkalcic_2003 { Marko Tkalcic and Jurij F. Tasic (2003), \e { Colour spaces: perceptual, historical and applicational background }, EUROCON 2003. Computer as a Tool. The IEEE Region 8. Vol. 1, pp. 304--308 }
 
 \reference vigna_2014 { Sebastiano Vigna (2014), \e { An experimental exploration of Marsaglia's xorshift generators, scrambled } (arXiv:1402.6246) }

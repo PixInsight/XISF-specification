@@ -27,7 +27,7 @@
 \pragma[numberequations]
 \pragma[numberfigures]
 \pragma[numbertables]
-\pragma[noequations]
+%\pragma[noequations]
 
 \include 01-Introduction.pidoc
 \include 02-VersionHistory.pidoc
@@ -38,7 +38,8 @@
 \include 07-Conformance.pidoc
 \include 08-DataObjects.pidoc
 \include 09-Structure.pidoc
-\include 10-CoreElements.pidoc
+\include 10-DataBlock.pidoc
+\include 11-CoreElements.pidoc
 \include References.pidoc
 
 \make

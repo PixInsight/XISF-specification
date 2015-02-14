@@ -1,7 +1,0 @@
-
-\subsection { \label attached_data_block Attached XISF Data Block } {
-
-   An attached XISF data block is an \lref data_block {XISF data block} stored in a \lref monolithic_xisf_file {monolithic XISF file}.
-
-   The position of an attached data block from the beginning of the monolithic XISF file where it is stored, as well as its length in bytes, \e must be completely and unambiguously defined by the \lref xisf_header {XISF header} of the \lref xisf_unit {XISF unit}.
-}

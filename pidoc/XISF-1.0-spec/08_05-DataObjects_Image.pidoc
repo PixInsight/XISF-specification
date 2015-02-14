@@ -44,11 +44,15 @@
          { Excess channels beyond nominal channels, with indexes \im{#: r,r+1,\dots,m-1 :#}, are collectively known as \e {alpha channels}. }
 
          { Although the roles of alpha channels are implementation-defined, the first alpha channel, at index \im{r}, \e should define the transparency of the image for alpha-compositing operations.\ref porter_1984 }
+
+         { Every real or integer image defines a visually representable numerical range, which we formalize as a \lref representable_range {representable range} propery. }
       }
 
       The mathematical symbols and terminology introduced in the above list will be used in the rest of this section.
 
-      \figure[numbered:fig_2d_image] {
+      \vs[length:2em]
+
+      \figure {
 
          \figtag \s { Structure of a two-dimensional image. }
 
@@ -97,6 +101,8 @@
             }
          }
 
+         \vs[length:2em]
+
          \figure[numbered:fig_planar_pixel_storage_model] {
 
             \figtag \s { A two-dimensional image in the planar pixel storage model. } Each square represents a pixel sample with its coordinates \im{#: \{c,i_0,i_1\} :#} written vertically, where \im c is a channel index and \im i_0 and \im i_1 are pixel coordinates. All pixel samples are stored as a single contiguous block from top to bottom and left to right (arrows indicate storage order).
@@ -139,7 +145,9 @@
             }
          }
 
-         \figure[numbered:fig_normal_pixel_storage_model] {
+         \vs[length:2em]
+
+         \figure {
 
             \figtag \s { A two-dimensional image in the normal pixel storage model. } As in Figure \figref fig_planar_pixel_storage_model, each square represents a pixel sample with its coordinates written vertically. Colors have been used to indicate image channels. As you can see by comparing both figures, in the normal model pixel samples are grouped by coordinates (by rows and columns in the case of a 2-D image) instead of by channels.
 
@@ -164,16 +172,16 @@
 
          \list[spaced] {
 
-            { \im{#: \mathbf{W} = \{x_W,y_W,Y_W\} :#} is a reference white. In this specification, all RGB working space parameters \e shall be relative to the standard D50 reference white.\ref iso_3664 }
+            { \im{#: \mathbf{W} = (x_W,y_W,Y_W) :#} is a reference white. In this specification, all RGB working space parameters \e shall be relative to the standard D50 reference white.\ref iso_3664 }
 
             { \im{#: \gamma :#} is an exponent for linearization of RGB components. }
 
-            { \im{#: \mathbf{x} = \{x_R,x_G,x_B\} :#} and \im{#: \mathbf{y} = \{y_R,y_G,y_B\} :#} are the chromaticity coordinates of the RGB primaries. }
+            { \im{#: \mathbf{x} = (x_R,x_G,x_B) :#} and \im{#: \mathbf{y} = (y_R,y_G,y_B) :#} are the chromaticity coordinates of the RGB primaries. }
 
-            { \im{#: \mathbf{Y} = \{Y_R,Y_G,Y_B\} :#} are the luminance coefficients of the RGB primaries. }
+            { \im{#: \mathbf{Y} = (Y_R,Y_G,Y_B) :#} are the luminance coefficients of the RGB primaries. }
          }
 
-         All chromaticity coordinates and luminance coefficients \e shall be represented normalized to the \[0,1\] range.
+         All chromaticity coordinates and luminance coefficients \e shall be normalized to the \[0,1\] range.
 
          For spaces not originally defined with respect to the D50 reference white, a chromatic adaptation algorithm \e must be applied to convert coordinates and coefficients to D50. The Bradford chromatic adaptation transform\ref icc_bradford is \e recommended.
 
@@ -395,7 +403,159 @@
 
       \subsection { RGB to Grayscale Conversion } {
 
-         A colorimetrically defined grayscale component \e shall be computed as the L* component of the CIE L*a*b space.
+         A colorimetrically defined grayscale component \e shall be computed as the L* component of the CIE L*a*b* space.
+      }
+   }
+
+   \subsection { \label representable_range Representable Range } {
+
+      The representable range is a property of every real or integer XISF image, that is, of any image whose pixel samples are floating point or integer scalars. It is the range \im{#: [r_0,r_1] :#} of pixel sample values that can be represented on display devices, as we describe below. We say that \im r_0 and \im r_1 are the \e {black point} and \e {white point} of the image, respectively.
+
+      Consider an abstract display device \im{#: \mathcal{D} :#} able to generate image representations for input pixel sample values in the \im{#: [v_0,v_1] :#} range. We call this range the device's \e {input range}, and we conventionally call \im v_0 and \im v_1 \e black and \e white, respectively. Pixel samples outside the input range will generate invalid, saturated representations: Any pixel sample value \im{#: x < v_0 :#} will be represented as black, while any pixel sample value \im{#: x > v_1 :#} will be represented as white. Any pixel sample \im{#: x \in [v_0,v_1]:#} will generate a valid representation \im{#: \mbox{R}(x) :#} as a gray level directly proportional to the input pixel sample value. Assuming a display device so defined, the representable range of the image \e shall be applied for each pixel sample \im x by means of the following algorithm:
+
+      \equation[numbered:eqn_representable_range] { #:
+         $$
+         \mathcal{D} \leftarrow \mbox{R}(x;r_0,r_1,v_0,v_1) = \left\{ \begin{array}{l l}
+            v_0                                                               & \quad \mbox{for} \; x < r_0 \\
+            v_1                                                               & \quad \mbox{for} \; x > r_1 \\
+            v_0 + (v_1 - v_0) \times \displaystyle{\frac{x - r_0}{r_1 - r_0}} & \quad \mbox{otherwise}      \\
+         \end{array}
+         \right. \, .
+         $$
+      :# }
+
+      This algorithm is a simple linear mapping of pixel sample values from the representable range of an image to a display device's input range.
+
+      For example, for an image being represented on a typical 8-bit output device, such as a computer display or a printer, we would have \im{ v_0 = 0 } and \im{ v_1 = 255 }. Another example is an image processing application working internally with normalized floating point pixel data in the \im{#: [0,1] :#} range, which would apply the above algorithm with \im{ v_0 = 0 } and \im{ v_1 = 1 } (note that in this case the algorithm can be simplified).
+
+      There is no default representable range for real images whose pixel samples are encoded as floating point scalars, so in these cases the representable range \e must be defined explicitly; see the \lref bounds_image_attribute \c bounds attribute of the \lref image_core_element \c Image core element for implementation-related information.
+
+      For images whose pixel samples are encoded as unsigned integer scalars, the default representable range \e shall be \im{#: [0,2^{n-1}] :#}, where \im n is the number of bits per pixel sample.
+
+      For complex images, i.e. for images whose pixel samples are complex numbers, the representable range property does not exist. The reason for this restriction is that a visually representable range, as we have described it with the above algorithm, does not really make sense for pixel data in the frequency domain and other applications of complex numerical data. The methods used for representation of complex-valued pixels are left as implementation-defined by this specification.
+
+      For color images encoded in a color space different from RGB, the representable range \e shall apply to pixel sample values \e {once converted} to the RGB color space.
+   }
+
+   \subsection { \label display_function Display Function } {
+
+      A display function (DF) is a mathematical transformation applied to modify the visual representation of an XISF image. A display function has a set \im{#: \{ \mathbf{m}, \mathbf{s}, \mathbf{h}, \mathbf{l}, \mathbf{r} \} :#} of function parameters, where:
+
+      \list[spaced] {
+
+         { \im{#: \mathbf{m} = (m_{RK},m_G,m_B,m_L) :#} is a vector of \e {midtones balance} parameters, }
+
+         { \im{#: \mathbf{s} = (s_{RK},s_G,s_B,s_L) :#} is a vector of \e {shadows clipping point} parameters, }
+
+         { \im{#: \mathbf{h} = (h_{RK},h_G,h_B,h_L) :#} is a vector of \e {highlights clipping point} parameters, }
+
+         { \im{#: \mathbf{l} = (l_{RK},l_G,l_B,l_L) :#} is a vector of \e {shadows dynamic range expansion} parameters, }
+
+         { \im{#: \mathbf{r} = (r_{RK},r_G,r_B,r_L) :#} is a vector of \e {highlights dynamic range expansion} parameters, }
+      }
+
+      with the following constraints for \im{#: i \in \{RK,G,B,L\} :#}:
+
+      \equation[unnumbered] { #:
+         $$
+         \begin{array}{c}
+            0   \le m_i \le 1 \\
+            0   \le s_i \le 1 \\
+            0   \le h_i \le 1 \\
+            s_i \le h_i       \\
+            l_i \le 0         \\
+            r_i \ge 1         \\
+         \end{array} \, .
+         $$
+      :# }
+
+      For DF vector parameter components, the \im[scale:0.7]{RK}, \im[scale:0.7] G and \im[scale:0.7] B subindexes correspond to the red, green and blue nominal channels of RGB color images, respectively. For grayscale images, the \im[scale:0.7] RK subindex corresponds to the unique grayscale nominal channel, and the \im[scale:0.7] G and \im[scale:0.7] B vector components are not applicable. Finally, the \im[scale:0.7] L subindex applies to visualizations of the CIE L* component (or \e{lightness}) of RGB color images.
+
+      A decoder that claims support of display functions \e shall implement the following algorithm. For a pixel sample \im{#: x \in [0,1] :#}, define the \e {midtones transfer function}
+
+      \equation[numbered:eqn_mtf] { #:
+         $$
+         \mbox{M}(x;m) = \left\{ \begin{array}{l l}
+            0                                             & \quad \mbox{for} \; x = 0 \\
+            1/2                                           & \quad \mbox{for} \; x = m \\
+            1                                             & \quad \mbox{for} \; x = 1 \\
+            \displaystyle{\frac{(m - 1)x}{(2m - 1)x - m}} & \quad \mbox{otherwise}    \\
+         \end{array}
+         \right. \, .
+         $$
+      :# }
+
+      This is a smooth, continuous function passing through the points \im{(0,0)}, \im{(m,1/2)} and \im{(1,1)}, where \im m is a midtones balance DF parameter. A midtones balance of 0.5 defines a linear function. A midtones balance value below 0.5 increases the midtones, while a value above 0.5 darkens the midtones of the image. The above equation can be derived from the Bulirsch-Stoer algorithm \ref bulirsch_2010 for evaluation of the diagonal rational function, given the three fixed points of the midtones transfer function.
+
+      Define the \e {clipping function}
+
+      \equation[numbered:eqn_clipping] { #:
+         $$
+         \mbox{C}(x;s,h) = \left\{ \begin{array}{l l}
+            0                                  & \quad \mbox{for} \; x < s \\
+            1                                  & \quad \mbox{for} \; x > h \\
+            \displaystyle{\frac{x - s}{h - s}} & \quad \mbox{otherwise}    \\
+         \end{array}
+         \right. \, ,
+         $$
+      :# }
+
+      and the \e {expansion function}
+
+      \equation[numbered:eqn_expansion] { #:
+         $$
+         \mbox{E}(x;l,r) = \frac{x - l}{r - l} \, .
+         $$
+      :# }
+
+      Now for each pixel sample \im x_i of a given image plane or component \im{#: i \in \{RK,G,B,L\} :#}, we define the display function as
+
+      \equation { #:
+         $$
+         \mbox{DF}(x_i;\mathbf{m},\mathbf{s},\mathbf{h},\mathbf{l},\mathbf{r}) = \mbox{E}( \mbox{M}( \mbox{C}(x_i;s_i,h_i); m_i );l_i,r_i ) \, .
+         $$
+      :# }
+
+      The \e {identity display function} is defined by the following parameters \im{#: \forall \; i \in \{RK,G,B,L\} :#}:
+
+      \equation[numbered:eqn_identity_df] { #:
+         $$
+         \begin{array}{l l l}
+            m_i & = & 1/2 \\
+            s_i & = & 0   \\
+            h_i & = & 1   \\
+            l_i & = & 0   \\
+            r_i & = & 1   \\
+         \end{array} \, .
+         $$
+      :# }
+
+      When no display function is specified for an image, the identity DF \e shall be assigned by default.
+
+      For normalization to the \[0,1\] range, as required by Equations \eqnref eqn_mtf, \eqnref eqn_clipping and \eqnref eqn_expansion, Equation \eqnref eqn_representable_range \e shall be used with \im{#: v_0 = 0 :#} and \im{#: v_1 = 1 :#} if the original pixel data are encoded with a different representable range.
+
+      Display functions are mostly useful for visualization of linear images, such as CCD and digital camera raw frames. Figure \figref fig_display_function shows a typical example with a deep-sky astronomical image.
+
+      \vs[length:2em]
+
+      \figure[numbered:fig_display_function] {
+
+         \figtag \s { Display function example. }
+
+         \s (a) Linear image. Integration of 15 CCD raw images of the M81/M82 region.
+
+         \s (b) Linear image visualized with display function parameters \im[scale:0.8]{#: m_{RK} = 7.35 \times 10^{-4} :#}, \im[scale:0.8]{#: s_{RK} = 3.758 \times 10^{-3} :#}, and \im[scale:0.8]{#: h_{RK} = 1 :#}.
+
+         \s (c) Linear image visualized with display function parameters \im[scale:0.8]{#: m_{RK} = 1.84 \times 10^{-4} :#}, \im[scale:0.8]{#: s_{RK} = 3.819 \times 10^{-3} :#}, and \im[scale:0.8]{#: h_{RK} = 1 :#}.
+
+         In all cases dynamic range expansion parameters have the default values \im[scale:0.8]{#: l_{RK} = 0 :#} and \im[scale:0.8]{#: r_{RK} = 1 :#}. Display function parameters have been computed adaptively based on robust image statistics.
+
+         \vs[length:2em]
+         \group{ \block[float:left] \s a \image[float:right] M81-M82-linear.png }
+         \vs
+         \group{ \block[float:left] \s b \image[float:right] M81-M82-df-1.png }
+         \vs
+         \group{ \block[float:left] \s c \image[float:right] M81-M82-df-2.png }
       }
    }
 }
