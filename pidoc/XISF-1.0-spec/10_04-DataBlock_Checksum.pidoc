@@ -7,7 +7,7 @@
 
    Cryptographic checksums are \e optional for non-signed units, although their implementation is \e recommended for all XISF encoders as a user-selectable option available in all cases, irrespective of digital signatures.
 
-   When a \c checksum attribute is defined for an XML element serializing a data block, an XISF decoder \e must verify it by computing a new digest from the serialized data and comparing it with the value of the corresponding \c checksum attribute. If the digests differ, a decoder should issue a warning or error message and give the user an option to stop loading the affected data block or the entire XISF unit, as appropriate. This validation process \e must always occur before making the data block available to the user, either directly or indirectly. Checksum verification \e may be implemented on an on-demand basis: only data blocks whose contents have to be loaded from the XISF unit need to be verified. For unattented operations such as batch processes, a decoder \e should \e not load an XISF unit for which a checksum verification fails.
+   When a \c checksum attribute is defined for an XML element serializing a data block, an XISF decoder \e must verify it by computing a new digest from the serialized data and comparing it with the value of the corresponding \c checksum attribute. If the digests differ, a decoder should issue a warning or error message and give the user an option to stop loading the affected data block or the entire XISF unit, as appropriate. This validation process \e must always occur before making the data block available to the user, either directly or indirectly. Checksum verification \e may be implemented on an on-demand basis: only data blocks whose contents have to be loaded from the XISF unit need to be verified. For unattended operations such as batch processes, a decoder \e should \e not load an XISF unit for which a checksum verification fails.
 
    See also the section on \lref data_block_compression {compressed XISF data blocks} for important security considerations about \lref checksums_of_compressed_blocks {checksums and compression}.
 
@@ -21,7 +21,7 @@
 
          Message digests \e shall be encoded in Base16 using the lowercase hexadecimal digits 'a', 'b', 'c', 'd', 'e', and 'f'.
 
-         Supported algorithms include:
+         Supported algorithms are:
 
          \table[caption,header,width:100\%] {
             { Cryptographic Hashing Algorithms }
@@ -33,7 +33,7 @@
             { { SHA3-512 (Keccak)\ref nist_sha3 \ref www_keccak } { \c sha3-512 } {} }
          }
 
-         SHA-1 is the \e recommended general-purpose hashing algorithm for use in XISF units.
+         SHA-1 is the \e recommended general-purpose hashing algorithm for use in XISF units, and \e must be supported by all encoders and decoders claiming support for data block checksums. The rest of algorithms are \e optional.
 
          Example:
 

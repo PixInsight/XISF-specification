@@ -37,7 +37,7 @@
 
          { For images with a visual representation role, pixel samples \e must be representable in a \e {color model}.\ref gonzalez_2008_color_model \ref wikipedia_color_model }
 
-         { The color model where pixel samples are represented, if defined, \e should be augmented with a number of viewing conditions and colorimetric properties, which define the \e {color space}\ref tkalcic_2003 of the image. }
+         { The color model where pixel samples are represented, if defined, \e should be augmented with a number of viewing conditions and colorimetric properties, which define the \e {color space}\ref cie_colorimetry of the image. }
 
          { The first \im{#: r \le m :#} channels strictly required to define the color model (or color space) of an image, with indexes \im{#: 0,\dots,r-1 :#}, are \e {nominal channels}. }
 
@@ -45,7 +45,7 @@
 
          { Although the roles of alpha channels are implementation-defined, the first alpha channel, at index \im{r}, \e should define the transparency of the image for alpha-compositing operations.\ref porter_1984 }
 
-         { Every real or integer image defines a visually representable numerical range, which we formalize as a \lref representable_range {representable range} propery. }
+         { Every real or integer image defines a visually representable numerical range, which we formalize as a \lref representable_range {representable range} property. }
       }
 
       The mathematical symbols and terminology introduced in the above list will be used in the rest of this section.
@@ -160,9 +160,9 @@
 
    \subsection { \label image_color_spaces Color Spaces } {
 
-      The following color spaces are formally supported by this specification for storage of pixel data in XISF units: Grayscale (monochrome), RGB, and CIE L*a*b*.
+      The following color spaces are formally supported by this specification for storage of pixel data in XISF units: Grayscale (monochrome), RGB, and CIE L*a*b*.\ref cie_lab
 
-      An in-depth description of color spaces is beyond the scope of this specification. The reader should refer to the literature for further information on this subject; for example, see references \ref gonzalez_2008_color_model, \ref tkalcic_2003 and \ref www_bruce_lindbloom.
+      An in-depth description of color spaces is beyond the scope of this specification. The reader should refer to the literature for further information on this subject; for example, see references \ref cie_colorimetry, \ref gonzalez_2008_color_model, \ref tkalcic_2003 and \ref www_bruce_lindbloom.
 
       To remove any possible ambiguity in the specification of CIE L*a*b*, we'll describe the necessary color space transformation algorithms in the next subsections.
 
@@ -228,9 +228,9 @@
          \equation { #:
             $$
             \hbox{S}(x) = \left\{ \begin{array}{l l}
-               \displaystyle{\frac{x}{12.92}}                            & \hbox{if} \;\; x \le 0.04045 \\
+               \displaystyle{\frac{x}{12.92}}                            & \hbox{if} \enspace x \le 0.04045 \\
                \\
-               \left(\displaystyle{\frac{x + 0.055}{1.055}}\right)^{2.4} & \hbox{otherwise}             \\
+               \left(\displaystyle{\frac{x + 0.055}{1.055}}\right)^{2.4} & \hbox{otherwise}                 \\
             \end{array}
             \right. \, .
             $$
@@ -312,9 +312,9 @@
          \equation { #:
             $$
             \hbox{T}(x) = \left\{ \begin{array}{l l}
-               12.92 \times x          & \hbox{if} \;\; x \le 0.0031308 \\
+               12.92 \times x          & \hbox{if} \enspace x \le 0.0031308 \\
                \\
-               1.055 \, x^{1/2.4} - 0.055 & \hbox{otherwise}            \\
+               1.055 \, x^{1/2.4} - 0.055 & \hbox{otherwise}                \\
             \end{array}
             \right. \, .
             $$
@@ -340,9 +340,9 @@
          \equation { #:
             $$
             \hbox{f}(x) = \left\{ \begin{array}{l l}
-               x^{1/3}                                  & \hbox{if} \;\; x > \epsilon \\
+               x^{1/3}                                  & \hbox{if} \enspace x > \epsilon \\
                \\
-               \displaystyle{\frac{\kappa x + 16}{116}} & \hbox{otherwise}            \\
+               \displaystyle{\frac{\kappa x + 16}{116}} & \hbox{otherwise}                \\
             \end{array}
             \right. \, ,
             $$
@@ -380,9 +380,9 @@
          \equation { #:
             $$
             \hbox{g}(x) = \left\{ \begin{array}{l l}
-               x^3                                      & \hbox{if} \;\; x^3 > \epsilon \\
+               x^3                                      & \hbox{if} \enspace x^3 > \epsilon \\
                \\
-               \displaystyle{\frac{116 x - 16}{\kappa}} & \hbox{otherwise}              \\
+               \displaystyle{\frac{116 x - 16}{\kappa}} & \hbox{otherwise}                  \\
             \end{array}
             \right. \, ,
             $$
@@ -411,20 +411,20 @@
 
       The representable range is a property of every real or integer XISF image, that is, of any image whose pixel samples are floating point or integer scalars. It is the range \im{#: [r_0,r_1] :#} of pixel sample values that can be represented on display devices, as we describe below. We say that \im r_0 and \im r_1 are the \e {black point} and \e {white point} of the image, respectively.
 
-      Consider an abstract display device \im{#: \mathcal{D} :#} able to generate image representations for input pixel sample values in the \im{#: [v_0,v_1] :#} range. We call this range the device's \e {input range}, and we conventionally call \im v_0 and \im v_1 \e black and \e white, respectively. Pixel samples outside the input range will generate invalid, saturated representations: Any pixel sample value \im{#: x < v_0 :#} will be represented as black, while any pixel sample value \im{#: x > v_1 :#} will be represented as white. Any pixel sample \im{#: x \in [v_0,v_1]:#} will generate a valid representation \im{#: \mbox{R}(x) :#} as a gray level directly proportional to the input pixel sample value. Assuming a display device so defined, the representable range of the image \e shall be applied for each pixel sample \im x by means of the following algorithm:
+      Consider an abstract device \im{#: \mathcal{D} :#} able to generate image representations for pixel sample values in the \im{#: [v_0,v_1] :#} range. We call this range the device's \e {input range}, and we conventionally call \im v_0 and \im v_1 \e black and \e white, respectively, in the context of image representations. Pixel samples outside the representable range will generate invalid, saturated representations: Any pixel sample value \im{#: x < r_0 :#} will be represented as black, while any pixel sample value \im{#: x > r_1 :#} will be represented as white. Any pixel sample \im{#: x \in [r_0,r_1]:#} will generate a valid representation \im{#: \mbox{R}(x) :#} as a gray level directly proportional to the input pixel sample value. Assuming a device so defined, the representable range of the image \e shall be applied for each pixel sample \im x by means of the following algorithm:
 
       \equation[numbered:eqn_representable_range] { #:
          $$
          \mathcal{D} \leftarrow \mbox{R}(x;r_0,r_1,v_0,v_1) = \left\{ \begin{array}{l l}
-            v_0                                                               & \quad \mbox{for} \; x < r_0 \\
-            v_1                                                               & \quad \mbox{for} \; x > r_1 \\
-            v_0 + (v_1 - v_0) \times \displaystyle{\frac{x - r_0}{r_1 - r_0}} & \quad \mbox{otherwise}      \\
+            v_0                                                               & \quad \mbox{if} \enspace x < r_0 \\
+            v_1                                                               & \quad \mbox{if} \enspace x > r_1 \\
+            v_0 + (v_1 - v_0) \times \displaystyle{\frac{x - r_0}{r_1 - r_0}} & \quad \mbox{otherwise}           \\
          \end{array}
          \right. \, .
          $$
       :# }
 
-      This algorithm is a simple linear mapping of pixel sample values from the representable range of an image to a display device's input range.
+      This algorithm is a simple linear mapping of pixel sample values from the representable range of an image to a device's input range.
 
       For example, for an image being represented on a typical 8-bit output device, such as a computer display or a printer, we would have \im{ v_0 = 0 } and \im{ v_1 = 255 }. Another example is an image processing application working internally with normalized floating point pixel data in the \im{#: [0,1] :#} range, which would apply the above algorithm with \im{ v_0 = 0 } and \im{ v_1 = 1 } (note that in this case the algorithm can be simplified).
 
@@ -432,14 +432,14 @@
 
       For images whose pixel samples are encoded as unsigned integer scalars, the default representable range \e shall be \im{#: [0,2^{n-1}] :#}, where \im n is the number of bits per pixel sample.
 
-      For complex images, i.e. for images whose pixel samples are complex numbers, the representable range property does not exist. The reason for this restriction is that a visually representable range, as we have described it with the above algorithm, does not really make sense for pixel data in the frequency domain and other applications of complex numerical data. The methods used for representation of complex-valued pixels are left as implementation-defined by this specification.
+      For complex images, i.e. for images whose pixel samples are complex numbers, the representable range property is undefined. The reason for this limitation is that a visually representable range, as we have described it with the above algorithm, does not really make sense for pixel data in the frequency domain and other applications of complex numerical data. The methods used for representation of complex-valued pixels are left as implementation-defined by this specification.
 
-      For color images encoded in a color space different from RGB, the representable range \e shall apply to pixel sample values \e {once converted} to the RGB color space.
+      For color images encoded in color spaces different from RGB, the representable range \e shall apply to pixel sample values \e {once converted} to the RGB color space.
    }
 
    \subsection { \label display_function Display Function } {
 
-      A display function (DF) is a mathematical transformation applied to modify the visual representation of an XISF image. A display function has a set \im{#: \{ \mathbf{m}, \mathbf{s}, \mathbf{h}, \mathbf{l}, \mathbf{r} \} :#} of function parameters, where:
+      A display function (DF) is a mathematical transformation applied to modify the visual representation of an XISF image. A display function has a set \im{#: \{ \mathbf{m}, \mathbf{s}, \mathbf{h}, \mathbf{l}, \mathbf{r} \} :#} of function parameters such that
 
       \list[spaced] {
 
@@ -454,7 +454,7 @@
          { \im{#: \mathbf{r} = (r_{RK},r_G,r_B,r_L) :#} is a vector of \e {highlights dynamic range expansion} parameters, }
       }
 
-      with the following constraints for \im{#: i \in \{RK,G,B,L\} :#}:
+      with the following constraints for \im{#: i \in \{{\scriptstyle RK,G,B,L}\} :#}:
 
       \equation[unnumbered] { #:
          $$
@@ -469,17 +469,17 @@
          $$
       :# }
 
-      For DF vector parameter components, the \im[scale:0.7]{RK}, \im[scale:0.7] G and \im[scale:0.7] B subindexes correspond to the red, green and blue nominal channels of RGB color images, respectively. For grayscale images, the \im[scale:0.7] RK subindex corresponds to the unique grayscale nominal channel, and the \im[scale:0.7] G and \im[scale:0.7] B vector components are not applicable. Finally, the \im[scale:0.7] L subindex applies to visualizations of the CIE L* component (or \e{lightness}) of RGB color images.
+      For DF vector parameter components, the \im{#: {\scriptstyle RK} :#}, \im{#: {\scriptstyle G} :#} and \im{#: {\scriptstyle B} :#} subindexes correspond to the red, green and blue nominal channels of RGB color images, respectively. For grayscale images, the \im{#: {\scriptstyle RK} :#} subindex corresponds to the unique grayscale nominal channel, and the \im{#: {\scriptstyle G} :#} and \im{#: {\scriptstyle B} :#} vector components are not applicable. Finally, the \im{#: {\scriptstyle L} :#} subindex applies to visualizations of the CIE L* component (or \e{lightness}) of color images.
 
       A decoder that claims support of display functions \e shall implement the following algorithm. For a pixel sample \im{#: x \in [0,1] :#}, define the \e {midtones transfer function}
 
       \equation[numbered:eqn_mtf] { #:
          $$
          \mbox{M}(x;m) = \left\{ \begin{array}{l l}
-            0                                             & \quad \mbox{for} \; x = 0 \\
-            1/2                                           & \quad \mbox{for} \; x = m \\
-            1                                             & \quad \mbox{for} \; x = 1 \\
-            \displaystyle{\frac{(m - 1)x}{(2m - 1)x - m}} & \quad \mbox{otherwise}    \\
+            0                                             & \quad \mbox{if} \enspace x = 0 \\
+            1/2                                           & \quad \mbox{if} \enspace x = m \\
+            1                                             & \quad \mbox{if} \enspace x = 1 \\
+            \displaystyle{\frac{(m - 1)x}{(2m - 1)x - m}} & \quad \mbox{otherwise}         \\
          \end{array}
          \right. \, .
          $$
@@ -492,9 +492,9 @@
       \equation[numbered:eqn_clipping] { #:
          $$
          \mbox{C}(x;s,h) = \left\{ \begin{array}{l l}
-            0                                  & \quad \mbox{for} \; x < s \\
-            1                                  & \quad \mbox{for} \; x > h \\
-            \displaystyle{\frac{x - s}{h - s}} & \quad \mbox{otherwise}    \\
+            0                                  & \quad \mbox{if} \enspace x < s \\
+            1                                  & \quad \mbox{if} \enspace x > h \\
+            \displaystyle{\frac{x - s}{h - s}} & \quad \mbox{otherwise}         \\
          \end{array}
          \right. \, ,
          $$
@@ -508,15 +508,15 @@
          $$
       :# }
 
-      Now for each pixel sample \im x_i of a given image plane or component \im{#: i \in \{RK,G,B,L\} :#}, we define the display function as
+      Now for each pixel sample \im x_i of a given image plane or component \im{#: i \in \{{\scriptstyle RK,G,B,L}\} :#}, we define the display function as
 
-      \equation { #:
+      \equation[numbered:eqn_display_function] { #:
          $$
          \mbox{DF}(x_i;\mathbf{m},\mathbf{s},\mathbf{h},\mathbf{l},\mathbf{r}) = \mbox{E}( \mbox{M}( \mbox{C}(x_i;s_i,h_i); m_i );l_i,r_i ) \, .
          $$
       :# }
 
-      The \e {identity display function} is defined by the following parameters \im{#: \forall \; i \in \{RK,G,B,L\} :#}:
+      The \e {identity display function} is defined by the following parameters \im{#: \forall \; i \in \{{\scriptstyle RK,G,B,L}\} :#}:
 
       \equation[numbered:eqn_identity_df] { #:
          $$
@@ -556,6 +556,156 @@
          \group{ \block[float:left] \s b \image[float:right] M81-M82-df-1.png }
          \vs
          \group{ \block[float:left] \s c \image[float:right] M81-M82-df-2.png }
+      }
+   }
+
+   \subsection { Adaptive Display Function Algorithm } {
+
+      In this subsection we describe an algorithm for the calculation of display functions based on robust image statistics. This algorithm, which has proven to yield excellent results for automatic visualization of most linear images, is \e recommended for all encoders claiming support for display functions.
+
+      For simplicity, let's consider a two-dimensional image; if necessary, the algorithm can be extended trivially to higher dimensions. Assume also, for the sake of simplicity, that the representable range of the image is \im{#: [0,1] :#}. Consider an image channel with index \im{c}, and recall that image dimensions are symbolized by \im d_0 and \im d_1 respectively for the X and Y axes. The normalized median absolute deviation of an image channel \im c is given by
+
+      \equation { #:
+         $$
+         \hbox{MADN}_c = 1.4826 \times \hbox{med}( |x_{c,0,0} - M_c|, \dots, |x_{c,d_0-1,d_1-1} - M_c| ) \, ,
+         $$
+      :# }
+
+      where \im{#: \hbox{med}() :#} is the sample median function,\ref wilcox_2010 \im{#: x_{c,i,j} :#} represents the pixel sample at coordinates \im{#: \{c,i,j\} :#}, and \im M_c is the median of all pixel samples in channel \im{c}. The constant 1.4826 makes the median absolute deviation consistent with the standard deviation of a normal distribution.
+
+      Define the parameters:
+
+      \definition {
+
+         \im B
+         {
+            Target mean background in the \im{#: [0,1] :#} range. This parameter controls the global illumination of the displayed image. The \e recommended default value is \im{B = 0.25}.
+         }
+
+         \im C
+         {
+            Clipping point in units of \im{#: \hbox{MADN}_c :#}, measured from the median \im{M_c}. This parameter controls the overall contrast of the displayed image. The \e recommended default value is \im{C = -2.8}.
+         }
+      }
+
+      Note that these parameters are valid for all images and image channels. Set
+
+      \equation { #:
+         $$
+         a_c = \left\{ \begin{array}{l l}
+            0 & \quad \mbox{if} \enspace M_c \le 1/2 \\
+            1 & \quad \mbox{if} \enspace M_c > 1/2   \\
+         \end{array}
+         \right. \, .
+         $$
+      :# }
+
+      Compute the clipping points
+
+      \equation { #:
+         $$
+         s_c = \left\{ \begin{array}{l l}
+            0                                                              & \quad \mbox{if} \enspace           a_c = 1 \\
+            0                                                              & \quad \mbox{if} \enspace \hbox{MADN}_c = 0 \\
+            \hbox{min}( 1, \hbox{max}( 0, M_c + C \times \hbox{MADN}_c ) ) & \quad \mbox{otherwise}                     \\
+         \end{array}
+         \right. \, ,
+         $$
+      :# }
+
+      \vs
+
+      \equation { #:
+         $$
+         h_c = \left\{ \begin{array}{l l}
+            1                                                              & \quad \mbox{if} \enspace           a_c = 0 \\
+            1                                                              & \quad \mbox{if} \enspace \hbox{MADN}_c = 0 \\
+            \hbox{min}( 1, \hbox{max}( 0, M_c - C \times \hbox{MADN}_c ) ) & \quad \mbox{otherwise}                     \\
+         \end{array}
+         \right. \, ,
+         $$
+      :# }
+
+      and the midtones balance
+
+      \equation { #:
+         $$
+         m_c = \left\{ \begin{array}{l l}
+            \mbox{M}(M_c - s_c;B) & \quad \mbox{if} \enspace a_c = 0 \\
+            \mbox{M}(B;h_c - M_c) & \quad \mbox{if} \enspace a_c = 1 \\
+         \end{array}
+         \right. \, ,
+         $$
+      :# }
+
+      where \im{#: \mbox{M}() :#} is the midtones transfer function defined by Equation \eqnref eqn_mtf. Setting \im{ l_c = 0 } and \im { r_c = 1 }, now we have the whole set of parameters to apply an automatic display function to a channel of the image (see Equation \eqnref eqn_display_function).
+
+      For RGB color images, a side effect of this algorithm is the relative alignment of the three histogram peaks, which tends to yield an effective white balance correction. The algorithm can be modified easily to apply a single set of DF parameters to all nominal channels, which preserves the existing color balance. In such case we can calculate, for example:
+
+      \equation[numbered:eqn_linked_df_1] { #:
+         $$
+         a_0 = a_1 = a_2 = \left\{ \begin{array}{l l}
+            0 & \quad \mbox{if} \enspace (M_0 + M_1 + M_2) \le 1.5 \\
+            1 & \quad \mbox{if} \enspace (M_0 + M_1 + M_2) > 1.5   \\
+         \end{array}
+         \right. \, ,
+         $$
+      :# }
+
+      \equation[numbered:eqn_linked_df_2] { #:
+         $$
+         s_{RGB} = \frac{s_0 + s_1 + s_2}{3} \, ,
+         $$
+      :# }
+
+      \equation[numbered:eqn_linked_df_3] { #:
+         $$
+         h_{RGB} = \frac{h_0 + h_1 + h_2}{3} \, ,
+         $$
+      :# }
+
+      \equation[numbered:eqn_linked_df_4] { #:
+         $$
+         m_{RGB} = \frac{m_0 + m_1 + m_2}{3} \, .
+         $$
+      :# }
+
+      \vs[length:2em]
+
+      \figure {
+
+         \figtag \s { Adaptive display function examples. }
+
+         \s (a) Linear image. A single raw frame acquired with a DSLR camera.
+
+         \s (b) Linear image (a) visualized with separate adaptive display functions computed for each nominal channel. The original color balance of the linear data has been altered.
+
+         \s (c) Linear image (a) visualized with a single adaptive display function computed by Equations \eqnref eqn_linked_df_1, \eqnref eqn_linked_df_2, \eqnref eqn_linked_df_3 and \eqnref eqn_linked_df_4. Note that the original color balance has been preserved.
+
+         \s (d) Linear RGB color image of M74. Composition of three integrated CCD images.
+
+         \s (e) Linear image (d) visualized with separate adaptive display functions computed for each nominal channel.
+
+         \s (f) Linear image (d) visualized with a single adaptive display function.
+
+         \s (g) Histogram of (d), magnified horizontally by a factor of 25.
+
+         In all cases adaptive DFs have been computed with default target background and clipping point parameters, as described in the text. Image of M74 courtesy of Calar Alto Observatory / Vicent Peris.
+
+         \vs[length:2em]
+         \group{ \block[float:left] \s a \image[float:right] flower-df-linear.png }
+         \vs
+         \group{ \block[float:left] \s b \image[float:right] flower-df-unlinked.png }
+         \vs
+         \group{ \block[float:left] \s c \image[float:right] flower-df-linked.png }
+         \vs
+         \group{ \block[float:left] \s d \image[float:right] M74-df-linear.png }
+         \vs
+         \group{ \block[float:left] \s e \image[float:right] M74-df-unlinked.png }
+         \vs
+         \group{ \block[float:left] \s f \image[float:right] M74-df-linked.png }
+         \vs
+         \group{ \block[float:left] \s g \group[width:800px,float:right]{ \image[float:left] M74-df-histogram.png } }
       }
    }
 }

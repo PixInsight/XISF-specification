@@ -49,7 +49,7 @@
 
          \c { width:\e{count} }
          {
-            \c\e count is a plain text representation of an unsigned integer. If the length \e n in characers of the represented value is less than the value of \c\e count, the represented value \e shall be padded with (\e n -- \c\e count) padding characters---see the \c fill token below. The location of padding characters depends on the current alignment---see the \c align token below.
+            \c\e count is a plain text representation of an unsigned integer. If the length \e n in characters of the represented value is less than the value of \c\e count, the represented value \e shall be padded with (\e n -- \c\e count) padding characters---see the \c fill token below. The location of padding characters depends on the current alignment---see the \c align token below.
 
             If no \c width token is specified, the value \e shall be represented using the minimum number of characters necessary, that is, no padding will be used by default.
          }

@@ -7,7 +7,7 @@
 
       { \label inline_data_block \c { location="inline:\e{encoding}" } }
       {
-         Defines an \e {inline XISF data block}. An inline data block is serialized in the character contents of an XML element, encoded as plain ASCII\ref unicode_ascii_subset text. \e\c encoding defines the data encoding used, which \e must be either \c base64 or \c hex, corresponding to the Base64 and Base16 (or hexadecimal) encodings,\ref rfc_4648 respectively. For data encoded in Base16, the digit symbols 'a', 'b', 'c', 'd', 'e' and 'f' \e shall be used to represent the nibble values 10\sub{10}, 11\sub{10}, 12\sub{10}, 13\sub{10}, 14\sub{10} and 15\sub{10}, respectively; in other words, a lowercase hexadecial representation \e shall be used for Base16 encoding.
+         Defines an \e {inline XISF data block}. An inline data block is serialized in the character contents of an XML element, encoded as plain ASCII\ref unicode_ascii_subset text. \e\c encoding defines the data encoding used, which \e must be either \c base64 or \c hex, corresponding to the Base64 and Base16 (or hexadecimal) encodings,\ref rfc_4648 respectively. For data encoded in Base16, the digit symbols 'a', 'b', 'c', 'd', 'e' and 'f' \e shall be used to represent the nibble values 10\sub{10}, 11\sub{10}, 12\sub{10}, 13\sub{10}, 14\sub{10} and 15\sub{10}, respectively; in other words, a lowercase hexadecimal representation \e shall be used for Base16 encoding.
 
          Example of inline XISF data block:
 

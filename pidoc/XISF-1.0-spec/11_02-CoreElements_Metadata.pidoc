@@ -56,7 +56,7 @@
             { { Operating system }  { \c CreatorOS property value } }
             { { FreeBSD }           { \c FreeBSD } }
             { { Linux }             { \c Linux } }
-            { { Apple OS X }        { \c {OS X} } }
+            { { Apple OS X }        { \c {OSX} } }
             { { Microsoft Windows } { \c Windows } }
          }
 

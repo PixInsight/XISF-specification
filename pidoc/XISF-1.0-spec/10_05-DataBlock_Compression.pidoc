@@ -11,7 +11,7 @@
 
    \subsection { \label checksums_of_compressed_blocks Checksums of Compressed Blocks } {
 
-      When a \lref data_block_checksum \c checksum attribute is included in the XML element serializing a compressed data block, an encoder \e shall compute the corresponding cryptoghraphic digest for the compressed data, and \e never from the original, uncompressed data. If a checksum verification fails for a compressed data block, a decoder \e must \e not attempt to decompress the altered data, as this might cause a vulnerability that could be exploited.
+      When a \lref data_block_checksum \c checksum attribute is included in the XML element serializing a compressed data block, an encoder \e shall compute the corresponding cryptographic digest for the compressed data, and \e never from the original, uncompressed data. If a checksum verification fails for a compressed data block, a decoder \e must \e not attempt to decompress the altered data, as this might cause a vulnerability that could be exploited.
    }
 
    \subsection { Zlib Compression } {

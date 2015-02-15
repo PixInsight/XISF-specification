@@ -59,7 +59,7 @@
 
          For complex images, where the value of the \lref sampleformat_image_attribute \c sampleFormat attribute is \c Complex32 or \c Complex64, the \c bounds attribute \e must \e not be specified, since the representable range property does not exist for these images. Visual representation of complex-valued pixel data is left as implementation-defined by this specification.
 
-         For images encoded in color spaces different from grayscale or RGB, the representable range defined by the \c\e lower and \c\e upper bounds \e shall apply to pixel sample values \e {once converted} to the RGB color space.
+         For color images encoded in color spaces different from RGB, the representable range defined by the \c\e lower and \c\e upper bounds \e shall apply to pixel sample values \e {once converted} to the RGB color space.
       }
 
       \c { offset="\e{sample-value}" }
