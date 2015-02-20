@@ -20,28 +20,28 @@
    \code[lang:xml] { #:
 <Image id="IMG7953" geometry="4096:4096:4" sampleFormat="Float32" bounds="0:1"
                               colorSpace="RGB" location="attachment:4096:268435456">
-   <RGBWS x="0.648431:0.230154:0.155886"
+   <RGBWorkingSpace x="0.648431:0.230154:0.155886"
           y="0.330856:0.701572:0.066044"
           Y="0.311114:0.625662:0.063224" gamma="2.2"
           name="Adobe RGB (1998)" />
 </Image>
 <Image id="IMG7954" geometry="4096:4096:4" sampleFormat="Float32" bounds="0:1"
                               colorSpace="RGB" location="attachment:268439552:268435456">
-   <RGBWS x="0.648431:0.230154:0.155886"
+   <RGBWorkingSpace x="0.648431:0.230154:0.155886"
           y="0.330856:0.701572:0.066044"
           Y="0.311114:0.625662:0.063224" gamma="2.2"
           name="Adobe RGB (1998)" />
 </Image>
 <Image id="IMG7955" geometry="4096:4096:4" sampleFormat="Float32" bounds="0:1"
                               colorSpace="RGB" location="attachment:536875008:268435456">
-   <RGBWS x="0.648431:0.230154:0.155886"
+   <RGBWorkingSpace x="0.648431:0.230154:0.155886"
           y="0.330856:0.701572:0.066044"
           Y="0.311114:0.625662:0.063224" gamma="2.2"
           name="Adobe RGB (1998)" />
 </Image>
    :# }
 
-   As you see, the three images have been associated with identical RGB working spaces. Instead of repeating the same \c RGBWS element three times, we can simplify the markup considerably with \c Reference elements:
+   As you see, the three images have been associated with identical RGB working spaces. Instead of repeating the same \c RGBWorkingSpace element three times, we can simplify the markup considerably with \c Reference elements:
 
    \code[lang:xml] { #:
 <Image id="IMG7953" geometry="4096:4096:4" sampleFormat="Float32" bounds="0:1"
@@ -56,7 +56,7 @@
                               colorSpace="RGB" location="attachment:536875008:268435456">
    <Reference ref="RGBWS001" />
 </Image>
-<RGBWS uid="RGBWS001"
+<RGBWorkingSpace uid="RGBWS001"
        x="0.648431:0.230154:0.155886"
        y="0.330856:0.701572:0.066044"
        Y="0.311114:0.625662:0.063224" gamma="2.2"

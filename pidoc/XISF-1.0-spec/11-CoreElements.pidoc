@@ -30,16 +30,17 @@
       }
    }
 
-   Three main core elements have been formalized in this specification to support a number of essential components of XISF units: \lref property_core_element \c Property, \lref metadata_core_element \c Metadata, and \lref image_core_element \c Image. In addition, a number of core elements have been defined to serialize properties and auxiliary objects associated with images: \lref fitskeyword_core_element \c FITSKeyword, \lref iccprofile_core_element \c ICCProfile, \lref rgbws_core_element \c RGBWS, \lref displayfunction_core_element \c DisplayFunction, \lref resolution_core_element \c Resolution, and \lref thumbnail_core_element \c Thumbnail. Finally, the \lref reference_core_element \c Reference core element allows associating a single core element with multiple data objects.
+   Three main core elements have been formalized in this specification to support a number of essential components of XISF units: \lref property_core_element \c Property, \lref metadata_core_element \c Metadata, and \lref image_core_element \c Image. In addition, a number of core elements have been defined to serialize properties and auxiliary objects associated with images: \lref fitskeyword_core_element \c FITSKeyword, \lref iccprofile_core_element \c ICCProfile, \lref rgbws_core_element \c RGBWorkingSpace, \lref displayfunction_core_element \c DisplayFunction, \lref colorfilterarray_core_element \c ColorFilterArray, \lref resolution_core_element \c Resolution, and \lref thumbnail_core_element \c Thumbnail. Finally, the \lref reference_core_element \c Reference core element allows associating a single core element with multiple data objects.
 
    \include 11_01-CoreElements_Property.pidoc
    \include 11_02-CoreElements_Metadata.pidoc
    \include 11_03-CoreElements_Image.pidoc
    \include 11_04-CoreElements_FITSKeyword.pidoc
    \include 11_05-CoreElements_ICCProfile.pidoc
-   \include 11_06-CoreElements_RGBWS.pidoc
+   \include 11_06-CoreElements_RGBWorkingSpace.pidoc
    \include 11_07-CoreElements_DisplayFunction.pidoc
-   \include 11_08-CoreElements_Resolution.pidoc
-   \include 11_09-CoreElements_Thumbnail.pidoc
-   \include 11_10-CoreElements_Reference.pidoc
+   \include 11_08-CoreElements_ColorFilterArray.pidoc
+   \include 11_09-CoreElements_Resolution.pidoc
+   \include 11_10-CoreElements_Thumbnail.pidoc
+   \include 11_11-CoreElements_Reference.pidoc
 }

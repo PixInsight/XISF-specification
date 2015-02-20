@@ -189,7 +189,7 @@
 
          \equation[unnumbered] { #:
             $$
-            \hbox{sRGB} : \left\{ \begin{array}{l c l}
+            \hbox{sRGB}_{\mathrm{D50}} : \left\{ \begin{array}{l c l}
                x_R &=& 0.648431 \\
                x_G &=& 0.321152 \\
                x_B &=& 0.155886 \\
@@ -241,9 +241,9 @@
          \equation { #:
             $$
             \begin{array}{l c l}
-               R' &=& \hbox{S}(R_{\tiny\hbox{\sffamily{sRGB}}}) \\
-               G' &=& \hbox{S}(G_{\tiny\hbox{\sffamily{sRGB}}}) \\
-               B' &=& \hbox{S}(B_{\tiny\hbox{\sffamily{sRGB}}}) \\
+               R' &=& \hbox{S}(R_{\mathrm{sRGB}}) \\
+               G' &=& \hbox{S}(G_{\mathrm{sRGB}}) \\
+               B' &=& \hbox{S}(B_{\mathrm{sRGB}}) \\
             \end{array} \, .
             $$
          :# }
@@ -325,9 +325,9 @@
          \equation { #:
             $$
             \begin{array}{l c l}
-               R_{\tiny\hbox{\sffamily{sRGB}}} &=& \hbox{T}(R') \\
-               G_{\tiny\hbox{\sffamily{sRGB}}} &=& \hbox{T}(G') \\
-               B_{\tiny\hbox{\sffamily{sRGB}}} &=& \hbox{T}(B') \\
+               R_{\mathrm{sRGB}} &=& \hbox{T}(R') \\
+               G_{\mathrm{sRGB}} &=& \hbox{T}(G') \\
+               B_{\mathrm{sRGB}} &=& \hbox{T}(B') \\
             \end{array} \, .
             $$
          :# }
@@ -430,7 +430,7 @@
 
       There is no default representable range for real images whose pixel samples are encoded as floating point scalars, so in these cases the representable range \e must be defined explicitly; see the \lref bounds_image_attribute \c bounds attribute of the \lref image_core_element \c Image core element for implementation-related information.
 
-      For images whose pixel samples are encoded as unsigned integer scalars, the default representable range \e shall be \im{#: [0,2^{n-1}] :#}, where \im n is the number of bits per pixel sample.
+      For images whose pixel samples are encoded as unsigned integer scalars, the default representable range \e shall be \im{#: [0,2^n-1] :#}, where \im n is the number of bits per pixel sample.
 
       For complex images, i.e. for images whose pixel samples are complex numbers, the representable range property is undefined. The reason for this limitation is that a visually representable range, as we have described it with the above algorithm, does not really make sense for pixel data in the frequency domain and other applications of complex numerical data. The methods used for representation of complex-valued pixels are left as implementation-defined by this specification.
 

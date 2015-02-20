@@ -9,7 +9,7 @@
       { Two-dimensional image. }
       { UInt8 or UInt16 sample format. }
       { RGB or grayscale color space. }
-      { Its width and height \e must \e not be greater than 1024 pixels. }
+      { Its width and height \e should \e not be greater than 1024 pixels. }
       { Can have a single alpha channel. }
    }
 
@@ -17,9 +17,9 @@
 
    \list {
       { The \c bounds attribute \e must \e not be defined. This implies that the representable range of a thumbnail image is always \[0,2\sup{n}--1\], where n is either 8 or 16 bits. }
-      { The \c cfaType attribute \e must \e not be defined. This implies that thumbnail images associated with mosaiced images \e should be already demosaiced versions. }
+      { A child \lref colorfilterarray_core_element \c ColorFilterArray element \e shall \e not be present. This implies that thumbnail images associated with mosaiced images \e must be already demosaiced versions. }
       { A child \c Thumbnail element \e shall \e not be present, that is, nested \c Thumbnail elements are not permitted. }
-      { A child \c Reference element referencing a \c Thumbnail element \e shall \e not be present, for the same reason as above. }
+      { A child \lref reference_core_element \c Reference element referencing a \c Thumbnail element \e shall \e not be present, for the same reason as above. }
    }
 
    A \c Thumbnail core element \e must be either a child element of an \lref image_core_element \c Image core element, or a child element of the unique \lref root_element {XISF root element}. In the former case, the thumbnail \e shall be associated with the corresponding image. In the latter case, a \c uid attribute \e should be defined to associate the thumbnail with one or more \c Image elements by means of child \lref reference_core_element \c Reference elements.

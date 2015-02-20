@@ -140,33 +140,6 @@
          \e {Slope maps} are integer or floating point real images where each pixel sample value is proportional to the slope of a straight line fitted to a set of integrated pixels at the corresponding pixel coordinates. A slope map value equal to the lower bound of the \lref bounds_image_attribute {representable range} corresponds to a horizontal line (or a slope of zero degrees), while the upper bound represents a vertical line (infinite slope).
       }
 
-      \c { cfaType="\e{cfa-spec}" }
-      {
-         This attribute \e should be specified for \c Image elements serializing images mosaiced with a Color Filter Array (CFA)\ref wikipedia_cfa, such as a Bayer filter. \ref wikipedia_bayer_filter \ref bayer_patent This attribute \e shall \e not be specified for images not mosaiced with a CFA.
-
-         The supported \c cfaType attribute values are:
-
-         \table[caption,header,width:100\%] {
-            { \c cfaType Attribute Values }
-            { { Color filter array } { \c cfaType attribute value } }
-            { { RGGB Bayer filter } { \c RGGB } }
-            { { BGGR Bayer filter } { \c BGGR } }
-            { { GRBG Bayer filter } { \c GRBG } }
-            { { GBRG Bayer filter } { \c GBRG } }
-            { { CYGM (cyan/yellow/green/magenta) filter } { \c CYGM } }
-            { { Fujifilm X-Trans filter } { \c XTrans } }
-         }
-
-         \figure {
-
-            \figtag \s { Color filter arrays (CFA) supported by the XISF 1.0 specification. }
-
-            \vs[length:2em]
-
-            \center \image[width:26.08em] { cfa.svg }
-         }
-      }
-
       \c { id="\e{image-id}" }
       {
          This attribute is \e optional for all \c Image elements. \c\e image-id \e shall be a sequence of ASCII characters satisfying the following regular expression:\ref ecmascript_regexp

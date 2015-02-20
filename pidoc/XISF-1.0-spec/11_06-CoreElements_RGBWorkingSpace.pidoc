@@ -1,7 +1,7 @@
 
-\subsection { \label rgbws_core_element \c RGBWS Core Element } {
+\subsection { \label rgbws_core_element \c RGBWorkingSpace Core Element } {
 
-   The \c RGBWS core element defines the parameters of a colorimetrically-defined \lref rgb_working_space {RGB working color space} (RGBWS) and associates it with an \lref xisf_image {XISF image} serialized in an \lref xisf_unit {XISF unit}. From the referenced \lref rgb_working_space {section}, recall that the parameters of an RGBWS are:
+   The \c RGBWorkingSpace core element defines the parameters of a colorimetrically-defined \lref rgb_working_space {RGB working color space} (RGBWS) and associates it with an \lref xisf_image {XISF image} serialized in an \lref xisf_unit {XISF unit}. From the referenced \lref rgb_working_space {section}, recall that the parameters of an RGBWS are:
 
    \definition[marginleft:2em] {
 
@@ -27,7 +27,7 @@
       }
    }
 
-   These parameters \e shall be serialized by an \c RGBWS core element with the following mandatory XML attributes:
+   These parameters \e shall be serialized by an \c RGBWorkingSpace core element with the following mandatory XML attributes:
 
    \definition {
 
@@ -58,7 +58,7 @@
       }
    }
 
-   The following attribute is \e optional for an \c RGBWS element:
+   The following attribute is \e optional for an \c RGBWorkingSpace element:
 
    \definition {
 
@@ -68,16 +68,16 @@
       }
    }
 
-   An \c RGBWS element \e must be either a child element of an \lref image_core_element \c Image core element, or a child element of the unique \lref root_element {XISF root element}. In the former case, the RGBWS \e shall be associated with the corresponding image. In the latter case, a \c uid attribute \e should be defined to associate the RGBWS with one or more \c Image elements by means of child \lref reference_core_element \c Reference elements.
+   An \c RGBWorkingSpace element \e must be either a child element of an \lref image_core_element \c Image core element, or a child element of the unique \lref root_element {XISF root element}. In the former case, the RGBWS \e shall be associated with the corresponding image. In the latter case, a \c uid attribute \e should be defined to associate the RGBWS with one or more \c Image elements by means of child \lref reference_core_element \c Reference elements.
 
-   When no \c RGBWS element is specified for an \c Image core element, the default RGBWS \e shall be the sRGB space.\ref iec_srgb
+   When no \c RGBWorkingSpace element is specified for an \c Image core element, the default RGBWS \e shall be the sRGB space.\ref iec_srgb
 
    Examples (some parts of the code replaced with \c ... to shorten the examples):
 
    \code[lang:xml] { #:
 <Image ... >
 ...
-   <RGBWS x="0.648431:0.230154:0.155886"
+   <RGBWorkingSpace x="0.648431:0.230154:0.155886"
           y="0.330856:0.701572:0.066044"
           Y="0.311114:0.625662:0.063224" gamma="2.2"
           name="Adobe RGB (1998)" />
@@ -88,7 +88,7 @@
    \code[lang:xml] { #:
 <Image ... >
 ...
-   <RGBWS x="0.648431:0.321152:0.155886"
+   <RGBWorkingSpace x="0.648431:0.321152:0.155886"
           y="0.330856:0.597871:0.066044"
           Y="0.222491:0.716888:0.060621" gamma="sRGB"
           name="sRGB IEC61966-2.1" />
@@ -99,7 +99,7 @@
    \code[lang:xml] { #:
 <Image ... >
 ...
-   <RGBWS x="0.648431:0.230154:0.155886"
+   <RGBWorkingSpace x="0.648431:0.230154:0.155886"
           y="0.330856:0.701572:0.066044"
           Y="0.333333:0.333333:0.333333" gamma="1"
           name="Uniform Linear with sRGB Primaries" />
@@ -107,7 +107,7 @@
 </Image>
    :# }
 
-   In the next example, an \c RGBWS element has been defined somewhere in the \lref xisf_header {XISF header} with \c uid="SampleRGBWS", and has been associated with an image through a \lref reference_core_element \c Reference element:
+   In the next example, an \c RGBWorkingSpace element has been defined somewhere in the \lref xisf_header {XISF header} with \c uid="SampleRGBWS", and has been associated with an image through a \lref reference_core_element \c Reference element:
 
    \code[lang:xml] { #:
 <Image ... >
@@ -116,6 +116,6 @@
 ...
 </Image>
 ...
-<RGBWS ... uid="SampleRGBWS" ... />
+<RGBWorkingSpace ... uid="SampleRGBWS" ... />
    :# }
 }
