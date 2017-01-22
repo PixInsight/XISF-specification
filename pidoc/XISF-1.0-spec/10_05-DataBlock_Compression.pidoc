@@ -1,32 +1,86 @@
-
 \subsection { \label data_block_compression XISF Data Block Compression } {
 
    An \lref data_block {XISF data block} \e may be transformed with a compression codec or algorithm. Both lossless and lossy compression schemes are permitted. XML elements serializing the values of compressed XISF data blocks \e must include a \c compression XML attribute with the following syntax:
 
-   \c { \hs compression="\e{codec}:\e{parameters}" }
+   \definition {
 
-   where \c\e codec is the name of a compression algorithm, and \c\e parameters is a set of algorithm-dependent parameters. The value of the \c compression attribute \e must be sufficient to recover meaningful data for the XISF data block being serialized. Note that we specify \e meaningful instead of \e {the original} because lossy compression algorithms are supported. The performance and ability of a compression algorithm to maximize compression ratios and minimize data degradation are beyond the scope of this specification.
+      \c { compression="\e{codec}:\e{parameters}" }
+      {
+         where \c\e codec is the name of a compression algorithm, and \c\e parameters is a set of algorithm-dependent parameters. The value of the \c compression attribute \e must be sufficient to recover meaningful data for the XISF data block being serialized. Note that we specify \e meaningful instead of \e {the original} because lossy compression algorithms are supported. The performance and ability of a compression algorithm to maximize compression ratios and minimize data degradation are beyond the scope of this specification.
 
-   For \lref embedded_data_block {embedded XISF data blocks}, the \c compression attribute \e shall be an attribute of the \c Data child element serializing the block's contents, \e not of the element that serializes the block. For the rest of \lref data_block_location {block location modes}, the \c compression attribute \e shall be included in the element that serializes the block.
+         For \lref embedded_data_block {embedded XISF data blocks}, the \c compression attribute \e shall be an attribute of the \c Data child element serializing the block's contents, \e not of the element that serializes the block. For the rest of \lref data_block_location {block location modes}, the \c compression attribute \e shall be included in the element that serializes the block.
+      }
+   }
+
+   The following attribute can be present in XML elements including \c compression attributes:
+
+   \definition {
+
+      \c { subblocks="\e{c}\sub{1},\e{u}\sub{1}:\e{c}\sub{2},\e{u}\sub{2}:...:\e{c}\sub{N},\e{u}\sub{N}" }
+      {
+         where each pair of \e{c}\sub{i} and \e{u}\sub{i} attribute components are, respectively, unsigned integer \lref scalars_serializations {plain text representations} of the compressed and uncompressed lengths in bytes of the \e i-th \e {compression subblock}. There is no specific limit for maximum number of compression subblocks.
+
+         Most compression codecs have limited capabilities as for the maximum length of an input data block. For example, the standard implementation of \lref zlib_compression {Zlib compression} cannot compress blocks larger than 2\sup{32}--1 bytes. When a block larger than the upper limit for the applied compression codec has to be compressed in an XISF unit, it must be divided into contiguous subblocks of the appropriate size, which can be managed individually. In these cases, the \c subblocks attribute \e must appear along with the \c compression attribute to describe the organization of the compressed data. Normally this requirement only applies to compression of very large blocks, typically larger than about 4 GiB.
+
+         For blocks not larger than the upper limit of the applied compression algorithm, the \c subblocks attribute is \e optional. An encoder \e may decide to compress an XISF data block in smaller chunks for several reasons. One of them is that, depending on the nature and distribution of the data, working with subblocks of specific lengths can lead to higher compression ratios. Another reason is parallelization: by dividing the data into disjoint subsets, most compression codecs can be applied---as far as their implementations are thread-safe---as multithreaded compression/decompression tasks without contention, with substantial performance improvements.
+      }
+   }
 
    \subsection { \label checksums_of_compressed_blocks Checksums of Compressed Blocks } {
 
       When a \lref data_block_checksum \c checksum attribute is included in the XML element serializing a compressed data block, an encoder \e shall compute the corresponding cryptographic digest for the compressed data, and \e never from the original, uncompressed data. If a checksum verification fails for a compressed data block, a decoder \e must \e not attempt to decompress the altered data, as this might cause a vulnerability that could be exploited.
    }
 
-   \subsection { Zlib Compression } {
+   \subsection { \label byte_shuffling Byte Shuffling } {
 
-      The deflate compression algorithm\ref rfc_1951 and the standard zlib format\ref rfc_1950 are formally supported by this first XISF specification as the standard XISF compression codec. Future revisions of XISF will include more compression methods.
+      For data blocks structured as contiguous sequences of 16-bit, 32-bit and 64-bit integer or floating point numbers, a byte shuffling routine can greatly improve compression ratios by increasing data locality, i.e. by redistributing the sequence such that similar byte values tend to be placed close together.
+
+      For compression of XISF data blocks, an optional byte shuffling algorithm can be applied \e before data compression. A reverse shuffling (or \e unshuffling) must then be applied \e after decompression to recover the original data.
+
+      The byte shuffling algorithm can be described as follows. Assume an input sequence of \im{N} items:
+
+      \equation { #:
+         $$
+         x_0,x_1,\dots,x_{N-1} \, ,
+         $$
+      :# }
+
+      where each item \im{x_i} is composed by \im{n} bytes. We can rewrite the entire unshuffled sequence to show the individual bytes as follows:
+
+      \equation { #:
+         $$
+         x_{0,0},x_{0,1},\dots,x_{0,n-1}, \;\; x_{1,0},x_{1,1},\dots,x_{1,n-1}, \;\; \dots, \;\; x_{N-1,0},x_{N-1,1},\dots,x_{N-1,n-1} \, .
+         $$
+      :# }
+
+      The byte shuffling transform consists of reordering individual bytes such that the \im{n} subsets of equally significant bytes are stored as compact subsequences in ascending order:
+
+      \equation { #:
+         $$
+         x_{0,0},x_{1,0},\dots,x_{N-1,0}, \;\; x_{0,1},x_{1,1},\dots,x_{N-1,1}, \;\; \dots, \;\; x_{0,n-1},x_{1,n-1},\dots,x_{N-1,n-1} \, .
+         $$
+      :# }
+
+      With this notation the algorithm reduces to an exchange of subindexes, which gives a good implementation hint. For 8-bit data, that is when \im{n=1}, byte shuffling is a no-op. The following code fragment provides a practical C++ implementation of the byte shuffling algorithm described in this specification.
+
+      \code[import] ByteShuffling.cpp
+   }
+
+   \subsection { \label zlib_compression Zlib Compression } {
+
+      The deflate compression algorithm\ref rfc_1951 and the standard zlib format\ref rfc_1950 are formally supported by this first XISF specification as one of the standard XISF compression codecs.
 
       In particular, the implementation written by Jean-Loup Gailly and Mark Adler, the well-known zlib library,\ref www_zlib is \e recommended by this specification.
 
-      An XML element serializing the contents of an XISF data block compressed with the zlib format \e must have a \c compression attribute with the following syntax:
+      An XML element serializing the contents of an XISF data block compressed with the zlib codec \e must have a \c compression attribute with the following syntax:
 
-      \block[marginleft:2em] \c {
-         compression="zlib:\e{uncompressed-size}"
+      \definition {
+
+         \c { compression="zlib:\e{uncompressed-size}" }
+         {
+            where \c\e uncompressed-size is a plain text representation of an unsigned integer whose value is the size in bytes of the original uncompressed data.
+         }
       }
-
-      where \c\e uncompressed-size is a plain text representation of an unsigned integer whose value is the size in bytes of the original uncompressed data.
 
       Example:
 
@@ -55,5 +109,84 @@
        colorSpace="RGB" compression="zlib:6220800" location="attachment:4570:1428362"
        checksum="sha1:1ad9a10249b7574f97c7b4771f13924603b9852d" />
       :# }
+   }
+
+   \subsection { \label zlib_sh_compression Zlib Compression with Byte Shuffling } {
+
+      This compression codec is identical to \lref zlib_compression {zlib compression}, except that the \lref byte_shuffling {byte shuffling} transform \e must be applied to the data block \e before compressing it. The reverse byte shuffling transform \e shall be applied \e after decompression to recover the original order of bytes in the uncompressed data.
+
+      An XML element serializing the contents of an XISF data block compressed with the zlib with byte shuffling codec \e must have a \c compression attribute with the following syntax:
+
+      \definition {
+
+         \c { compression="zlib+sh:\e{uncompressed-size}:\e{item-size}" }
+         {
+            where \c\e uncompressed-size and \c\e item-size are \lref scalars_serializations  {plain text representations} of unsigned integers whose values are, respectively, the size in bytes of the original uncompressed data and the length in bytes of a data item, required for the byte shuffling algorithm.
+         }
+      }
+   }
+
+   \subsection { \label lz4_compression LZ4 Compression } {
+
+      the LZ4 compression algorithm,\ref www_lz4 created by Yann Collet, is formally supported by this first XISF specification as one of the standard XISF compression codecs.
+
+      LZ4 is a lossless data compression algorithm focused on compression and decompression speed, featuring an extremely fast decoder suitable for real-time operation on modern hardware. The reference implementation in C by the author \ref github_lz4 is \e recommended by this specification.
+
+      An XML element serializing the contents of an XISF data block compressed with the LZ4 codec \e must have a \c compression attribute with the following syntax:
+
+      \definition {
+
+         \c { compression="lz4:\e{uncompressed-size}" }
+         {
+            where \c\e uncompressed-size is a \lref scalars_serializations {plain text representation} of an unsigned integer whose value is the size in bytes of the original uncompressed data.
+         }
+      }
+   }
+
+   \subsection { \label lz4_sh_compression LZ4 Compression with Byte Shuffling } {
+
+       This compression codec is identical to \lref lz4_compression {LZ4 compression}, except that the \lref byte_shuffling {byte shuffling} transform \e must be applied to the data block \e before compressing it. The reverse byte shuffling transform \e shall be applied \e after decompression to recover the original order of bytes in the uncompressed data.
+
+      An XML element serializing the contents of an XISF data block compressed with the LZ4 with byte shuffling codec \e must have a \c compression attribute with the following syntax:
+
+      \definition {
+
+         \c { compression="lz4+sh:\e{uncompressed-size}:\e{item-size}" }
+         {
+            where \c\e uncompressed-size and \c\e item-size are \lref scalars_serializations  {plain text representations} of unsigned integers whose values are, respectively, the size in bytes of the original uncompressed data and the length in bytes of a data item, required for the byte shuffling algorithm.
+         }
+      }
+   }
+
+   \subsection { \label lz4hc_compression LZ4_HC Compression } {
+
+      the LZ4_HC derivative of the \lref lz4_compression {LZ4 compression} algorithm \ref www_lz4 by Yann Collet is formally supported by this first XISF specification as one of the standard XISF compression codecs.
+
+      LZ4_HC is as fast as LZ4 for decompression, but achieves much higher compression ratios at the cost of a slower compression. The reference implementation in C by the author \ref github_lz4 is \e recommended by this specification.
+
+      An XML element serializing the contents of an XISF data block compressed with the LZ4_HC codec \e must have a \c compression attribute with the following syntax:
+
+      \definition {
+
+         \c { compression="lz4hc:\e{uncompressed-size}" }
+         {
+            where \c\e uncompressed-size is a \lref scalars_serializations {plain text representation} of an unsigned integer whose value is the size in bytes of the original uncompressed data.
+         }
+      }
+   }
+
+   \subsection { \label lz4hc_sh_compression LZ4_HC Compression with Byte Shuffling } {
+
+       This compression codec is identical to \lref lz4hc_compression {LZ4_HC compression}, except that the \lref byte_shuffling {byte shuffling} transform \e must be applied to the data block \e before compressing it. The reverse byte shuffling transform \e shall be applied \e after decompression to recover the original order of bytes in the uncompressed data.
+
+      An XML element serializing the contents of an XISF data block compressed with the LZ4_HC with byte shuffling codec \e must have a \c compression attribute with the following syntax:
+
+      \definition {
+
+         \c { compression="lz4hc+sh:\e{uncompressed-size}:\e{item-size}" }
+         {
+            where \c\e uncompressed-size and \c\e item-size are \lref scalars_serializations  {plain text representations} of unsigned integers whose values are, respectively, the size in bytes of the original uncompressed data and the length in bytes of a data item, required for the byte shuffling algorithm.
+         }
+      }
    }
 }

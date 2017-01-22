@@ -21,7 +21,9 @@
 
 \reference rfc_6234 { Donald Eastlake, Tony Hansen (2011), RFC 6234: \xref {http://tools.ietf.org/html/rfc6234} \e {US Secure Hash Algorithms (SHA and SHA-based HMAC and HKDF)}. }
 
-\reference xml_1_0 { W3C Recommendation: \xref {http://www.w3.org/TR/REC-xml/} \e {Extensible Markup Language (XML) 1.0}. }
+\reference xml_1_0 { W3C Recommendation: \xref {http://www.w3.org/TR/xml/} \e {Extensible Markup Language (XML) 1.0}. }
+
+\reference xml_references { W3C Recommendation: \xref {http://www.w3.org/TR/xml/#sec-references} \e {Extensible Markup Language (XML) 1.0: Character and Entity References}. }
 
 \reference xml_namespaces { W3C Recommendation: \e \xref {http://www.w3.org/TR/xml-names/} {Namespaces in XML 1.0}. }
 
@@ -73,7 +75,9 @@
 
 \reference iso_12232 { International Organization for Standardization, \xref {http://www.iso.org/iso/catalogue_detail?csnumber=37777} \e {ISO 12232:2006 -- Photography -- Digital still cameras -- Determination of exposure index, ISO speed ratings, standard output sensitivity, and recommended exposure index} }
 
-\reference nist_sha3 { National Institute of Standards and Technology (2014) \xref {http://csrc.nist.gov/groups/ST/hash/sha-3/sha-3_standard_fips202.html} \e {Draft FIPS 202, SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions}. }
+\reference nist_sha3 { National Institute of Standards and Technology (2015) \xref {http://dx.doi.org/10.6028/NIST.FIPS.202} \e { FIPS PUB 202, SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions}. }
+
+\reference wikipedia_rsa { Wikipedia article: \xref {https://en.wikipedia.org/wiki/RSA_\%28cryptosystem\%29} \e {RSA (cryptosystem)} }
 
 \reference wikipedia_cfa { Wikipedia article: \xref {http://en.wikipedia.org/wiki/Color_filter_array} \e {Color filter array} }
 
@@ -122,6 +126,10 @@
 \reference www_keccak { Guido Bertoni, Joan Daemen, Michaël Peeters and Gilles Van Assche, \xref {http://keccak.noekeon.org/} { The Keccak sponge function family (Keccak Website) } }
 
 \reference www_zlib { Greg Roelofs, Mark Adler, \xref {http://www.zlib.net/} { Zlib Home Site } }
+
+\reference www_lz4 { Yann Collet, \xref {http://lz4.github.io/lz4/} { LZ4 Homepage } }
+
+\reference github_lz4 { Yann Collet, \xref {https://github.com/lz4} { LZ4 GitHub Repositories } }
 
 \reference www_icrs { International Earth Rotation and Reference Systems Service, \xref {http://www.iers.org/IERS/EN/Science/ICRS/ICRS.html} { The International Celestial Reference System (ICRS) } }
 

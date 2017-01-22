@@ -94,12 +94,12 @@
 
                \c auto
                {
-                  A minus sign ASCII character ('-', ASCII code point 45\sub{10} = 2D\sub{16}) \e shall be prepended to a representation of a scalar if the represented value is less than zero. If the represented value is zero or greater than zero, a sign character \e shall \e not be prepended.
+                  Either a minus sign ASCII character ('-', ASCII code point 45\sub{10} = 2D\sub{16}) or a Unicode minus sign character ('&#x2212;', U+2212) \e shall be prepended to a representation of a scalar if the represented value is less than zero. If the represented value is zero or greater than zero, a sign character \e shall \e not be prepended.
                }
 
                \c force
                {
-                  A minus sign ASCII character ('-', ASCII code point 45\sub{10} = 2D\sub{16}) \e shall be prepended to a representation of a scalar if the represented value is less than zero, and a plus sign ASCII character ('+', ASCII code point 43\sub{10} = 2B\sub{16}) \e shall be prepended if the value is greater than zero.
+                  Either a minus sign ASCII character ('-', ASCII code point 45\sub{10} = 2D\sub{16}) or a Unicode minus sign character ('&#x2212;', U+2212) \e shall be prepended to a representation of a scalar if the represented value is less than zero, and a plus sign ASCII character ('+', ASCII code point 43\sub{10} = 2B\sub{16}) \e shall be prepended if the value is greater than zero.
                }
             }
 
@@ -321,7 +321,7 @@
 
          In ISO 8601 extended representations of time points, decimal fractions \e shall be divided from integer parts \e exclusively by the full stop or dot character ('.', ASCII code point 46\sub{10} = 2E\sub{16}).
 
-         A time zone \e should always be specified in a time point representation to eliminate any possible ambiguity about the difference of a time point with respect to UTC. If no time zone is specified in the ISO 8601 extended representation, the time point \e shall be assumed to be UTC, that is, the "Z" time zone \e shall be assumed by default.
+         A time zone \e should always be specified in a time point representation to eliminate any possible ambiguity about the difference of a time point representation with respect to UTC. If no time zone is specified in the ISO 8601 extended representation, the time point \e shall be assumed to be represented as UTC+0, that is, the Zulu time zone \e shall be assumed by default.
 
          TimePoint properties don't have a \lref property_format_specifier {property format specifier}. As \lref date_and_time_format {stated above}, representation of dates and times is left as implementation-defined in this version of the XISF specification.
       }

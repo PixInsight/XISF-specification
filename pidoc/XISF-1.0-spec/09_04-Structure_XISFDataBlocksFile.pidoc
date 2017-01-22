@@ -50,7 +50,7 @@
 
                   { Unique Identifier }
                   {
-                     An unsigned 64-bit integer. This identifier \e must be unique in the XISF data blocks file, that is, no two index elements can have the same identifier in a given data blocks file.
+                     An unsigned 64-bit integer. This identifier \e must be unique in the XISF data blocks file, that is, no two index elements can have the same identifier in a given XISF data blocks file.
                   }
 
                   { Block position }
@@ -137,7 +137,7 @@
 
    \code[import] XISFDataBlocksFileHeader.cpp
 
-   In the next code fragment we implement the XISF block index element structure with automatic generation of unique identifiers. The \c RandomUI64() static member function of \c XISFBlockIndexElement should be implemented to generate high-quality, pseudo-random uniform deviates as unsigned 64-bit integer values with a good random seeding routine. The XorShift1024* algorithm\ref vigna_2014 \ref vigna_2014_1 \ref www_xorshift is \e recommended.
+   In the next code fragment we implement the XISF block index element structure. Unique identifiers (the \c uniqueId member of \c XISFBlockIndexElement in the code) can be generated from high-quality, pseudo-random uniform deviates as unsigned 64-bit integers with a good random seeding routine. The XorShift1024* algorithm\ref vigna_2014 \ref vigna_2014_1 \ref www_xorshift is \e recommended for this task.
 
    \code[import] XISFBlockIndexElement.cpp
 }

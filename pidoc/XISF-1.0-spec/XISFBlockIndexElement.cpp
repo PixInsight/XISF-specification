@@ -5,18 +5,20 @@
  */
 struct XISFBlockIndexElement
 {
-   uint64_t uniqueId;                // unique block index element identifier
-   uint64_t blockPosition;           // block byte offset from file beginning
-   uint64_t blockLength;             // stored block length in bytes
-   uint64_t uncompressedBlockLength; // uncompressed block length in bytes
-   uint64_t reserved;                // reserved - must be zero
+   uint64_t uniqueId;                    // unique block index element identifier
+   uint64_t blockPosition = 0;           // block byte offset from file beginning
+   uint64_t blockLength = 0;             // stored block length in bytes
+   uint64_t uncompressedBlockLength = 0; // uncompressed block length in bytes
+   uint64_t reserved = 0;                // reserved - must be zero
 
    /*
     * Constructs a free block index element.
+    *
+    * The _uniqueId argument must be unique within the XISF data blocks file to
+    * which this block index pertains.
     */
-   XISFBlockIndexElement() : uniqueId( RandomUI64() )
+   XISFBlockIndexElement( uint64_t _uniqueId ) : uniqueId( _uniqueId )
    {
-      blockPosition = blockLength = uncompressedBlockLength = reserved = 0;
    }
 
    /*
@@ -25,15 +27,5 @@ struct XISFBlockIndexElement
    bool IsFree() const
    {
       return blockPosition == 0;
-   }
-
-private:
-
-   /*
-    * Returns a pseudo-random 64-bit unsigned integer.
-    */
-   static uint64_t RandomUI64()
-   {
-      ...
    }
 };

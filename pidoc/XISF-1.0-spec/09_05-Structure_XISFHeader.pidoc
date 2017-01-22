@@ -22,9 +22,9 @@
          }
       }
 
-      { Initial comment (\e recommended) }
+      { Initial comment (\e optional) }
       {
-         An XISF header \e should include a brief comment after the XML declaration. This initial comment \e should (1) specify that the XML document pertains to an \lref xisf_unit {XISF unit} by declaring the XISF format and its version, and (2) identify the software which has created the XISF unit. The following example shows the starting lines of an XISF header with the XML declaration followed by a valid initial comment:
+         An XISF header \e may include a brief comment after the XML declaration. This initial comment, if present, \e should (1) specify that the XML document pertains to an \lref xisf_unit {XISF unit} by declaring the XISF format and its version, and (2) identify the software that has created the XISF unit. The following example shows the starting lines of an XISF header with the XML declaration followed by a valid initial comment:
 
          \code[lang:xml] { #:
 <?xml version="1.0" encoding="UTF-8"?>
@@ -52,9 +52,9 @@ Created with TheMagicImagingSoftware - http://reallymagic.com/
             { \e Should have the following namespace\ref xml_namespaces and schema\ref xml_schema attributes:\n\n
 
                \block[marginleft:2em] \c {
-                  xmlns="http://www.pixinsight.com"\n
+                  xmlns="http://www.pixinsight.com/xisf"\n
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n
-                  xsi:schemaLocation="http://www.pixinsight.com/xisf http://pixinsight.com/xsd/xisf-1.0.xsd"
+                  xsi:schemaLocation="http://www.pixinsight.com/xisf http://pixinsight.com/xisf/xisf-1.0.xsd"
                }
             }
 
@@ -69,14 +69,10 @@ Created with TheMagicImagingSoftware - http://reallymagic.com/
 
          \code[lang:xml] { #:
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-Extensible Image Serialization Format - XISF version 1.0
-Created with TheMagicImagingSoftware - http://reallymagic.com/
--->
 <xisf version="1.0"
-   xmlns="http://www.pixinsight.com"
+   xmlns="http://www.pixinsight.com/xisf"
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://www.pixinsight.com/xisf http://pixinsight.com/xsd/xisf-1.0.xsd">
+   xsi:schemaLocation="http://www.pixinsight.com/xisf http://pixinsight.com/xisf/xisf-1.0.xsd">
          :# }
       }
 
@@ -97,14 +93,10 @@ Created with TheMagicImagingSoftware - http://reallymagic.com/
 
          \code[lang:xml] { #:
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-Extensible Image Serialization Format - XISF version 1.0
-Created with TheMagicImagingSoftware - http://reallymagic.com/
--->
 <xisf version="1.0" id="XISFRootElement"
-   xmlns="http://www.pixinsight.com"
+   xmlns="http://www.pixinsight.com/xisf"
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://www.pixinsight.com/xisf http://pixinsight.com/xsd/xisf-1.0.xsd">
+   xsi:schemaLocation="http://www.pixinsight.com/xisf http://pixinsight.com/xisf/xisf-1.0.xsd">
    ...
    ...
    ...
@@ -138,7 +130,7 @@ Created with TheMagicImagingSoftware - http://reallymagic.com/
 </Signature>
       :# }
 
-         In this example, the XISF root element being signed is selected with the "XISFRootElement" identifier through a \e {same-document reference}.\ref rfc_3986 The root element is signed with a SHA-1 digest\ref rfc_3174 and the RSA public key of an X.509 certificate.\ref rfc_5280
+         In this example, the XISF root element being signed is selected with the "XISFRootElement" identifier through a \e {same-document reference}.\ref rfc_3986 The root element is signed with a SHA-1 digest\ref rfc_3174 encrypted with the RSA \ref wikipedia_rsa private key of an X.509 certificate.\ref rfc_5280
       }
    }
 }

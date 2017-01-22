@@ -89,9 +89,13 @@
 
       A \c Property element serializing a \lref complex32_property_type Complex32 or \lref complex64_property_type Complex64 property \e shall have a \c value attribute, whose value \e shall serialize the value of the XISF property as follows:
 
-      \c { \hs value="(\e{real},\e{imag})" }
+      \definition {
 
-      where \c\e real and \c\e imag are, respectively, \lref floating_point_serializations {plain text representations} of the floating point real and imaginary parts of the complex number. Typically, in these cases the \c Property element is an empty XML element.
+         \c { value="(\e{real},\e{imag})" }
+         {
+            where \c\e real and \c\e imag are, respectively, \lref floating_point_serializations {plain text representations} of the floating point real and imaginary parts of the complex number. Typically, in these cases the \c Property element is an empty XML element.
+         }
+      }
 
       Example:
 

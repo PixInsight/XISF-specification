@@ -67,14 +67,10 @@
 
    \code[lang:xml] { #:
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-Extensible Image Serialization Format - XISF version 1.0
-Created with TheMagicImagingSoftware - http://reallymagic.com/
--->
 <xisf version="1.0"
-   xmlns="http://www.pixinsight.com"
+   xmlns="http://www.pixinsight.com/xisf"
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://www.pixinsight.com/xisf http://pixinsight.com/xsd/xisf-1.0.xsd">
+   xsi:schemaLocation="http://www.pixinsight.com/xisf http://pixinsight.com/xisf/xisf-1.0.xsd">
 
    <Image geometry="4096:4096:4" sampleFormat="Float32" bounds="0:1"
                                  colorSpace="RGB" location="attachment:4096:268435456" />
@@ -94,14 +90,10 @@ Created with TheMagicImagingSoftware - http://reallymagic.com/
 
    \code[lang:xml] { #:
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-Extensible Image Serialization Format - XISF version 1.0
-Created with TheMagicImagingSoftware - http://reallymagic.com/
--->
 <xisf version="1.0"
-   xmlns="http://www.pixinsight.com"
+   xmlns="http://www.pixinsight.com/xisf"
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://www.pixinsight.com/xisf http://pixinsight.com/xsd/xisf-1.0.xsd">
+   xsi:schemaLocation="http://www.pixinsight.com/xisf http://pixinsight.com/xisf/xisf-1.0.xsd">
 
    <Image uid="foo_bar"
           geometry="4096:4096:4" sampleFormat="Float32" bounds="0:1"

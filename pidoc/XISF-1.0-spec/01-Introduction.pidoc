@@ -1,9 +1,9 @@
 
 \introduction {
 
-   Extensible Image Serialization Format (XISF) is a free file format for storage, management and interchange of digital images and associated data.
+   Extensible Image Serialization Format (XISF, pronounced ɛksˈɪsf) is a free file format for storage, management and interchange of digital images and associated data.
 
-   XISF has been originally conceived and implemented as the native file format of PixInsight, an image processing software platform designed specifically for astronomical imaging, and developed by the company Pleiades Astrophoto S.L. However, our hope is that XISF serves as an efficient tool for the development of imaging software, including not only software specialized in astronomy, but image processing software in a wide range of technical and general fields.
+   XISF has been originally conceived and implemented as the native file format of PixInsight, an image processing software platform designed specifically for astronomical imaging, and developed by the Spain-based software development company Pleiades Astrophoto S.L. However, our hope is that XISF serves as an efficient tool for the development of imaging software, including not only software specialized in astronomy, but image processing software in a wide range of technical and general fields.
 
    Two key elements in the design of XISF can be found in its title: \e extensible and \e serialization. Extensibility is crucial to adapt the format easily and efficiently to the requirements of present and future software applications. The architecture of XISF has to facilitate the development of extensions to the core format specification, and for this purpose XISF headers are standard XML documents. Serialization denotes the ability of XISF to store not just image data, but also data structures associated with the environments where the images evolve as living objects. These data structures can be deserialized to recreate the images along with their working contexts. We formalize the resources to store data structures and objects as \e properties of a variety of predefined data types. XISF properties can be directly associated with images, with entire XISF units, or be defined as standalone components.
 
@@ -13,6 +13,8 @@
 
       \list {
          { Jean--Marc Lugrin (Switzerland) }
+         { Vicent Peris (Spain) }
+         { Jon Rista (United States) }
          { Mike Schuster (United States) }
          { Georg Viehoever (Germany) }
       }
@@ -20,7 +22,7 @@
 
    \subsection { Copyright Information } {
 
-      Copyright &copy; 2014-2015 Pleiades Astrophoto S.L. All rights reserved.
+      Copyright &copy; 2014-2017 Pleiades Astrophoto S.L. All rights reserved.
 
       This document may be copied and furnished to others, and derivative works that comment on or otherwise explain it or assist in its implementation may be prepared, copied, published, and distributed, in whole or in part, without restriction of any kind, provided that the above copyright notice and this section are included on all such copies and derivative works. However, this document itself may not be modified in any way, including by removing the copyright notice or references to Pleiades Astrophoto S.L., except as needed for the purpose of developing any document or deliverable produced by Pleiades Astrophoto S.L.
 

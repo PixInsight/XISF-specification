@@ -43,7 +43,7 @@
 
          { Excess channels beyond nominal channels, with indexes \im{#: r,r+1,\dots,m-1 :#}, are collectively known as \e {alpha channels}. }
 
-         { Although the roles of alpha channels are implementation-defined, the first alpha channel, at index \im{r}, \e should define the transparency of the image for alpha-compositing operations.\ref porter_1984 }
+         { The roles of alpha channels are implementation-defined; however, for images with a visual representation role the first alpha channel, at index \im{r}, \e should define the transparency of the image for alpha-compositing operations.\ref porter_1984 }
 
          { Every real or integer image defines a visually representable numerical range, which we formalize as a \lref representable_range {representable range} property. }
       }
@@ -393,10 +393,18 @@
          \equation { #:
             $$
             \begin{array}{l c l}
-               Y &=& \hbox{g}\left( \displaystyle{\frac{{L*} + 0.16}{1.16}} \right) \\
-               X &=& \hbox{g}\left( \displaystyle{\frac{a*}{5}} + Y \right)         \\
-               Z &=& \hbox{g}\left( Y - \displaystyle{\frac{b*}{2}} \right)         \\
-            \end{array} \, .
+               X &=& \hbox{g}\left( \displaystyle{\frac{a*}{5}} + y \right) \\
+               Y &=& \hbox{g}\left( \displaystyle{y} \right)                \\
+               Z &=& \hbox{g}\left( y - \displaystyle{\frac{b*}{2}} \right) \\
+            \end{array} \, ,
+            $$
+         :# }
+
+         where
+
+         \equation { #:
+            $$
+            y = \frac{{L*} + 0.16}{1.16} \, .
             $$
          :# }
       }
@@ -411,11 +419,11 @@
 
       The representable range is a property of every real or integer XISF image, that is, of any image whose pixel samples are floating point or integer scalars. It is the range \im{#: [r_0,r_1] :#} of pixel sample values that can be represented on display devices, as we describe below. We say that \im r_0 and \im r_1 are the \e {black point} and \e {white point} of the image, respectively.
 
-      Consider an abstract device \im{#: \mathcal{D} :#} able to generate image representations for pixel sample values in the \im{#: [v_0,v_1] :#} range. We call this range the device's \e {input range}, and we conventionally call \im v_0 and \im v_1 \e black and \e white, respectively, in the context of image representations. Pixel samples outside the representable range will generate invalid, saturated representations: Any pixel sample value \im{#: x < r_0 :#} will be represented as black, while any pixel sample value \im{#: x > r_1 :#} will be represented as white. Any pixel sample \im{#: x \in [r_0,r_1]:#} will generate a valid representation \im{#: \mbox{R}(x) :#} as a gray level directly proportional to the input pixel sample value. Assuming a device so defined, the representable range of the image \e shall be applied for each pixel sample \im x by means of the following algorithm:
+      Consider an abstract device \im{#: \mathcal{D} :#} able to generate image representations for pixel sample values in the \im{#: [v_0,v_1] :#} range. We call this range the device's \e {input range}, and we conventionally call \im v_0 and \im v_1 \e black and \e white, respectively, in the context of image representations. Pixel samples outside the representable range will generate invalid, saturated representations: Any pixel sample value \im{#: x < r_0 :#} will be represented as black, while any pixel sample value \im{#: x > r_1 :#} will be represented as white. Any pixel sample \im{#: x \in [r_0,r_1]:#} will generate a valid representation \im{#: \mathcal{D}(\mbox{R}(x)) :#} as a gray level directly proportional to the input pixel sample value. Assuming a device so defined, the representable range of the image \e shall be applied for each pixel sample \im x by means of the following algorithm:
 
       \equation[numbered:eqn_representable_range] { #:
          $$
-         \mathcal{D} \leftarrow \mbox{R}(x;r_0,r_1,v_0,v_1) = \left\{ \begin{array}{l l}
+         \mathcal{D}(\mbox{R}(x;r_0,r_1);v_0,v_1) = \left\{ \begin{array}{l l}
             v_0                                                               & \quad \mbox{if} \enspace x < r_0 \\
             v_1                                                               & \quad \mbox{if} \enspace x > r_1 \\
             v_0 + (v_1 - v_0) \times \displaystyle{\frac{x - r_0}{r_1 - r_0}} & \quad \mbox{otherwise}           \\
