@@ -3,15 +3,15 @@
 
    The \c ColorFilterArray core element describes a color filter array (CFA),\ref wikipedia_cfa such as a Bayer filter,\ref wikipedia_bayer_filter \ref bayer_patent associated with a two-dimensional \lref xisf_image {XISF image} stored in an \lref xisf_unit {XISF unit}.
 
-   Encoders \e should associate \c ColorFilterArray elements with images mosaiced with CFAs. An encoder \e shall \e not associate a \c ColorFilterArray element with an image that is not mosaiced with a CFA.
+   Encoders \e shall associate \c ColorFilterArray elements with images known to be mosaiced with CFAs. An encoder \e shall \e not associate a \c ColorFilterArray element with an image that is not mosaiced with a CFA.
 
    A \c ColorFilterArray core element \e shall define the following mandatory attributes:
 
    \definition {
 
-      \c { pattern="\e{p\sub{1}}...\e{p\sub{N}}" }
+      \c { pattern="\e{p}\sub{1}...\e{p}\sub{N}" }
       {
-         A sequence of characters defining the elements of a CFA matrix. Each \c\e{p\sub{i}} is a single ASCII character that represents an element of the CFA matrix, which can be one of:
+         A sequence of characters defining the elements of a CFA matrix. Each \c\e{p}\sub{i} is a single ASCII character that represents an element of the CFA matrix, which can be one of:
 
          \table[caption,header,width:100\%] {
             { \c CFA \c pattern Elements }
@@ -26,7 +26,7 @@
             { Y { Yellow } }
          }
 
-         The number \c\e N of \c\e{p\sub{i}} characters \e must be equal to the number of elements in the CFA matrix being described.
+         The number \c\e N of \c\e{p}\sub{i} characters \e must be equal to the number of elements in the CFA matrix being described.
 
          The represented matrix \e shall be oriented as it occurs on the image, and its elements \e shall be ordered from top to bottom and left to right. For example, in a 2x2 CFA, the first pattern element corresponds to the pixel at coordinates (x=0,y=0), the second pattern element to the pixel at (x=1,y=0), the third element to the pixel at (x=0,y=1), and the fourth element to the pixel at (x=1,y=1).
       }

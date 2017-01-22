@@ -37,15 +37,15 @@
 
       For compression of XISF data blocks, an optional byte shuffling algorithm can be applied \e before data compression. A reverse shuffling (or \e unshuffling) must then be applied \e after decompression to recover the original data.
 
-      The byte shuffling algorithm can be described as follows. Assume an input sequence of \im{N} items:
+      The byte shuffling algorithm can be described as follows. Assume an input sequence of \im{N} data items:
 
       \equation { #:
          $$
-         x_0,x_1,\dots,x_{N-1} \, ,
+         x_0,x_1,\dots,x_{N-1} \, .
          $$
       :# }
 
-      where each item \im{x_i} is composed by \im{n} bytes. We can rewrite the entire unshuffled sequence to show the individual bytes as follows:
+      Let's assume also that each data item \im{x_i} is composed of \im{n} bytes. We can then rewrite the entire unshuffled sequence to show the individual bytes as follows:
 
       \equation { #:
          $$
@@ -53,7 +53,7 @@
          $$
       :# }
 
-      The byte shuffling transform consists of reordering individual bytes such that the \im{n} subsets of equally significant bytes are stored as compact subsequences in ascending order:
+      The byte shuffling transform consists of rearranging all bytes such that the \im{n} subsets of equally significant bytes are stored as compact subsequences in ascending order:
 
       \equation { #:
          $$
@@ -61,7 +61,7 @@
          $$
       :# }
 
-      With this notation the algorithm reduces to an exchange of subindexes, which gives a good implementation hint. For 8-bit data, that is when \im{n=1}, byte shuffling is a no-op. The following code fragment provides a practical C++ implementation of the byte shuffling algorithm described in this specification.
+      This notation gives a good implementation hint, and also shows that the algorithm is obviously a no-op for 8-bit data, that is when \im{n=1}. The following code fragment provides a practical C++ implementation of the byte shuffling algorithm described above, with the corresponding reverse transform.
 
       \code[import] ByteShuffling.cpp
    }
@@ -160,7 +160,7 @@
 
    \subsection { \label lz4hc_compression LZ4_HC Compression } {
 
-      the LZ4_HC derivative of the \lref lz4_compression {LZ4 compression} algorithm \ref www_lz4 by Yann Collet is formally supported by this first XISF specification as one of the standard XISF compression codecs.
+      the LZ4_HC variant of the \lref lz4_compression {LZ4 compression} algorithm \ref www_lz4 by Yann Collet is formally supported by this first XISF specification as one of the standard XISF compression codecs.
 
       LZ4_HC is as fast as LZ4 for decompression, but achieves much higher compression ratios at the cost of a slower compression. The reference implementation in C by the author \ref github_lz4 is \e recommended by this specification.
 

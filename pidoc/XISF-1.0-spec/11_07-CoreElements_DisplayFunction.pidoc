@@ -67,7 +67,7 @@
 
       \c { name="\e{df-name}" }
       {
-         \c\e df-name is an arbitrary sequence of Unicode characters that will be assigned as the name of the display function for identification purposes.
+         where \c\e df-name is an arbitrary sequence of Unicode characters that will be assigned as the name of the display function for identification purposes.
       }
    }
 

@@ -1,7 +1,7 @@
 
 \introduction {
 
-   Extensible Image Serialization Format (XISF, pronounced ɛksˈɪsf) is a free file format for storage, management and interchange of digital images and associated data.
+   Extensible Image Serialization Format (XISF, pronounced \[ɛksˈɪsf\]) is a free file format for storage, management and interchange of digital images and associated data.
 
    XISF has been originally conceived and implemented as the native file format of PixInsight, an image processing software platform designed specifically for astronomical imaging, and developed by the Spain-based software development company Pleiades Astrophoto S.L. However, our hope is that XISF serves as an efficient tool for the development of imaging software, including not only software specialized in astronomy, but image processing software in a wide range of technical and general fields.
 

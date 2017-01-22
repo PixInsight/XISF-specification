@@ -64,7 +64,7 @@
 
       \c { name="\e{rgbws-name}" }
       {
-         \c\e rgbws-name is an arbitrary sequence of Unicode characters that will be assigned as the name of the RGBWS for identification purposes.
+         where \c\e rgbws-name is an arbitrary sequence of Unicode characters that will be assigned as the name of the RGBWS for identification purposes.
       }
    }
 

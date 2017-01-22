@@ -27,7 +27,7 @@
 \pragma[numberequations]
 \pragma[numberfigures]
 \pragma[numbertables]
-\pragma[noequations]
+%\pragma[noequations]
 
 \include 01-Introduction.pidoc
 \include 02-VersionHistory.pidoc

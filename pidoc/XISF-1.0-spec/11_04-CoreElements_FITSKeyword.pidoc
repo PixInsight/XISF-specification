@@ -11,7 +11,7 @@
 
       \c { name="\e{keyword-name}" }
       {
-         \c\e keyword-name is the name of a FITS header keyword. Quoted from the FITS standard:\ref fits_keyword_name
+         where \c\e keyword-name is the name of a FITS header keyword. Quoted from the FITS standard:\ref fits_keyword_name
 
          \e { The keyword name \e shall be a left justified, 8-character, space-filled, ASCII string with no embedded spaces. All digits 0 through 9 (decimal ASCII codes 48 to 57, or hexadecimal 30 to 39) and upper case Latin alphabetic characters ‘A’ through ‘Z’ (decimal 65 to 90 or hexadecimal 41 to 5A) are permitted; lower case characters \e shall \e not be used. The underscore ( ‘_’, decimal 95 or hexadecimal 5F) and hyphen (‘-’, decimal 45 or hexadecimal 2D) are also permitted. No other characters are permitted. }
 
