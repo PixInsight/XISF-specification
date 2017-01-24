@@ -28,7 +28,7 @@
       There is no specific limit for the length of a property identifier.
    }
 
-   \subsection { Property Value } {
+   \subsection { \label property_value Property Value } {
 
       A property value is a data object associated with a property identifier. A property value has a predefined \lref property_types {XISF property type}, which determines its structure and behavior.
    }
@@ -246,7 +246,7 @@
 
    \subsection { \label property_types Property Types } {
 
-      XISF property types are organized into six categories: \e scalar, \e complex, \e string, \e {time point}, \e vector and \e matrix properties.\n\n
+      XISF property types are organized into seven categories: \e scalar, \e complex, \e string, \e {time point}, \e vector, \e matrix and \e table.
 
       \subsection { \label scalar_property_types Scalar Property Types } {
 
@@ -384,6 +384,46 @@
             { { C32Matrix } {  } { A matrix whose elements are \lref complex32_property_type Complex32 values. } }
             { { C64Matrix } {  } { A matrix whose elements are \lref complex64_property_type Complex64 values. } }
          }
+      }
+
+      \subsection { \label table_property_type Table Property Type } {
+
+         An XISF table is a non-homogeneous collection of XISF property values structured as a two-dimensional array with a fixed number of rows and columns. To formally define an XISF table object we need to define the properties of its structure and its data:
+
+         \definition {
+            { Table Structure }
+            \list {
+               { A \e {table field} is an association of an XISF \lref property_identifier {property identifier}, a \lref property_types {property type}, an \e optional \lref string_property_type String value known as \e header, and an \e optional \lref property_format_specifier {property format specifier}. }
+               { A table field \e shall \e not be of table type. }
+               { A \e {table structure} is an ordered sequence of table fields. }
+               { Field property identifiers \e must be unique, i.e., two or more fields pertaining to the same table \e cannot have the same property identifier. }
+               { A table structure cannot be empty, i.e., it \e must have at least one table field. }
+               { There are no specific limits for the maximum number of fields in a table structure. }
+            }
+         }
+
+         \definition {
+            { Table Data }
+            \list {
+               { Consider a table with M columns. The set of M columns \e must be completely defined by the table structure, which \e must have \e exactly M fields. }
+               { A \e {table cell}, or \e {table element}, is a \lref property_value {property value} contained in a table at specific row and column coordinates. }
+               { A table cell \e must be a valid property value of the type specified by the field corresponding to its column. }
+               { A table cell \e must be randomly accessible by its corresponding pair of row and column coordinates. }
+               { In a table with M columns, each table row is an ordered sequence of M table cells. }
+               { In a table with N rows, the set of N table rows forms an ordered sequence of length N. }
+               { The total number of table cells in a table of N rows and M columns is NxM. }
+               { The value of an XISF table property is its entire set of table cells. }
+               { An \e {empty table} is a table with zero rows. }
+               { There are no specific limits for the maximum number of rows in a table. }
+               { There are no specific limits for the maximum number of columns in a table. }
+            }
+         }
+
+         In data disposition and access terms, an XISF table behaves like a matrix property. However, unlike a matrix, a table is a non-homogeneous structure, so it can be used to store sequences of objects of different types.
+
+         Table properties cannot be nested, that is, a table property cannot belong to or be serialized in a table property. To enforce this restriction, as noted above, table fields \e shall \e not be of table type.
+
+         For representations of an XISF table object, the headers defined in its structure, when available, \e should be used as column headers or titles to present the table data in tabular form. The format specifiers defined in the table structure, when available, \e should be used to represent individual table cell values.
       }
    }
 }

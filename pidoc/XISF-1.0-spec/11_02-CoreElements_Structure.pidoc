@@ -1,0 +1,68 @@
+
+\subsection { \label structure_core_element \c Structure Core Element } {
+
+   The \c Structure core element has the following properties:
+
+   \list {
+
+      { A \c Structure element \e shall define the structure of an \lref table_property_type {XISF table property}. }
+
+      { A \c Structure element \e must contain at least one child \lref field_element \c Field element, as described below. }
+
+      { A \c Structure element \e may be a child element of a \lref table_core_element \c Table core element. }
+
+      { A \c Structure element \e may be a child element of the unique \lref root_element {XISF root element} to serialize a standalone table structure. In such case, the \c Structure element \e shall have a \c uid attribute in order to be accessible by means of child \lref reference_core_element \c Reference elements. }
+   }
+
+   \subsection { \label field_element \c Field Element } {
+
+      Every \c Structure element \e shall have at least one child \c Field element. Each \c Field element \e shall define a table field in the table structure being defined by its parent \c Structure element. Each \c Field element \e must have the following mandatory attributes:
+
+      \definition {
+
+         \c { id="\e{field-id}" }
+         {
+            where \c\e field-id \e is a valid \lref property_identifier {XISF property identifier}, which \e shall be the identifier of the table field being defined.
+         }
+
+         \c { type="\e{field-type}" }
+         {
+            where \c\e field-type \e is the name of an \lref property_types {XISF property type}, which \e shall be the type of the table field being defined.
+         }
+      }
+
+      A \c Field element \e may have the following \e optional attributes:
+
+      \definition {
+
+         \c { format="\e{field-format-spec}" }
+         {
+            where \c\e field-format-spec is a valid \lref property_format_specifier {XISF property format specifier}, which \e shall be the format specifier of the table field being defined.
+         }
+
+         \c { header="\e{field-header}" }
+         {
+            where \c\e field-header is a \lref string_property_type String property value, which \e shall be the header or title of the table field being defined.
+         }
+      }
+
+      XISF decoders \e should use field headers, when available, as column headers or titles in representations of table properties in tabular form. Decoders supporting property format specifiers \e should apply table field formats, when available, to generate plain text representations of table cell values, as appropriate. See the \lref property_core_element \c Property core element for more information and examples.
+   }
+
+   \region { \label structure_example
+
+      In the following example a \c Structure element defines the structure of a table to store a list of Messier objects:
+
+      \code[lang:xml] { #:
+<Structure uid="MessierCatalogStructure">
+   <Field id="number" type="UInt8" header="Messier Number" />
+   <Field id="ngc_ic" type="String" header="NGC/IC" />
+   <Field id="commonName" type="String" header="Common Name" />
+   <Field id="objectType" type="String" header="Object Type" />
+   <Field id="distance" type="Float32" header="Distance" format="float:fixed;precision:2;unit:kly" />
+   <Field id="constellation" type="String" header="Constellation" />
+   <Field id="magnitude" type="Float32" header="Apparent Magnitude" format="float:fixed;precision:1" />
+</Structure>
+      :# }
+   }
+}

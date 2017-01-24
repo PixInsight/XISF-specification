@@ -1,0 +1,129 @@
+
+\subsection { \label table_core_element \c Table Core Element } {
+
+   The \c Table core element has the following properties:
+
+   \list {
+
+      { A \c Table element \e shall serialize an \lref table_property_type {XISF table property}. }
+
+      { An \lref xisf_header {XISF header} \e may contain multiple \c Table core elements. }
+
+      { A \c Table element \e may be a child element of an \lref image_core_element \c Image core element to serialize a property of an \lref xisf_image {XISF image}. }
+
+      { A \c Table element \e may be a child element of the unique \lref root_element {XISF root element} to serialize a standalone property. }
+
+      { A \c Table element can be associated with \c Image core elements by means of a \c uid attribute and child \lref reference_core_element \c Reference elements. }
+
+      { A \c Table element \e must have either a unique child \lref structure_core_element \c Structure element, or a unique child \lref reference_core_element \c Reference element to reference an existing \c Structure element by means of a \c uid attribute. The \c Structure element so included or referenced \e shall define the structure of the table property being serialized. }
+
+      { When a \c Table element defines its structure by means of a child \c Reference element, as described above, the referenced \c Structure element must be a child element of the \lref root_element {XISF root element}, that is, it must be a standalone \c Structure element. In other words, a table structure defined by means of a child \e Structure element of a \c Table element cannot be referenced from another \c Table element. }
+
+      { A \c Table element \e may have one or more child \c Row and \c Cell elements, as necessary to serialize the set of table cell values in the table property. }
+   }
+
+   To facilitate the work of sequential XML parsers, table structures \e should be defined before table data, that is, a child \c Structure element, or a child \c Reference element referencing a standalone \c Structure element, \e should be defined before child \c Row elements serializing table data.
+
+   A \c Table element can have the following attribute:
+
+   \definition {
+
+      \c { caption="\e{table-caption}" }
+      {
+         This attribute is \e optional for \c Table elements. \c\e table-caption \e is a \lref string_property_type String property value. Table captions \e should be used, when available, as titles for tabular representations of table properties.
+      }
+   }
+
+   \subsection { \c Row and \c Cell Elements } {
+
+      A \c Table element \e may have zero or more child \c Row elements. Each \c Row element serializes the sequence of cells in a \lref table_property_type {table row}.
+
+      Each \c Row element \e shall have one or more child \c Cell elements, each of them serializing a table cell value. The number and order of child \c Cell elements in each \c Row element \e shall be the number and order of table fields defined in the structure of the table being serialized. In addition, the objects serialized by \c Cell elements \e must be valid \lref property_value {XISF property values} for their corresponding table field types. In other words, there \e must be a one-to-one correspondence between \c cell elements and table fields.
+
+      A child \c Row element of a \c Table element \e shall have child \c Cell elements exclusively; no other contents are allowed, including character data contents.
+
+      A child \c Cell element of a child \c Row element of a \c Table element \e shall serialize its corresponding table cell value exactly as a \c Property element serializing an XISF property of the corresponding field type, except that the \c id, \c type and \c format attributes \e must \e not be used for \c Cell elements. For example, a \c Cell element serializing a scalar property \e must have a \c value attribute where the scalar value will be represented as plain text. A \c Cell element for a string table field can have a \c location attribute if the string value is being serialized as an attachment, or serialize the string directly in its character contents.
+   }
+
+   \region {
+
+      The next example shows a \c Table element serializing a table of Messier objects (some parts of the code replaced with \c ... to shorten the example). In this case a child \c Reference element is being used to access the \c Structure element defined in the \lref structure_example example of the previous section.
+
+      \code[lang:xml] { #:
+<Table caption="The Messier Catalog">
+   <Reference ref="MessierCatalogStructure" />
+   <Row>
+      <Cell value="1" />
+      <Cell value="NGC 1952" />
+      <Cell value="Crab Nebula" />
+      <Cell value="Supernova remnant" />
+      <Cell value="6.5" />
+      <Cell value="Taurus" />
+      <Cell value="8.4" />
+   </Row>
+   <Row>
+      <Cell value="2" />
+      <Cell value="NGC 7089" />
+      <Cell value="" />
+      <Cell value="Globular cluster" />
+      <Cell value="33" />
+      <Cell value="Aquarius" />
+      <Cell value="6.3" />
+   </Row>
+   <Row>
+      <Cell value="3" />
+      <Cell value="NGC 5272" />
+      <Cell value="" />
+      <Cell value="Globular cluster" />
+      <Cell value="33.9" />
+      <Cell value="Canes Venatici" />
+      <Cell value="6.2" />
+   </Row>
+   ...
+   <Row>
+      <Cell value="31" />
+      <Cell value="NGC 224" />
+      <Cell value="Andromeda Galaxy" />
+      <Cell value="Spiral galaxy" />
+      <Cell value="2540" />
+      <Cell value="Andromeda" />
+      <Cell value="3.4" />
+   </Row>
+   ...
+</Table>
+      :# }
+
+      The following example shows a \c Table element serializing a set of variable star observations. The table includes fields to serialize the star designation and the total number of observations available, as well as a ByteArray field to store the observational data. The observations have been serialized as \lref attachment_data_block {attached data blocks} with \lref lz4hc_compression {LZ4_HC compression} and SHA-1 \lref data_block_checksum {block checksums}.
+
+      \code[lang:xml] { #:
+<Table caption="Observations">
+   <Structure>
+      <Field id="starName" type="String" header="Star" />
+      <Field id="numObs" type="UInt32" header="Number of Observations" />
+      <Field id="data" type="ByteArray" />
+   </Structure>
+   <Row>
+      <Cell value="SS Cyg" />
+      <Cell value="132729" />
+      <Cell length="537068" compression="lz4hc:537068"
+         location="attachment:4096:228002"
+         checksum="sha1:1fe534b0f97d67b75800e7a3077ab26586b35959" />
+   </Row>
+   <Row>
+      <Cell value="R CrB" />
+      <Cell value="58135" />
+      <Cell length="210580" compression="lz4hc:210580"
+         location="attachment:623016:121555"
+         checksum="sha1:f90215ad052df0d557b0a8089305247904e36174" />
+   </Row>
+   <Row>
+      <Cell value="TT Ari" />
+      <Cell value="99702" />
+      <Cell length="429993" compression="lz4hc:429993"
+         location="attachment:1327024:260077"
+         checksum="sha1:dea20adf1d1397a136da45309c6d1af29e215f34" />
+   </Row>
+</Table>
+      :# }
+   }
+}

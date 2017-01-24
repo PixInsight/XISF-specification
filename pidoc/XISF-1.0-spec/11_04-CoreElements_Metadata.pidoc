@@ -5,7 +5,7 @@
 
    The identifiers of all \c Metadata properties have the \c 'XISF:' namespace prefix. These properties---including mandatory and optional properties---have reserved identifiers that \e must \e not be used for purposes different from the ones described herein.
 
-   A unique \c Metadata element \e shall be included in every \lref xisf_header {XISF header} as a child element of the \lref root_element {XISF root element}. The \c Metadata element \e must contain \c Property child elements serializing the following XISF properties:
+   A unique \c Metadata element \e shall be included in every \lref xisf_header {XISF header} as a child element of the \lref root_element {XISF root element}. The \c Metadata element \e must contain child \c Property elements serializing the following XISF properties:
 
    \definition {
 

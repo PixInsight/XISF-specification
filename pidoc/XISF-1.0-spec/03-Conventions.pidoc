@@ -3,7 +3,7 @@
 
    \subsection { Requirement Levels } {
 
-      The key words \e must, \e {must not}, \e required, \e shall, \e {shall not}, \e should, \e {should not}, \e recommended, \e may, and \e optional in this document are to be interpreted as described in RFC 2119.\ref rfc_2119
+      The key words \e must, \e {must not}, \e required, \e shall, \e {shall not}, \e should, \e {should not}, \e recommended, \e may, and \e optional in this document, when \e emphasized, are to be interpreted as described in RFC 2119.\ref rfc_2119
    }
 
    \subsection { Typographical Conventions } {

@@ -18,7 +18,7 @@
 
       \c { subblocks="\e{c}\sub{1},\e{u}\sub{1}:\e{c}\sub{2},\e{u}\sub{2}:...:\e{c}\sub{N},\e{u}\sub{N}" }
       {
-         where each pair of \e{c}\sub{i} and \e{u}\sub{i} attribute components are, respectively, unsigned integer \lref scalars_serializations {plain text representations} of the compressed and uncompressed lengths in bytes of the \e i-th \e {compression subblock}. There is no specific limit for maximum number of compression subblocks.
+         where each pair of \e{c}\sub{i} and \e{u}\sub{i} attribute components are, respectively, unsigned integer \lref scalars_serializations {plain text representations} of the compressed and uncompressed lengths in bytes of the \e i-th \e {compression subblock}. There is no specific limit for the maximum number of compression subblocks.
 
          Most compression codecs have limited capabilities as for the maximum length of an input data block. For example, the standard implementation of \lref zlib_compression {Zlib compression} cannot compress blocks larger than 2\sup{32}--1 bytes. When a block larger than the upper limit for the applied compression codec has to be compressed in an XISF unit, it must be divided into contiguous subblocks of the appropriate size, which can be managed individually. In these cases, the \c subblocks attribute \e must appear along with the \c compression attribute to describe the organization of the compressed data. Normally this requirement only applies to compression of very large blocks, typically larger than about 4 GiB.
 

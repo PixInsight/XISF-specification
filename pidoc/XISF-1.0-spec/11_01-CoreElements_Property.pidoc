@@ -5,7 +5,7 @@
 
    \list {
 
-      { A \c Property element \e shall serialize an \lref xisf_property {XISF property}. }
+      { A \c Property element \e shall serialize an \lref xisf_property {XISF property} of any type except \lref table_property_type {XISF table properties}, which can only be serialized as \lref table_core_element \c Table core elements. }
 
       { An \lref xisf_header {XISF header} \e may contain multiple \c Property core elements. }
 
@@ -18,7 +18,7 @@
       { A \c Property element can be associated with \c Metadata or \c Image core elements by means of a \c uid attribute and child \lref reference_core_element \c Reference elements. }
    }
 
-   \subsection { \c Property Attributes Required for All Properties } {
+   \subsection { Mandatory \c Property Attributes } {
 
       Every \c Property element \e shall have the following attributes:
 

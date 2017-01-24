@@ -65,7 +65,7 @@
 
       { Data compression }
       {
-         The XISF specification supports data compression codecs, including lossless and lossy compression schemes. The deflate/zlib algorithm is the standard compression codec of XISF.
+         The XISF specification supports data compression codecs, including lossless and lossy compression schemes. The deflate/zlib and LZ4 algorithms are the standard compression codecs of XISF 1.0.
       }
 
       { Digital signatures }
@@ -75,22 +75,22 @@
 
       { XML file headers }
       {
-         XISF headers (in both the monolithic and distributed models) are plain text in standard XML 1.0 format encoded as UTF-8.
+         XISF headers (in both the monolithic and distributed models) are plain text in standard XML 1.0 format encoded in UTF-8.
       }
 
       { Full Unicode support }
       {
-         Image metadata and textual properties fully support Unicode.
+         Image metadata and text properties support the entire range of Unicode characters.
       }
 
       { Properties }
       {
-         An XISF property is a data block accessible through a unique identifier (name-value pairs). Properties can be associated with images, with the whole XISF unit, or be serialized as standalone elements. XISF properties are typed objects of scalar, complex, string, time point, vector and matrix types.
+         An XISF property is a data block accessible through a unique identifier (name-value pairs). Properties can be associated with images, with the whole XISF unit, or be serialized as standalone elements. XISF properties are typed objects of scalar, complex, string, time point, vector, matrix and table types.
       }
 
-      { FITS format compatibility }
+      { Legacy FITS format compatibility }
       {
-         FITS header keywords can be stored in XISF units and retrieved as if the reader were working with actual FITS files.
+         FITS header keywords can be stored in XISF units and retrieved transparently as if the reader were working with actual FITS files.
       }
    }
 }

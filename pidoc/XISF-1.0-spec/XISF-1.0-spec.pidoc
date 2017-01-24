@@ -7,7 +7,7 @@
 }
 
 \title {
-   XISF Version 1.0 Specification (DRAFT 8)
+   XISF Version 1.0 Specification (DRAFT 9)
 }
 
 \author {
@@ -27,7 +27,7 @@
 \pragma[numberequations]
 \pragma[numberfigures]
 \pragma[numbertables]
-%\pragma[noequations]
+\pragma[noequations]
 
 \include 01-Introduction.pidoc
 \include 02-VersionHistory.pidoc
