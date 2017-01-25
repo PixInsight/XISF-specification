@@ -1,7 +1,7 @@
 
 \subsection { File Name Suffixes } {
 
-   The following file name suffixes, also known as \e {file name extensions} in some operating systems, are mandatory for files pertaining to \lref xisf_unit {XISF units}:
+   The following file name suffixes, also known as \e {file name extensions} in some operating systems, are \e required for files pertaining to \lref xisf_unit {XISF units}:
 
    \list[spaced] {
 

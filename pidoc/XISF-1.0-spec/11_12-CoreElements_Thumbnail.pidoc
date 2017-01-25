@@ -24,20 +24,22 @@
 
    A \c Thumbnail core element \e must be either a child element of an \lref image_core_element \c Image core element, or a child element of the unique \lref root_element {XISF root element}. In the former case, the thumbnail \e shall be associated with the corresponding image. In the latter case, a \c uid attribute \e should be defined to associate the thumbnail with one or more \c Image elements by means of child \lref reference_core_element \c Reference elements.
 
-   Examples (some parts of the code replaced with \c ... to shorten the examples):
+   \region {
 
-   \code[lang:xml] { #:
+      Examples (some parts of the code replaced with \c ... to shorten the examples):
+
+      \code[lang:xml] { #:
 <Image ... >
 ...
    <Thumbnail geometry="400:300:3"
               sampleFormat="UInt8" colorSpace="RGB" location="attachment:8192:360000" />
 ...
 </Image>
-   :# }
+      :# }
 
-   In the next example, a \c Thumbnail element has been defined somewhere in the \lref xisf_header {XISF header} with \c uid="TheThumbnail", and has been associated with an image through a \lref reference_core_element \c Reference element:
+      In the next example, a \c Thumbnail element has been defined somewhere in the \lref xisf_header {XISF header} with \c uid="TheThumbnail", and has been associated with an image through a \lref reference_core_element \c Reference element:
 
-   \code[lang:xml] { #:
+      \code[lang:xml] { #:
 <Image ... >
 ...
    <Reference ref="TheThumbnail" />
@@ -46,5 +48,6 @@
 ...
 <Thumbnail uid="TheThumbnail" geometry="400:300:3"
            sampleFormat="UInt8" colorSpace="RGB" location="attachment:8192:360000" />
-   :# }
+      :# }
+   }
 }

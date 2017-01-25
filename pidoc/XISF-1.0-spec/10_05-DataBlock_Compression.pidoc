@@ -8,7 +8,7 @@
       {
          where \c\e codec is the name of a compression algorithm, and \c\e parameters is a set of algorithm-dependent parameters. The value of the \c compression attribute \e must be sufficient to recover meaningful data for the XISF data block being serialized. Note that we specify \e meaningful instead of \e {the original} because lossy compression algorithms are supported. The performance and ability of a compression algorithm to maximize compression ratios and minimize data degradation are beyond the scope of this specification.
 
-         For \lref embedded_data_block {embedded XISF data blocks}, the \c compression attribute \e shall be an attribute of the \c Data child element serializing the block's contents, \e not of the element that serializes the block. For the rest of \lref data_block_location {block location modes}, the \c compression attribute \e shall be included in the element that serializes the block.
+         For \lref embedded_data_block {embedded XISF data blocks}, the \c compression attribute \e shall be an attribute of the child \c Data element serializing the block's contents, \e not of the element that serializes the block. For the rest of \lref data_block_location {block location modes}, the \c compression attribute \e shall be included in the element that serializes the block.
       }
    }
 
@@ -33,11 +33,11 @@
 
    \subsection { \label byte_shuffling Byte Shuffling } {
 
-      For data blocks structured as contiguous sequences of 16-bit, 32-bit and 64-bit integer or floating point numbers, a byte shuffling routine can greatly improve compression ratios by increasing data locality, i.e. by redistributing the sequence such that similar byte values tend to be placed close together.
+      For data blocks structured as contiguous sequences of 16-bit or larger integer or floating point numbers, a reversible byte shuffling routine can greatly improve compression ratios by increasing data locality, i.e. by redistributing the sequence such that similar byte values tend to be placed close together.
 
       For compression of XISF data blocks, an optional byte shuffling algorithm can be applied \e before data compression. A reverse shuffling (or \e unshuffling) must then be applied \e after decompression to recover the original data.
 
-      The byte shuffling algorithm can be described as follows. Assume an input sequence of \im{N} data items:
+      This byte shuffling algorithm can be described as follows. Assume an input sequence of \im{N} data items:
 
       \equation { #:
          $$

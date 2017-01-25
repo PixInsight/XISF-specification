@@ -35,12 +35,12 @@
          A set of one or more files defining contents in the XISF format.
       }
 
-      { Monolithic XISF unit }
+      { \lref monolithic_xisf_unit Monolithic XISF unit }
       {
          An XISF unit structured following the monolithic storage model.
       }
 
-      { Distributed XISF unit }
+      { \lref distributed_xisf_unit Distributed XISF unit }
       {
          An XISF unit structured following the distributed storage model.
       }
@@ -62,7 +62,7 @@
 
       { \lref data_blocks_file {XISF data blocks file} }
       {
-         A file that allows indexed access to XISF data blocks, available as a local or a remote resource.
+         A file, available as a local or remote resource, that allows indexed access to XISF data blocks.
       }
 
       { Encoder }
@@ -80,44 +80,69 @@
          A single value without internal structure, such as an integer or a floating point number.
       }
 
+      { Structure }
+      {
+         A set of zero or more scalars or structures.
+      }
+
+      { Object }
+      {
+         Any scalar or structure.
+      }
+
+      { Homogeneous structure }
+      {
+         A structure that can only contain objects of the same class or data type.
+      }
+
+      { Heterogeneous structure }
+      {
+         A structure that can contain objects of different classes or data types.
+      }
+
+      { Sequence }
+      {
+         A structure consisting of zero or more objects stored at consecutive locations.
+      }
+
+      { Contiguous sequence / contiguous objects }
+      {
+         A structure consisting of zero or more objects stored consecutively without any gaps.
+      }
+
+      { Ordered sequence }
+      {
+         A sequence where the relative locations of its contained objects is a relevant property of the sequence itself.
+      }
+
+      { Sorted sequence }
+      {
+         An ordered sequence where the relative locations of its contained objects is a function of their values.
+      }
+
       { Complex number }
       {
          A number that can be expressed in the form \im{a + bi}, where \im{a} and \im{b} are real numbers and \im{i} is the \e {imaginary unit}, which is defined by the equation \im{#: i^2 = -1 :#}. The components \im{a} and \im{b} of a complex number are called its \e real and \e imaginary parts or components.
       }
 
+      { Array }
+      {
+         An ordered sequence where any object can be accessed through an \e {array index}.
+      }
+
       { Vector }
       {
-         A homogeneous sequence of zero or more contiguous scalars or complex numbers.
+         A homogeneous, ordered sequence of zero or more scalars or complex numbers.
       }
 
       { Matrix }
       {
-         A homogeneous set of contiguous scalars or complex numbers, structured as a two-dimensional array with a fixed number of rows and columns.
+         A homogeneous set of scalars or complex numbers, structured as a two-dimensional array with a fixed number of rows and columns.
       }
 
       { String }
       {
-         A homogeneous sequence of zero or more contiguous Unicode\ref unicode_standard code points represented as integer scalars.
-      }
-
-      { Array }
-      {
-         A contiguous sequence of zero or more objects, where any object can be accessed through an \e {array index}.
-      }
-
-      { Homogeneous structure }
-      {
-         A structure that can only store objects of the same class or data type.
-      }
-
-      { Heterogeneous structure }
-      {
-         A structure that can store objects of different classes or data types.
-      }
-
-      { Contiguous sequence / contiguous objects }
-      {
-         Zero or more objects or structures stored consecutively without any gaps.
+         A homogeneous, ordered sequence of zero or more Unicode\ref unicode_standard code points represented as integer scalars.
       }
 
       { Case-sensitive }
@@ -132,12 +157,12 @@
 
       { Little-endian }
       {
-         A data encoding where the bytes within a 16-bit, 32-bit or 64-bit value are addressed from the least significant to the most significant as the byte address increases.
+         A data encoding where the bytes within a 16-bit or larger scalar are addressed from the least significant to the most significant as the byte address increases.
       }
 
       { Big-endian }
       {
-         A data encoding where the bytes within a 16-bit, 32-bit or 64-bit value are addressed from the most significant to the least significant as the byte address increases.
+         A data encoding where the bytes within a 16-bit or larger scalar are addressed from the most significant to the least significant as the byte address increases.
       }
    }
 }

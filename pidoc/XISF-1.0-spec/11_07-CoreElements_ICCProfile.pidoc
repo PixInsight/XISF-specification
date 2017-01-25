@@ -11,20 +11,22 @@
 
    Note that the ICC profile specification states that \e {all profile data shall be encoded as big-endian} (Section 7 of the ICC profile specification\ref icc_profile). This implies that an XISF data block storing an ICC profile structure is an exception to the \lref endianness {native little-endian encoding} of XISF.
 
-   Examples (some parts of the code replaced with \c ... to shorten the examples):
+   \region {
 
-   \code[lang:xml] { #:
+      Examples (some parts of the code replaced with \c ... to shorten the examples):
+
+      \code[lang:xml] { #:
 <Image geometry="4657:3452:4" sampleFormat="UInt8" colorSpace="RGB"
                                     location="attachment:4096:48227892">
 ...
    <ICCProfile location="attachment:48234496:28456"/>
 ...
 </Image>
-   :# }
+      :# }
 
-   In the above example, the ICC color profile has been stored as an attached data block. The following example:
+      In the above example, the ICC color profile has been stored as an attached data block. The following example:
 
-   \code[lang:xml] { #:
+      \code[lang:xml] { #:
 <Image ... >
 ...
    <ICCProfile compression="zlib:3024" location="inline:base64">
@@ -38,13 +40,13 @@
    </ICCProfile>
 ...
 </Image>
-   :# }
+      :# }
 
-   shows a zlib-compressed, Base64-encoded ICC color profile serialized as an inline data block.
+      shows a zlib-compressed, Base64-encoded ICC color profile serialized as an inline data block.
 
-   In the next example, an \c ICCProfile element has been defined somewhere in the \lref xisf_header {XISF header} with \c uid="TheProfile", and has been associated with an image through a \lref reference_core_element \c Reference element:
+      In the next example, an \c ICCProfile element has been defined somewhere in the \lref xisf_header {XISF header} with \c uid="TheProfile", and has been associated with an image through a \lref reference_core_element \c Reference element:
 
-   \code[lang:xml] { #:
+      \code[lang:xml] { #:
 <Image ... >
 ...
    <Reference ref="TheProfile" />
@@ -52,5 +54,6 @@
 </Image>
 ...
 <ICCProfile ... uid="TheProfile" ... />
-   :# }
+      :# }
+   }
 }

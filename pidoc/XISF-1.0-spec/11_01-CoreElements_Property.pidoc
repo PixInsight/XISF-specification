@@ -1,26 +1,26 @@
 
 \subsection { \label property_core_element \c Property Core Element } {
 
-   The \c Property core element has the following properties:
+   A \c Property core element:
 
    \list {
 
-      { A \c Property element \e shall serialize an \lref xisf_property {XISF property} of any type except \lref table_property_type {XISF table properties}, which can only be serialized as \lref table_core_element \c Table core elements. }
+      { \e Shall serialize an \lref xisf_property {XISF property} of any type except \lref table_property_type {XISF table properties}, which can only be serialized as \lref table_core_element \c Table core elements. }
 
-      { An \lref xisf_header {XISF header} \e may contain multiple \c Property core elements. }
+      { \e May occur multiple times in an \lref xisf_header {XISF header}. }
 
-      { A \c Property element \e may be a child element of a \lref metadata_core_element \c Metadata core element to serialize a property of the \lref xisf_unit {XISF unit}. }
+      { \e May be a child element of a \lref metadata_core_element \c Metadata core element to serialize a property of the \lref xisf_unit {XISF unit}. }
 
-      { A \c Property element \e may be a child element of an \lref image_core_element \c Image core element to serialize a property of an \lref xisf_image {XISF image}. }
+      { \e May be a child element of an \lref image_core_element \c Image core element to serialize a property of an \lref xisf_image {XISF image}. }
 
-      { A \c Property element \e may be a child element of the unique \lref root_element {XISF root element} to serialize a standalone property. }
+      { \e May be a child element of the unique \lref root_element {XISF root element} to serialize a standalone property. }
 
-      { A \c Property element can be associated with \c Metadata or \c Image core elements by means of a \c uid attribute and child \lref reference_core_element \c Reference elements. }
+      { \e May be associated with \c Metadata or \c Image core elements by means of a \c uid attribute and child \lref reference_core_element \c Reference elements. }
    }
 
    \subsection { Mandatory \c Property Attributes } {
 
-      Every \c Property element \e shall have the following attributes:
+      A \c Property element \e shall have the following attributes:
 
       \definition {
 
@@ -36,17 +36,29 @@
       }
    }
 
-   \subsection { \c Property \c format Attribute } {
+   \subsection { Optional \c Property Attributes } {
 
-      A \c Property element \e may have an optional \c format attribute:
+      A \c Property element \e may have the following \e optional attributes:
 
       \definition {
 
          \c { format="\e{property-format-spec}" }
          {
             where \c\e property-format-spec is a valid \lref property_format_specifier {XISF property format specifier} for the XISF property being serialized.
+
+            XISF decoders claiming support for property format specifiers \e should apply them, as appropriate, to generate plain text representations of scalar values. This includes all \lref scalar_property_types {scalar property types}, the components of \lref complex_property_types {complex properties}, \lref string_property_type {string properties} (where only \c width and \c align format tokens should be taken into account), the components of \lref vector_property_types {vector properties}, and the elements of \lref matrix_property_types {matrix properties}.
+         }
+
+         \c { comment="\e{property-comment}" }
+         {
+            where \c\e property-comment is a \lref string_property_type String property value. This attribute is intended to provide a descriptive comment about the property being serialized.
+
+            The use of property comments is \e discouraged in general. Always try to assign descriptive, self-documenting names to properties, including namespaces when appropriate. This makes it seldom necessary to write property comments.
          }
       }
+   }
+
+   \region {
 
       Examples:
 
@@ -68,8 +80,6 @@
 "      32.1, -1.24e-08" }
 
       In the last example, note that the \c {float:auto} format token is implicitly being used by default. Only the first two vector components are shown, and in this example we assume that the decoder application is representing vectors as comma-separated lists of components, which is not part of this specification and hence is not mandatory.
-
-      XISF decoders supporting property format specifiers \e should apply them, as appropriate, to generate plain text representations of scalar values. This includes all \lref scalar_property_types {scalar property types}, the components of \lref complex_property_types {complex properties}, \lref string_property_type {string properties} (where only \c width and \c align format tokens should be taken into account), the components of \lref vector_property_types {vector properties}, and the elements of \lref matrix_property_types {matrix properties}.
    }
 
    \subsection { Serialization of Scalar Properties } {
@@ -87,7 +97,7 @@
 
    \subsection { Serialization of Complex Properties } {
 
-      A \c Property element serializing a \lref complex32_property_type Complex32 or \lref complex64_property_type Complex64 property \e shall have a \c value attribute, whose value \e shall serialize the value of the XISF property as follows:
+      A \c Property element serializing a \lref complex32_property_type Complex32, \lref complex64_property_type Complex64 or \lref complex128_property_type Complex128 property \e shall have a \c value attribute, whose value \e shall serialize the value of the XISF property as follows:
 
       \definition {
 

@@ -24,7 +24,7 @@
 
       { \label embedded_data_block \c { location="embedded" } }
       {
-         Defines an \e {embedded XISF data block}. An embedded block \e shall be serialized in the character contents of a \c Data child element, encoded as plain ASCII\ref unicode_ascii_subset text. The \c Data child element \e must have an \c encoding attribute, with the same meaning and rules as for \lref inline_data_block {inline data blocks}.
+         Defines an \e {embedded XISF data block}. An embedded block \e shall be serialized in the character contents of a child \c Data element, encoded as plain ASCII\ref unicode_ascii_subset text. The child \c Data element \e must have an \c encoding attribute, with the same meaning and rules as for \lref inline_data_block {inline data blocks}.
 
          Example of embedded XISF data block:
 
@@ -39,7 +39,7 @@
 
          Note that white space is irrelevant and \e must be ignored for Base64 and Base16 encoded data.
 
-         The \c Data child element serializing an embedded data block \e shall \e not have child elements or additional character data contents.
+         The child \c Data element serializing an embedded data block \e shall \e not have child elements or additional character data contents.
 
          Embedded data blocks are necessary for blocks that have to be serialized within XML elements that can have child elements or character data contents. In these cases an inline serialization is \e forbidden by this specification.
       }

@@ -1,36 +1,69 @@
 
 \subsection { \label table_core_element \c Table Core Element } {
 
-   The \c Table core element has the following properties:
+   A \c Table core element:
 
    \list {
 
-      { A \c Table element \e shall serialize an \lref table_property_type {XISF table property}. }
+      { \e Shall serialize an \lref table_property_type {XISF table property}. }
 
-      { An \lref xisf_header {XISF header} \e may contain multiple \c Table core elements. }
+      { \e May occur multiple times in an \lref xisf_header {XISF header}. }
 
-      { A \c Table element \e may be a child element of an \lref image_core_element \c Image core element to serialize a property of an \lref xisf_image {XISF image}. }
+      { \e May be a child element of an \lref image_core_element \c Image core element to serialize a property of an \lref xisf_image {XISF image}. }
 
-      { A \c Table element \e may be a child element of the unique \lref root_element {XISF root element} to serialize a standalone property. }
+      { \e May be a child element of the unique \lref root_element {XISF root element} to serialize a standalone property. }
 
-      { A \c Table element can be associated with \c Image core elements by means of a \c uid attribute and child \lref reference_core_element \c Reference elements. }
+      { \e May be associated with \c Image core elements by means of a \c uid attribute and child \lref reference_core_element \c Reference elements. }
 
-      { A \c Table element \e must have either a unique child \lref structure_core_element \c Structure element, or a unique child \lref reference_core_element \c Reference element to reference an existing \c Structure element by means of a \c uid attribute. The \c Structure element so included or referenced \e shall define the structure of the table property being serialized. }
+      { \e Must have either a unique child \lref structure_core_element \c Structure element, or a unique child \lref reference_core_element \c Reference element to reference an existing \c Structure element by means of a \c uid attribute. The \c Structure element so included or referenced \e shall define the structure of the table property being serialized. }
 
-      { When a \c Table element defines its structure by means of a child \c Reference element, as described above, the referenced \c Structure element must be a child element of the \lref root_element {XISF root element}, that is, it must be a standalone \c Structure element. In other words, a table structure defined by means of a child \e Structure element of a \c Table element cannot be referenced from another \c Table element. }
-
-      { A \c Table element \e may have one or more child \c Row and \c Cell elements, as necessary to serialize the set of table cell values in the table property. }
+      { \e May have one or more child \c Row and \c Cell elements, as necessary to serialize the set of table cell values in the table property. }
    }
+
+   When a \c Table element defines its structure by means of a child \c Reference element, as described above, the referenced \c Structure element must be a child element of the \lref root_element {XISF root element}, that is, it must be a standalone \c Structure element. In other words, a table structure defined by means of a child \c Structure element of a \c Table element cannot be referenced from another \c Table element.
 
    To facilitate the work of sequential XML parsers, table structures \e should be defined before table data, that is, a child \c Structure element, or a child \c Reference element referencing a standalone \c Structure element, \e should be defined before child \c Row elements serializing table data.
 
-   A \c Table element can have the following attribute:
+   \subsection { Mandatory \c Table Attributes } {
 
-   \definition {
+      Every \c Table element \e shall have the following attribute:
 
-      \c { caption="\e{table-caption}" }
-      {
-         This attribute is \e optional for \c Table elements. \c\e table-caption \e is a \lref string_property_type String property value. Table captions \e should be used, when available, as titles for tabular representations of table properties.
+      \definition {
+
+         \c { id="\e{property-id}" }
+         {
+            where \c\e property-id \e is a valid \lref property_identifier {XISF property identifier}, which \e shall be the identifier of the \lref xisf_property {XISF property} being serialized.
+         }
+      }
+   }
+
+   \subsection { Optional \c Table Attributes } {
+
+      A \c Table element \e may have the following \e optional attributes:
+
+      \definition {
+
+         \c { caption="\e{table-caption}" }
+         {
+            where \c\e table-caption \e is a \lref string_property_type String property value. Table captions \e should be used, when available, as titles for tabular representations of table properties.
+         }
+
+         \c { rows="\e{row-count}" }
+         {
+            where \c\e row-count \e is a \lref scalars_serializations {plain text serialization} of the number of rows in the table. When present, this attribute \e must correspond to the actual number of rows defined in the table being serialized.
+         }
+
+         \c { columns="\e{columns-count}" }
+         {
+            where \c\e columns-count \e is a \lref scalars_serializations {plain text serialization} of the number of columns in the table. When present, this attribute \e must correspond to the actual number of columns defined in the table being serialized.
+         }
+
+         \c { comment="\e{property-comment}" }
+         {
+            where \c\e property-comment is a \lref string_property_type String property value. This attribute is intended to provide a descriptive comment about the table property being serialized.
+
+            As happens with the rest of property types, the use of table comments is \e discouraged. Always try to assign descriptive, self-documenting names to properties, including namespaces when appropriate. This makes it seldom necessary to write property comments.
+         }
       }
    }
 
@@ -50,7 +83,7 @@
       The next example shows a \c Table element serializing a table of Messier objects (some parts of the code replaced with \c ... to shorten the example). In this case a child \c Reference element is being used to access the \c Structure element defined in the \lref structure_example example of the previous section.
 
       \code[lang:xml] { #:
-<Table caption="The Messier Catalog">
+<Table id="MessierCatalog" caption="The Messier Catalog" rows="110" columns="7">
    <Reference ref="MessierCatalogStructure" />
    <Row>
       <Cell value="1" />
@@ -96,7 +129,7 @@
       The following example shows a \c Table element serializing a set of variable star observations. The table includes fields to serialize the star designation and the total number of observations available, as well as a ByteArray field to store the observational data. The observations have been serialized as \lref attachment_data_block {attached data blocks} with \lref lz4hc_compression {LZ4_HC compression} and SHA-1 \lref data_block_checksum {block checksums}.
 
       \code[lang:xml] { #:
-<Table caption="Observations">
+<Table id="obsvar_2016" caption="Observations of Selected Variable Stars in 2016">
    <Structure>
       <Field id="starName" type="String" header="Star" />
       <Field id="numObs" type="UInt32" header="Number of Observations" />

@@ -3,60 +3,68 @@
 
    The \c ColorFilterArray core element describes a color filter array (CFA),\ref wikipedia_cfa such as a Bayer filter,\ref wikipedia_bayer_filter \ref bayer_patent associated with a two-dimensional \lref xisf_image {XISF image} stored in an \lref xisf_unit {XISF unit}.
 
-   Encoders \e shall associate \c ColorFilterArray elements with images known to be mosaiced with CFAs. An encoder \e shall \e not associate a \c ColorFilterArray element with an image that is not mosaiced with a CFA.
-
-   A \c ColorFilterArray core element \e shall define the following mandatory attributes:
-
-   \definition {
-
-      \c { pattern="\e{p}\sub{1}...\e{p}\sub{N}" }
-      {
-         A sequence of characters defining the elements of a CFA matrix. Each \c\e{p}\sub{i} is a single ASCII character that represents an element of the CFA matrix, which can be one of:
-
-         \table[caption,header,width:100\%] {
-            { \c CFA \c pattern Elements }
-            { { \c pattern character } { CFA element } }
-            { 0 { A nonexistent or undefined CFA element } }
-            { R { Red } }
-            { G { Green } }
-            { B { Blue } }
-            { W { White or panchromatic } }
-            { C { Cyan } }
-            { M { Magenta } }
-            { Y { Yellow } }
-         }
-
-         The number \c\e N of \c\e{p}\sub{i} characters \e must be equal to the number of elements in the CFA matrix being described.
-
-         The represented matrix \e shall be oriented as it occurs on the image, and its elements \e shall be ordered from top to bottom and left to right. For example, in a 2x2 CFA, the first pattern element corresponds to the pixel at coordinates (x=0,y=0), the second pattern element to the pixel at (x=1,y=0), the third element to the pixel at (x=0,y=1), and the fourth element to the pixel at (x=1,y=1).
-      }
-
-      \c { width="\e{cfa-width}" }
-      {
-         \c\e cfa-width is a plain text representation of an unsigned integer whose value, which must be greater than zero, is the width in pixels of the CFA matrix.
-      }
-
-      \c { height="\e{cfa-height}" }
-      {
-         \c\e cfa-height is a plain text representation of an unsigned integer whose value, which must be greater than zero, is the height in pixels of the CFA matrix.
-      }
-   }
-
-   The following attribute is optional, but \e recommended, for \c ColorFilterArray core elements:
-
-   \definition {
-
-      \c { name="\e{cfa-name}" }
-      {
-         \c\e cfa-name is a sequence of Unicode characters that \e must identify the type or model of CFA that is being described by the \c ColorFilterArray element.
-      }
-   }
-
    A \c ColorFilterArray element \e must be either a child element of an \lref image_core_element \c Image core element, or a child element of the unique \lref root_element {XISF root element}. In the former case, the CFA \e shall be associated with the corresponding image. In the latter case, a \c uid attribute \e should be defined to associate the CFA with one or more \c Image elements by means of child \lref reference_core_element \c Reference elements.
 
-   Examples (some parts of the code replaced with \c ... to shorten the examples):
+   Encoders \e shall associate \c ColorFilterArray elements with images known to be mosaiced with CFAs. An encoder \e shall \e not associate a \c ColorFilterArray element with an image that is not mosaiced with a CFA.
 
-   \code[lang:xml] { #:
+   \subsection { Mandatory \c ColorFilterArray Attributes } {
+
+      A \c ColorFilterArray core element \e shall define the following attributes:
+
+      \definition {
+
+         \c { pattern="\e{p}\sub{1}...\e{p}\sub{N}" }
+         {
+            A sequence of characters defining the elements of a CFA matrix. Each \c\e{p}\sub{i} is a single ASCII character that represents an element of the CFA matrix, which can be one of:
+
+            \table[caption,header,width:100\%] {
+               { \c CFA \c pattern Elements }
+               { { \c pattern character } { CFA element } }
+               { 0 { A nonexistent or undefined CFA element } }
+               { R { Red } }
+               { G { Green } }
+               { B { Blue } }
+               { W { White or panchromatic } }
+               { C { Cyan } }
+               { M { Magenta } }
+               { Y { Yellow } }
+            }
+
+            The number \c\e N of \c\e{p}\sub{i} characters \e must be equal to the number of elements in the CFA matrix being described.
+
+            The represented matrix \e shall be oriented as it occurs on the image, and its elements \e shall be ordered from top to bottom and left to right. For example, in a 2x2 CFA, the first pattern element corresponds to the pixel at coordinates (x=0,y=0), the second pattern element to the pixel at (x=1,y=0), the third element to the pixel at (x=0,y=1), and the fourth element to the pixel at (x=1,y=1).
+         }
+
+         \c { width="\e{cfa-width}" }
+         {
+            \c\e cfa-width is a plain text representation of an unsigned integer whose value, which must be greater than zero, is the width in pixels of the CFA matrix.
+         }
+
+         \c { height="\e{cfa-height}" }
+         {
+            \c\e cfa-height is a plain text representation of an unsigned integer whose value, which must be greater than zero, is the height in pixels of the CFA matrix.
+         }
+      }
+   }
+
+   \subsection { Optional \c ColorFilterArray Attributes } {
+
+      The following attribute is optional, but \e recommended, for \c ColorFilterArray core elements:
+
+      \definition {
+
+         \c { name="\e{cfa-name}" }
+         {
+            \c\e cfa-name is a sequence of Unicode characters that \e must identify the type or model of CFA that is being described by the \c ColorFilterArray element.
+         }
+      }
+   }
+
+   \region {
+
+      Examples (some parts of the code replaced with \c ... to shorten the examples):
+
+      \code[lang:xml] { #:
 <Image ... >
 ...
    <ColorFilterArray pattern="GRBG" width="2" height="2" name="GRBG Bayer Filter" />
@@ -80,11 +88,11 @@
                         width="4" height="4" name="Kodak TRUESENSE Sparse Color Filter" />
 ...
 </Image>
-   :# }
+      :# }
 
-   In the next example, a \c ColorFilterArray element has been defined somewhere in the \lref xisf_header {XISF header} with \c uid="BGGR_Bayer_Filter", and has been associated with an image through a \lref reference_core_element \c Reference element:
+      In the next example, a \c ColorFilterArray element has been defined somewhere in the \lref xisf_header {XISF header} with \c uid="BGGR_Bayer_Filter", and has been associated with an image through a \lref reference_core_element \c Reference element:
 
-   \code[lang:xml] { #:
+      \code[lang:xml] { #:
 <Image ... >
 ...
    <Reference ref="BGGR_Bayer_Filter" />
@@ -92,5 +100,6 @@
 </Image>
 ...
 <Resolution ... uid="BGGR_Bayer_Filter" ... />
-   :# }
+      :# }
+   }
 }

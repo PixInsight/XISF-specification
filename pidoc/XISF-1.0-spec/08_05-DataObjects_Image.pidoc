@@ -13,11 +13,11 @@
 
          { Each \im{n}-dimensional array is known as a \e channel or \e (hyper)plane of the image. }
 
-         { All image channels have identical lengths in each one of their \im{n} dimensions. }
+         { All image channels have identical lengths in each one of their \im n dimensions. }
 
          { Let \im{m > 0} be the number of channels in the image. Any channel \e must be addressable by its \e {channel index} \im{c}, an integer such that \im{#: 0 \le c < m :#}. }
 
-         { Let \im{d_j} be the length of any channel in the \im{j}-th dimension, \im{#: 0 \le j < n :#}. }
+         { Let \im d_j be the length of any channel in the \im{j}-th dimension, \im{#: 0 \le j < n :#}. }
 
          { An image with any length \im{#: d_j = 0 :#} for \im{#: 0 \le j < n :#} is an \e {empty image}. Empty images cannot be serialized in an XISF unit. }
 
@@ -25,7 +25,7 @@
 
          { Any \im{m}-tuple formed with the set of scalars or complex numbers at the same pixel coordinates \im{#: i_0,\dots,i_{n-1} :#} is a \e pixel. }
 
-         { The \im{m} components of a pixel are \e {pixel samples}. }
+         { The \im m components of a pixel are \e {pixel samples}. }
 
          { Any pixel \e must be addressable by its \im{n}-tuple \im{#: \{i_0,\dots,i_{n-1}\} :#} of pixel coordinates. }
 
@@ -48,7 +48,7 @@
          { Every real or integer image defines a visually representable numerical range, which we formalize as a \lref representable_range {representable range} property. }
       }
 
-      The mathematical symbols and terminology introduced in the above list will be used in the rest of this section.
+      The mathematical symbols and terminology introduced in the above list will be used, unless otherwise noted, in the rest of this section.
 
       \vs[length:2em]
 
@@ -64,9 +64,9 @@
 
    \subsection { Geometrical Conventions } {
 
-      In a two-dimensional image we have \im{n = 2} and the lengths \im{d_0} and \im{d_1} are known as the \e width and \e height of the image, respectively. Conventionally, the dimensions \im{i_0} and \im{i_1} are known as the \e X-axis and \e Y-axis, respectively. It is customary to use the symbols \im{x} and \im{y} to represent coordinates in the first and second dimensions, respectively. We also say that \im{i_0} is the \e {horizontal axis} and \im{i_1} is the \e {vertical axis}. The point with pixel coordinates \im{#: x = y = 0 :#} is said to be the \e {top-left corner} or the \e origin of the image. Note that all of these words don't necessarily imply any particular orientation of the \e represented image; they are just conventional designations.
+      In a two-dimensional image we have \im n=2 and the lengths \im d_0 and \im d_1 are known as the \e width and \e height of the image, respectively. Conventionally, the dimensions \im i_0 and \im i_1 are known as the \e X-axis and \e Y-axis, respectively. It is customary to use the symbols \im x and \im y to represent coordinates in the first and second dimensions, respectively. We also say that \im i_0 is the \e {horizontal axis} and \im i_1 is the \e {vertical axis}. The point with pixel coordinates \im{#: x = y = 0 :#} is said to be the \e {top-left corner} or the \e origin of the image. Note that all of these words don't necessarily imply any particular orientation of the \e represented image; they are just conventional designations.
 
-      In a three-dimensional image, \im{n = 3} and the dimensions \im{d_0}, \im{d_1} and \im{d_2} are the \e width, \e height and \e depth of the image, respectively. The dimensions \im{i_0}, \im{i_1} and \im{i_2} are known conventionally as the \e X-axis, \e Y-axis and \e Z-axis, respectively. It is customary to use the symbols \im{x}, \im{y} and \im{z} to represent coordinates in the first, second and third dimensions, respectively. \im{i_0} is the \e {horizontal axis}, \im{i_1} is the \e {vertical axis} and \im{i_2} is the \e {depth axis}. The point with pixel coordinates \im{#: x = y = z = 0 :#} is said to be the \e origin of the image. Again, these designations are purely conventional and don't imply any particular representation of the image.
+      In a three-dimensional image, \im n=3 and the dimensions \im{d_0}, \im d_1 and \im d_2 are the \e width, \e height and \e depth of the image, respectively. The dimensions \im{i_0}, \im i_1 and \im i_2 are known conventionally as the \e X-axis, \e Y-axis and \e Z-axis, respectively. It is customary to use the symbols \im{x}, \im y and \im z to represent coordinates in the first, second and third dimensions, respectively. \im i_0 is the \e {horizontal axis}, \im i_1 is the \e {vertical axis} and \im i_2 is the \e {depth axis}. The point with pixel coordinates \im{#: x = y = z = 0 :#} is said to be the \e origin of the image. Again, these designations are purely conventional and don't imply any particular representation of the image.
 
       For one-dimensional images and images with dimensionalities higher than three, such as tesseracts and other hypercubes, there are no conventional names for axes and lengths. Normally these structures are manipulated as mathematical objects in purely abstract terms without a perceptual meaning or a visual role.
    }
@@ -75,7 +75,7 @@
 
       Two pixel storage models are formalized by this specification: \e planar and \e normal. The planar storage model is appropriate for applications that store and organize images by separate channels in memory. The normal storage model is best suited for applications that organize images by pixels, that is, applications that store the components of each pixel at consecutive memory locations.
 
-      Irrespective of the pixel storage model, the total space in bytes required to store an uncompressed image channel equals \im{#: N \times b :#}, where \im{b} is the size in bytes of a pixel sample. Similarly, the total space in bytes required to store an uncompressed image is \im{#: M \times b :#}.
+      Irrespective of the pixel storage model, the total space in bytes required to store an uncompressed image channel equals \im{#: N \times b :#}, where \im b is the size in bytes of a pixel sample. Similarly, the total space in bytes required to store an uncompressed image is \im{#: M \times b :#}.
 
       \subsection { \label planar_pixel_storage_model Planar Pixel Storage Model } {
 
@@ -419,7 +419,7 @@
 
       The representable range is a property of every real or integer XISF image, that is, of any image whose pixel samples are floating point or integer scalars. It is the range \im{#: [r_0,r_1] :#} of pixel sample values that can be represented on display devices, as we describe below. We say that \im r_0 and \im r_1 are the \e {black point} and \e {white point} of the image, respectively.
 
-      Consider an abstract device \im{#: \mathcal{D} :#} able to generate image representations for pixel sample values in the \im{#: [v_0,v_1] :#} range. We call this range the device's \e {input range}, and we conventionally call \im v_0 and \im v_1 \e black and \e white, respectively, in the context of image representations. Pixel samples outside the representable range will generate invalid, saturated representations: Any pixel sample value \im{#: x < r_0 :#} will be represented as black, while any pixel sample value \im{#: x > r_1 :#} will be represented as white. Any pixel sample \im{#: x \in [r_0,r_1]:#} will generate a valid representation \im{#: \mathcal{D}(\mbox{R}(x)) :#} as a gray level directly proportional to the input pixel sample value. Assuming a device so defined, the representable range of the image \e shall be applied for each pixel sample \im x by means of the following algorithm:
+      Consider an abstract device \im{#: \mathcal{D} :#} able to generate image representations for pixel sample values in the \im{#: [v_0,v_1] :#} range. We call this range the device's \e {input range}, and we conventionally call \im v_0 and \im v_1 \e black and \e white, respectively, in the context of image representations generated by \im{#: \mathcal{D} :#}. Pixel samples outside the representable range will generate invalid, saturated representations: Any pixel sample value \im{#: x < r_0 :#} will be represented as black, while any pixel sample value \im{#: x > r_1 :#} will be represented as white. Any pixel sample \im{#: x \in [r_0,r_1]:#} will generate a valid representation \im{#: \mathcal{D}(\mbox{R}(x)) :#} as a gray level directly proportional to the input pixel sample value. Assuming a device so defined, the representable range of the image \e shall be applied for each pixel sample \im x by means of the following algorithm:
 
       \equation[numbered:eqn_representable_range] { #:
          $$
@@ -434,13 +434,13 @@
 
       This algorithm is a simple linear mapping of pixel sample values from the representable range of an image to a device's input range.
 
-      For example, for an image being represented on a typical 8-bit output device, such as a computer display or a printer, we would have \im{ v_0 = 0 } and \im{ v_1 = 255 }. Another example is an image processing application working internally with normalized floating point pixel data in the \im{#: [0,1] :#} range, which would apply the above algorithm with \im{ v_0 = 0 } and \im{ v_1 = 1 } (note that in this case the algorithm can be simplified).
+      For example, for an image being represented on a typical 8-bit output device, such as a computer display or a printer, we would have \im{v_0 = 0} and \im{v_1 = 255}. Another example is an image processing application working internally with normalized floating point pixel data in the \im{#: [0,1] :#} range, which would apply the above algorithm with \im{v_0 = 0} and \im{v_1 = 1} (note that in this case the algorithm can be trivially simplified).
 
-      There is no default representable range for real images whose pixel samples are encoded as floating point scalars, so in these cases the representable range \e must be defined explicitly; see the \lref bounds_image_attribute \c bounds attribute of the \lref image_core_element \c Image core element for implementation-related information.
+      There is no default representable range for real images whose pixel samples are encoded as floating point scalars, so in these cases the representable range \e must be declared explicitly; see the \lref bounds_image_attribute \c bounds attribute of the \lref image_core_element \c Image core element for implementation details.
 
       For images whose pixel samples are encoded as unsigned integer scalars, the default representable range \e shall be \im{#: [0,2^n-1] :#}, where \im n is the number of bits per pixel sample.
 
-      For complex images, i.e. for images whose pixel samples are complex numbers, the representable range property is undefined. The reason for this limitation is that a visually representable range, as we have described it with the above algorithm, does not really make sense for pixel data in the frequency domain and other applications of complex numerical data. The methods used for representation of complex-valued pixels are left as implementation-defined by this specification.
+      For complex images, i.e. for images whose pixel samples are complex numbers, the representable range property is \e undefined. The reason for this limitation is that the role of a visually representable range, as we have described it above, is unclear for pixel data in the frequency domain and other applications of complex numerical data. The methods used for representation of complex-valued pixels are left as implementation-defined by this version of the XISF specification.
 
       For color images encoded in color spaces different from RGB, the representable range \e shall apply to pixel sample values \e {once converted} to the RGB color space.
    }
@@ -646,7 +646,7 @@
          $$
       :# }
 
-      where \im{#: \mbox{M}() :#} is the midtones transfer function defined by Equation \eqnref eqn_mtf. Setting \im{ l_c = 0 } and \im { r_c = 1 }, now we have the whole set of parameters to apply an automatic display function to a channel of the image (see Equation \eqnref eqn_display_function).
+      where \im{#: \mbox{M}() :#} is the midtones transfer function defined by Equation \eqnref eqn_mtf. Setting \im{l_c = 0} and \im {r_c = 1}, now we have the whole set of parameters to apply an automatic display function to a channel of the image (see Equation \eqnref eqn_display_function).
 
       For RGB color images, a side effect of this algorithm is the relative alignment of the three histogram peaks, which tends to yield an effective white balance correction. The algorithm can be modified easily to apply a single set of DF parameters to all nominal channels, which preserves the existing color balance. In such case we can calculate, for example:
 

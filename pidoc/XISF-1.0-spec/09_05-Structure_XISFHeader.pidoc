@@ -80,7 +80,7 @@ Created with TheMagicImagingSoftware - http://reallymagic.com/
       {
          XISF child elements are child XML elements of the unique \lref root_element {XISF root element} in an XISF header. XISF child elements \e shall describe data structures and objects stored in an \lref xisf_unit {XISF unit}. A reduced number of XISF child elements have been formalized in this specification to support essential data structures; we call these elements \lref core_elements {XISF core elements}.
 
-         XISF is an extensible format mainly because new child elements \e may be defined as necessary to describe new data structures and objects stored in XISF units, which have not been formalized in this specification.
+         XISF is an extensible format mainly because new child elements may be defined as necessary to describe new data structures and objects stored in XISF units, which have not been formalized in this specification.
       }
 
       { \label xml_signature XML signature (\e optional) }

@@ -31,53 +31,61 @@
       }
    }
 
-   These parameters \e shall be serialized by a \c DisplayFunction core element with the following mandatory XML attributes:
-
-   \definition {
-
-      \c { m="\e{m_RK}:\e{m_G}:\e{m_B}:\e{m_L}" }
-      {
-         \c\e m_RK, \c\e m_G, \c\e m_B and \c\e m_L are plain text representations of floating point numbers. The values of these attributes are, respectively, the midtones balance parameters \im {#: m_{RK}, m_G, m_B, m_L :#} for the red/gray, green, blue and lightness image components.
-      }
-
-      \c { s="\e{s_RK}:\e{s_G}:\e{s_B}:\e{s_L}" }
-      {
-         \c\e s_RK, \c\e s_G, \c\e s_B and \c\e s_L are plain text representations of floating point numbers. The values of these attributes are, respectively, the shadows clipping points \im {#: s_{RK}, s_G, s_B, s_L :#} for the red/gray, green, blue and lightness image components.
-      }
-
-      \c { h="\e{h_RK}:\e{h_G}:\e{h_B}:\e{h_L}" }
-      {
-         \c\e h_RK, \c\e h_G, \c\e h_B and \c\e h_L are plain text representations of floating point numbers. The values of these attributes are, respectively, the highlights clipping points \im {#: h_{RK}, h_G, h_B, h_L :#} for the red/gray, green, blue and lightness image components.
-      }
-
-      \c { l="\e{l_RK}:\e{l_G}:\e{l_B}:\e{l_L}" }
-      {
-         \c\e l_RK, \c\e l_G, \c\e l_B and \c\e l_L are plain text representations of floating point numbers. The values of these attributes are, respectively, the shadows dynamic range expansion parameters \im {#: l_{RK}, l_G, l_B, l_L :#} for the red/gray, green, blue and lightness image components.
-      }
-
-      \c { r="\e{r_RK}:\e{r_G}:\e{r_B}:\e{r_L}" }
-      {
-         \c\e r_RK, \c\e r_G, \c\e r_B and \c\e r_L are plain text representations of floating point numbers. The values of these attributes are, respectively, the highlights dynamic range expansion parameters \im {#: r_{RK}, r_G, r_B, r_L :#} for the red/gray, green, blue and lightness image components.
-      }
-   }
-
-   The following attribute is \e optional for a \c DisplayFunction element:
-
-   \definition {
-
-      \c { name="\e{df-name}" }
-      {
-         where \c\e df-name is an arbitrary sequence of Unicode characters that will be assigned as the name of the display function for identification purposes.
-      }
-   }
-
    A \c DisplayFunction element \e must be either a child element of an \lref image_core_element \c Image core element, or a child element of the unique \lref root_element {XISF root element}. In the former case, the DF \e shall be associated with the corresponding image. In the latter case, a \c uid attribute \e should be defined to associate the DF with one or more \c Image elements by means of child \lref reference_core_element \c Reference elements.
 
    When no \c DisplayFunction element is specified for an \c Image core element, the default DF \e shall be the identity display function (Equation \eqnref eqn_identity_df).
 
-   Example (some parts of the code replaced with \c ... to shorten the examples):
+   \subsection { Mandatory \c DisplayFunction Attributes } {
 
-   \code[lang:xml] { #:
+      These parameters \e shall be serialized by a \c DisplayFunction core element with the following \e required XML attributes:
+
+      \definition {
+
+         \c { m="\e{m_RK}:\e{m_G}:\e{m_B}:\e{m_L}" }
+         {
+            \c\e m_RK, \c\e m_G, \c\e m_B and \c\e m_L are plain text representations of floating point numbers. The values of these attributes are, respectively, the midtones balance parameters \im {#: m_{RK}, m_G, m_B, m_L :#} for the red/gray, green, blue and lightness image components.
+         }
+
+         \c { s="\e{s_RK}:\e{s_G}:\e{s_B}:\e{s_L}" }
+         {
+            \c\e s_RK, \c\e s_G, \c\e s_B and \c\e s_L are plain text representations of floating point numbers. The values of these attributes are, respectively, the shadows clipping points \im {#: s_{RK}, s_G, s_B, s_L :#} for the red/gray, green, blue and lightness image components.
+         }
+
+         \c { h="\e{h_RK}:\e{h_G}:\e{h_B}:\e{h_L}" }
+         {
+            \c\e h_RK, \c\e h_G, \c\e h_B and \c\e h_L are plain text representations of floating point numbers. The values of these attributes are, respectively, the highlights clipping points \im {#: h_{RK}, h_G, h_B, h_L :#} for the red/gray, green, blue and lightness image components.
+         }
+
+         \c { l="\e{l_RK}:\e{l_G}:\e{l_B}:\e{l_L}" }
+         {
+            \c\e l_RK, \c\e l_G, \c\e l_B and \c\e l_L are plain text representations of floating point numbers. The values of these attributes are, respectively, the shadows dynamic range expansion parameters \im {#: l_{RK}, l_G, l_B, l_L :#} for the red/gray, green, blue and lightness image components.
+         }
+
+         \c { r="\e{r_RK}:\e{r_G}:\e{r_B}:\e{r_L}" }
+         {
+            \c\e r_RK, \c\e r_G, \c\e r_B and \c\e r_L are plain text representations of floating point numbers. The values of these attributes are, respectively, the highlights dynamic range expansion parameters \im {#: r_{RK}, r_G, r_B, r_L :#} for the red/gray, green, blue and lightness image components.
+         }
+      }
+   }
+
+   \subsection { Optional \c DisplayFunction Attributes } {
+
+      The following attribute is \e optional for a \c DisplayFunction element:
+
+      \definition {
+
+         \c { name="\e{df-name}" }
+         {
+            where \c\e df-name is an arbitrary sequence of Unicode characters that will be assigned as the name of the display function for identification purposes.
+         }
+      }
+   }
+
+   \region {
+
+      Example (some parts of the code replaced with \c ... to shorten the examples):
+
+      \code[lang:xml] { #:
 <Image ... >
 ...
    <DisplayFunction m="0.000735:0.000735:0.000735:0.5"
@@ -88,11 +96,11 @@
                     name="AutoStretch" />
 ...
 </Image>
-   :# }
+      :# }
 
-   In the next example, a \c DisplayFunction element has been defined somewhere in the \lref xisf_header {XISF header} with \c uid="AggressiveDF", and has been associated with an image through a \lref reference_core_element \c Reference element:
+      In the next example, a \c DisplayFunction element has been defined somewhere in the \lref xisf_header {XISF header} with \c uid="AggressiveDF", and has been associated with an image through a \lref reference_core_element \c Reference element:
 
-   \code[lang:xml] { #:
+      \code[lang:xml] { #:
 <Image ... >
 ...
    <Reference ref="AggressiveDF" />
@@ -100,5 +108,6 @@
 </Image>
 ...
 <DisplayFunction ... uid="AggressiveDF" ... />
-   :# }
+      :# }
+   }
 }

@@ -1,7 +1,7 @@
 
 \subsection { \label xisf_property XISF Property } {
 
-   An XISF property is an association of two data structures, \e identifier and \e value. A property \e may also have an optional associated \e {format specifier} to control its representation as readable text. An XISF property \e may be associated, either with an object stored in an \lref xisf_unit {XISF unit}, or with an XISF unit as a whole. An XISF property \e may also be stored in an XISF unit as a standalone object. Valid associations between properties and objects will be defined later in this document.
+   An XISF property is an association of two data structures, \e identifier and \e value. A property \e may also have an \e optional associated \e {format specifier}, to control its representation as readable text, and an \e optional informative \e comment. An XISF property \e may be associated, either with an object stored in an \lref xisf_unit {XISF unit}, or with an XISF unit as a whole. An XISF property \e may also be stored in an XISF unit as a standalone object. Valid associations between properties and objects will be defined later in this document.
 
    \subsection { \label property_identifier Property Identifier } {
 
@@ -23,7 +23,7 @@
 
       The colon separator (':', ASCII code point 58\sub{10} = 3A\sub{16}) \e may be used to organize a set of properties into customary groups known as \e namespaces. Namespaces can be useful to improve structuration of properties by defining logical and semantic categories.
 
-      A property identifier \e must be unique for the object with which the property is associated. For example, all the properties of a given image must have unique identifiers, but two properties associated with different images may have the same identifier, or a property associated with the whole \lref xisf_unit {XISF unit} may have the same identifier as another property associated with an image.
+      A property identifier \e must be unique for the object with which the property is associated. For example, all the properties of a given image must have unique identifiers, but two properties associated with different images may have the same identifier, or a property associated with the whole \lref xisf_unit {XISF unit} may have the same identifier as another property associated with an image, etc.
 
       There is no specific limit for the length of a property identifier.
    }
@@ -263,20 +263,26 @@
             { { \label int32_property_type Int32 } { Int } { A signed two's complement 32-bit integer. } }
             { { \label uint32_property_type UInt32 } { UInt } { An unsigned 32-bit integer. } }
             { { \label int64_property_type Int64 } {  } { A signed two's complement 64-bit integer. } }
+            { { \label int128_property_type Int128 } {  } { A signed two's complement 128-bit integer. } }
             { { \label uint64_property_type UInt64 } {  } { An unsigned 64-bit integer. } }
+            { { \label uint128_property_type UInt128 } {  } { An unsigned 128-bit integer. } }
             { { \label float32_property_type Float32 } { Float } { An IEEE 754\ref ieee_754 binary32 floating point value (single precision). } }
             { { \label float64_property_type Float64 } { Double } { An IEEE 754 binary64 floating point value (double precision). } }
+            { { \label float128_property_type Float128 } { Quad } { An IEEE 754 binary128 floating point value (quadruple precision). } }
          }
+
+         Support for 128-bit scalars is \e optional. Support for the rest of 8-bit, 16-bit, 32-bit and 64-bit scalars is \e required for all XISF encoders and decoders.
       }
 
       \subsection { \label complex_property_types Complex Property Types } {
 
-         A complex number is a homogeneous, ordered sequence of two contiguous scalars:
+         A complex number is a homogeneous, ordered sequence of two scalars:
 
          \list {
             { The two scalars that form a complex number are its \e components. }
             { The first component of a complex number is its \e {real part}. }
             { The second component of a complex number is its \e {imaginary part}. }
+            { When serialized in binary form, a complex number \e shall be stored as two contiguous scalars. }
          }
 
          \table[caption,header,width:100\%] {
@@ -284,18 +290,22 @@
             { \nowrap{ Type name } \nowrap{ Alternate name } { Description } }
             { { \label complex32_property_type Complex32 } {  } { A complex number whose components are encoded as two \lref float32_property_type Float32 values. } }
             { { \label complex64_property_type Complex64 } { Complex } { A complex number whose components are encoded as two \lref float64_property_type Float64 values. } }
+            { { \label complex128_property_type Complex128 } {  } { A complex number whose components are encoded as two \lref float128_property_type Float128 values. } }
          }
+
+         Support for 128-bit complex numbers (Complex128) is \e optional. Support for 32-bit and 64-bit complex types is \e required for all XISF encoders and decoders claiming support for complex properties.
       }
 
       \subsection { \label string_property_type String Property Type } {
 
-         A string is a sequence of zero or more Unicode\ref unicode_standard code points encoded as a homogeneous set of contiguous unsigned integer scalars.
+         A string is a homogeneous, ordered sequence of zero or more Unicode\ref unicode_standard code points encoded as unsigned integer scalars.
 
          \list {
             { The Unicode code points contained in a string are \e {string elements} or \e characters. }
             { The number of elements or characters in a string is the string's \e length. }
             { An \e {empty string} is a string with zero length. }
             { There is no specific limit for the length of a string. }
+            { When serialized in binary form, a string \e shall be stored as a sequence of contiguous scalars. }
          }
 
          \table[caption,header,width:100\%] {
@@ -328,13 +338,16 @@
 
       \subsection { \label vector_property_types Vector Property Types } {
 
-         A vector is a homogeneous sequence of zero or more contiguous scalars or complex numbers.
+         A vector is a homogeneous, ordered sequence of zero or more scalars or complex numbers.
 
          \list {
             { The scalars or complex numbers contained in a vector are \e {vector components}. }
             { The number of components in a vector is the vector's \e length. }
             { An \e {empty vector} is a vector with zero length. }
+            { A \e {vector index} is an integer number in the range \[0,N--1\], where N is the vector's length. }
+            { A vector component \e must be randomly accessible by its corresponding vector index. }
             { There is no specific limit for the length of a vector. }
+            { When serialized in binary form, a vector \e shall be stored as a sequence of contiguous scalars or complex numbers. }
          }
 
          \table[caption,header,width:100\%] {
@@ -348,24 +361,32 @@
             { { UI32Vector } { UIVector } { A vector whose components are \lref uint32_property_type UInt32 values. } }
             { { I64Vector } {  } { A vector whose components are \lref int64_property_type Int64 values. } }
             { { UI64Vector } {  } { A vector whose components are \lref uint64_property_type UInt64 values. } }
+            { { I128Vector } {  } { A vector whose components are \lref int128_property_type Int128 values. } }
+            { { UI128Vector } {  } { A vector whose components are \lref uint128_property_type UInt128 values. } }
             { { F32Vector } {  } { A vector whose components are \lref float32_property_type Float32 values. } }
             { { F64Vector } { Vector } { A vector whose components are \lref float64_property_type Float64 values. } }
+            { { F128Vector } {  } { A vector whose components are \lref float128_property_type Float128 values. } }
             { { C32Vector } {  } { A vector whose components are \lref complex32_property_type Complex32 values. } }
             { { C64Vector } {  } { A vector whose components are \lref complex64_property_type Complex64 values. } }
+            { { C128Vector } {  } { A vector whose components are \lref complex128_property_type Complex128 values. } }
          }
+
+         Support for 128-bit integer and floating point vectors (I128Vector, UI128Vector, F128Vector and C128Vector) is \e optional. Support for the rest of 8-bit, 16-bit, 32-bit and 64-bit vector types is \e required for all XISF encoders and decoders claiming support for vector properties.
       }
 
       \subsection { \label matrix_property_types Matrix Property Types } {
 
-         A matrix is a homogeneous set of contiguous scalars or complex numbers, structured as a two-dimensional array with a fixed number of rows and columns.
+         A matrix is a homogeneous, ordered set of scalars or complex numbers, structured as a two-dimensional array with a fixed number of rows and columns.
 
          \list {
             { The scalars or complex numbers contained in a matrix are \e {matrix elements}. }
             { The number of rows and columns in a matrix are the \e {matrix dimensions}. }
             { The total number of elements in a matrix is its \e length, which is equal to the product of its dimensions. }
             { An \e {empty matrix} is a matrix with zero length. }
+            { A \e {matrix index} is an ordered pair of integers (\e{i},\e{j}), with \e i in the range \[0,N--1\] and j in the range \[0,M--1\], being N and M, respectively, the number of rows and columns in the matrix. }
+            { A matrix element \e must be randomly accessible by its corresponding matrix index. }
             { There are no specific limits for the dimensions or the length of a matrix. }
-            { A matrix \e shall be stored as a contiguous sequence of matrix elements in \e {row order}: all matrix elements of the first row \e shall be stored by column order at consecutive locations, followed by all matrix elements of the second row, and so on. }
+            { When serialized in binary form, a matrix \e shall be stored as a contiguous sequence of matrix elements in \e {row order}: all matrix elements of the first row \e shall be stored by column order at consecutive locations, followed by all matrix elements of the second row, and so on. }
          }
 
          \table[caption,header,width:100\%] {
@@ -379,16 +400,22 @@
             { { UI32Matrix } { UIMatrix } { A matrix whose elements are \lref uint32_property_type UInt32 values. } }
             { { I64Matrix } {  } { A matrix whose elements are \lref int64_property_type Int64 values. } }
             { { UI64Matrix } {  } { A matrix whose elements are \lref uint64_property_type UInt64 values. } }
+            { { I128Matrix } {  } { A matrix whose elements are \lref int128_property_type Int128 values. } }
+            { { UI128Matrix } {  } { A matrix whose elements are \lref uint128_property_type UInt128 values. } }
             { { F32Matrix } {  } { A matrix whose elements are \lref float32_property_type Float32 values. } }
             { { F64Matrix } { Matrix } { A matrix whose elements are \lref float64_property_type Float64 values. } }
+            { { F128Matrix } {  } { A matrix whose elements are \lref float128_property_type Float128 values. } }
             { { C32Matrix } {  } { A matrix whose elements are \lref complex32_property_type Complex32 values. } }
             { { C64Matrix } {  } { A matrix whose elements are \lref complex64_property_type Complex64 values. } }
+            { { C128Matrix } {  } { A matrix whose elements are \lref complex128_property_type Complex128 values. } }
          }
+
+         Support for 128-bit integer and floating point matrices (I128Matrix, UI128Matrix, F128Matrix and C128Matrix) is \e optional. Support for the rest of 8-bit, 16-bit, 32-bit and 64-bit matrix types is \e required for all XISF encoders and decoders claiming support for matrix properties.
       }
 
       \subsection { \label table_property_type Table Property Type } {
 
-         An XISF table is a non-homogeneous collection of XISF property values structured as a two-dimensional array with a fixed number of rows and columns. To formally define an XISF table object we need to define the properties of its structure and its data:
+         An XISF table is a heterogeneous, ordered collection of XISF property values structured as a two-dimensional array with a fixed number of rows and columns. To formally define an XISF table object we need to define the properties of its structure and its data:
 
          \definition {
             { Table Structure }
@@ -397,7 +424,7 @@
                { A table field \e shall \e not be of table type. }
                { A \e {table structure} is an ordered sequence of table fields. }
                { Field property identifiers \e must be unique, i.e., two or more fields pertaining to the same table \e cannot have the same property identifier. }
-               { A table structure cannot be empty, i.e., it \e must have at least one table field. }
+               { A table structure cannot be empty, i.e., it \e must contain at least one table field. }
                { There are no specific limits for the maximum number of fields in a table structure. }
             }
          }
@@ -408,7 +435,8 @@
                { Consider a table with M columns. The set of M columns \e must be completely defined by the table structure, which \e must have \e exactly M fields. }
                { A \e {table cell}, or \e {table element}, is a \lref property_value {property value} contained in a table at specific row and column coordinates. }
                { A table cell \e must be a valid property value of the type specified by the field corresponding to its column. }
-               { A table cell \e must be randomly accessible by its corresponding pair of row and column coordinates. }
+               { A \e {table index} is an ordered pair of integers (\e{i},\e{j}), with \e i in the range \[0,N--1\] and j in the range \[0,M--1\], being N and M, respectively, the number of rows and columns in the table. }
+               { A table cell \e must be randomly accessible by its corresponding table index. }
                { In a table with M columns, each table row is an ordered sequence of M table cells. }
                { In a table with N rows, the set of N table rows forms an ordered sequence of length N. }
                { The total number of table cells in a table of N rows and M columns is NxM. }
@@ -419,11 +447,13 @@
             }
          }
 
-         In data disposition and access terms, an XISF table behaves like a matrix property. However, unlike a matrix, a table is a non-homogeneous structure, so it can be used to store sequences of objects of different types.
+         In data disposition and access terms, an XISF table behaves like a matrix property. However, unlike a matrix, a table is an heterogeneous collection, so it can be used to store sequences of objects of different types.
 
-         Table properties cannot be nested, that is, a table property cannot belong to or be serialized in a table property. To enforce this restriction, as noted above, table fields \e shall \e not be of table type.
+         Table properties cannot be nested, that is, a table property cannot belong to or be serialized in a table property. Coherently with this restriction, as noted above, table fields \e shall \e not be of table type.
 
-         For representations of an XISF table object, the headers defined in its structure, when available, \e should be used as column headers or titles to present the table data in tabular form. The format specifiers defined in the table structure, when available, \e should be used to represent individual table cell values.
+         For representations of an XISF table object, the headers defined in its structure, when available, \e should be used as column headers or titles to represent the table data as text in tabular form. The format specifiers defined in the table structure, when available, \e should be used to represent individual table cell values.
+
+         Table properties allow generation of human-readable serializations with explicit declaration of data structures. These can be important features for some applications; however, parsing and decoding a table is much less efficient than processing a vector or matrix property, where the data are directly accessible in binary form. For the sake of performance, it is generally \e recommended to always consider using vectors and matrices instead of tables, and use tables only for applications where readability of serialized data and other table features are really important. For example, a \lref bytearray_property_type ByteArray property can be used as a generic container to transport arbitrary data structures.
       }
    }
 }

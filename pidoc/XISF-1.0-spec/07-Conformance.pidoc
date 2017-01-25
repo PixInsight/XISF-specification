@@ -21,12 +21,12 @@
 
    \subsection { Baseline XISF Decoder } {
 
-      A baseline XISF decoder \e shall have \e {at least} the following abilities to read \lref xisf_unit {XISF units}:
+      A baseline XISF decoder \e shall have at least the following abilities to read \lref xisf_unit {XISF units}:
 
       \list {
          { Read \lref monolithic_xisf_file {monolithic XISF files}. }
          { Read multiple \lref image_core_element \c Image core elements from a monolithic XISF file. }
-         { Support \lref data_block_compression {zlib decompression}. }
+         { Support all standard \lref data_block_compression {compression codecs} defined in this specification for decompression. }
          { Read pixel data from \lref data_block {XISF blocks} with inline, embedded and attachment \lref data_block_location {block locations}. }
          { Read pixel data in the planar and normal \lref pixel_storage_models {pixel storage models}. }
          { Read pixel data in the UInt8, UInt16 and Float32 \lref sampleformat_image_attribute {pixel sample formats}. }

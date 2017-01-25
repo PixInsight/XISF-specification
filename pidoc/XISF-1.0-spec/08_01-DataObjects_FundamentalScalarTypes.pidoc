@@ -6,19 +6,24 @@
    \table[numbered:tbl_fundamental_data_types,caption,header,width:100\%] {
       { XISF Fundamental Scalar Types }
       { { Type name } { Size (bytes) } { Lower bound }  { Upper bound } { Decimal precision } }
-      { \nowrap { Unsigned 8-bit integer }  \center { 1 } \right \nowrap { 0 }                           \right \nowrap { 255 } {} }
-      { \nowrap { Unsigned 16-bit integer } \center { 2 } \right \nowrap { 0 }                           \right \nowrap { 65,535 } {} }
-      { \nowrap { Unsigned 32-bit integer } \center { 4 } \right \nowrap { 0 }                           \right \nowrap { 4,294,967,295 } {} }
-      { \nowrap { Unsigned 64-bit integer } \center { 8 } \right \nowrap { 0 }                           \right \nowrap { 18,446,744,073,709,551,615 } {} }
-      { \nowrap { Signed 8-bit integer }    \center { 1 } \right \nowrap { --128 }                       \right \nowrap { +127 } {} }
-      { \nowrap { Signed 16-bit integer }   \center { 2 } \right \nowrap { --32,768 }                    \right \nowrap { +32,767 } {} }
-      { \nowrap { Signed 32-bit integer }   \center { 4 } \right \nowrap { --2,147,483,648 }             \right \nowrap { +2,147,483,647 } {} }
-      { \nowrap { Signed 64-bit integer }   \center { 8 } \right \nowrap { --9,223,372,036,854,775,808 } \right \nowrap { +9,223,372,036,854,775,807 } {} }
-      { \nowrap { IEEE 754\ref ieee_754 binary32 floating point } \center { 4 } \right \nowrap { \pm 1.18 \times 10\sup{--38} }  \right \nowrap { \pm 3.40 \times 10\sup{38} }  \right \nowrap { 1.19 \times 10\sup{--7} } }
-      { \nowrap { IEEE 754 binary64 floating point }              \center { 8 } \right \nowrap { \pm 2.23 \times 10\sup{--308} } \right \nowrap { \pm 1.80 \times 10\sup{308} } \right \nowrap { 2.22 \times 10\sup{--16} } }
+      { \nowrap { Unsigned 8-bit integer }   \center {  1 } \right \nowrap { 0 }                            \right \nowrap { 255 } {} }
+      { \nowrap { Unsigned 16-bit integer }  \center {  2 } \right \nowrap { 0 }                            \right \nowrap { 65,535 } {} }
+      { \nowrap { Unsigned 32-bit integer }  \center {  4 } \right \nowrap { 0 }                            \right \nowrap { 4,294,967,295 } {} }
+      { \nowrap { Unsigned 64-bit integer }  \center {  8 } \right \nowrap { 0 }                            \right \nowrap { 18,446,744,073,709,551,615 } {} }
+      { \nowrap { Unsigned 128-bit integer } \center { 16 } \right \nowrap { 0 }                            \right \nowrap { \aeq 3.40 \times 10\sup{38} } {} }
+      { \nowrap { Signed 8-bit integer }     \center {  1 } \right \nowrap { --128 }                        \right \nowrap { +127 } {} }
+      { \nowrap { Signed 16-bit integer }    \center {  2 } \right \nowrap { --32,768 }                     \right \nowrap { +32,767 } {} }
+      { \nowrap { Signed 32-bit integer }    \center {  4 } \right \nowrap { --2,147,483,648 }              \right \nowrap { +2,147,483,647 } {} }
+      { \nowrap { Signed 64-bit integer }    \center {  8 } \right \nowrap { --9,223,372,036,854,775,808 }  \right \nowrap { +9,223,372,036,854,775,807 } {} }
+      { \nowrap { Signed 128-bit integer }   \center { 16 } \right \nowrap { --18,446,744,073,709,551,616 } \right \nowrap { +18,446,744,073,709,551,615 } {} }
+      { \nowrap { IEEE 754\ref ieee_754 binary32 } \center { 4  } \right \nowrap { \pm 1.18 \times 10\sup{--38} }  \right \nowrap { \pm 3.40 \times 10\sup{38} }  \right \nowrap { 1.19 \times 10\sup{--7} } }
+      { \nowrap { IEEE 754 binary64 }              \center { 8  } \right \nowrap { \pm 2.23 \times 10\sup{--308} } \right \nowrap { \pm 1.80 \times 10\sup{308} } \right \nowrap { 2.22 \times 10\sup{--16} } }
+      { \nowrap { IEEE 754 binary128 }             \center { 16 } \right \nowrap { \pm 3.36 \times 10\sup{--4932} } \right \nowrap { \pm 1.19 \times 10\sup{4932} } \right \nowrap { 1.93 \times 10\sup{--34} } }
    }
 
-   Fundamental scalar types can be unsigned integer numbers, two's complement signed integer numbers, and floating point numbers. Floating point types correspond to the IEEE 754\ref ieee_754 binary32 and binary64 basic formats, also known as \e {single precision} and \e {double precision}, respectively. For floating point types, the lower and upper bound columns in Table \tblref tbl_fundamental_data_types refer to the approximate smallest and largest representable normal values, and the decimal precision column gives the relative rounding error for each type, also known as \e {machine epsilon}.
+   Fundamental scalar types can be unsigned integer numbers, two's complement signed integer numbers, and IEEE 754 floating point numbers. Floating point types correspond to the IEEE 754\ref ieee_754 binary32, binary64 and binary128 formats, also known as \e {single precision}, \e {double precision} and \e {quadruple precision}, respectively. For floating point types, the lower and upper bound columns in Table \tblref tbl_fundamental_data_types refer to the approximate smallest and largest representable normal values, and the decimal precision column gives the relative rounding error for each type, also known as \e {machine epsilon}.
 
    IEEE 754 non-numeric entities, including infinities and NaN (Not a Number), are supported by this specification and \e must be correctly handled (in an implementation-specific manner) by XISF encoders and decoders.
+
+   Support for 128-bit integer and floating point scalars is \e optional. Support for the rest of 8-bit, 16-bit, 32-bit and 64-bit scalars is \e required for all XISF encoders and decoders.
 }

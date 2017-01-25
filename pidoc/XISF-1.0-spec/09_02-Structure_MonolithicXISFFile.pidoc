@@ -36,7 +36,7 @@
       }
    }
 
-   Figure \figref fig_monolithic_XISF_file_structure shows a graphical representation of a monolithic XISF file. An XISF decoder or a file management application can use the XISF signature (the first eight bytes of the file) to quickly determine if a given file can be a valid monolithic XISF file. The header length field has the advantage that an XISF decoder can load the entire XISF header in memory using a single file read operation. Without the header length element, a decoder would have to scan the XML source code sequentially in order to find the end of the XISF header. Unused spaces can be useful to optimize I/O buffering and access to attached data blocks in some devices.
+   Figure \figref fig_monolithic_XISF_file_structure shows a graphical representation of a monolithic XISF file. An XISF decoder or a file management application can use the XISF signature (the first eight bytes of the file) to quickly determine if a given file can be a valid monolithic XISF file. The header length field has the advantage that an XISF decoder can load the entire XISF header in memory using a single file read operation. Without the header length element, a decoder would have to read the XML document sequentially in order to find the end of the XISF header. Unused spaces can be useful to optimize I/O buffering and access to attached data blocks in some devices.
 
    \vs[length:2em]
 

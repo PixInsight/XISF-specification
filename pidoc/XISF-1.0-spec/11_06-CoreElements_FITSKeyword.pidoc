@@ -5,38 +5,43 @@
 
    The contents of a \c FITSKeyword core element (i.e., the values of its \c name, \c value and \c comment attributes; see below) \e must comply with the requirements of the FITS format specification\ref fits_format for header keywords.
 
-   A \c FITSKeyword core element \e shall define the following attributes:
-
-   \definition {
-
-      \c { name="\e{keyword-name}" }
-      {
-         where \c\e keyword-name is the name of a FITS header keyword. Quoted from the FITS standard:\ref fits_keyword_name
-
-         \e { The keyword name \e shall be a left justified, 8-character, space-filled, ASCII string with no embedded spaces. All digits 0 through 9 (decimal ASCII codes 48 to 57, or hexadecimal 30 to 39) and upper case Latin alphabetic characters ‘A’ through ‘Z’ (decimal 65 to 90 or hexadecimal 41 to 5A) are permitted; lower case characters \e shall \e not be used. The underscore ( ‘_’, decimal 95 or hexadecimal 5F) and hyphen (‘-’, decimal 45 or hexadecimal 2D) are also permitted. No other characters are permitted. }
-
-      }
-
-      \c { value="\e{keyword-value}" }
-      {
-         \c\e keyword-value is the value of a FITS header keyword.\ref fits_keyword_records The HISTORY and COMMENT keywords don't have a value, so this attribute \e must be an empty string for these keywords.
-      }
-
-      \c { comment="\e{keyword-comment}" }
-      {
-         \c\e keyword-comment is the comment of a FITS header keyword.\ref fits_keyword_records
-      }
-   }
-
    A \c FITSKeyword element \e must be either a child element of an \lref image_core_element \c Image core element, or a child element of the unique \lref root_element {XISF root element}. In the former case, the FITS header keyword \e shall be associated with the corresponding image. In the latter case, a \c uid attribute \e should be defined to associate the FITS header keyword with one or more \c Image elements by means of child \lref reference_core_element \c Reference elements.
 
    Multiple instances of the \c FITSKeyword element, and/or multiple \c Reference elements referencing existing \c FITSKeyword elements, can be children of an \c Image element to define a list of FITS keywords associated with an image.
 
    The \c FITSKeyword element provides a compatibility layer with image data stored as legacy FITS files. An XISF decoder compatible with FITS \e must load all existing \c FITSKeyword elements and give access to them transparently, as if the original data were stored in the FITS format.
 
-   Examples (some parts of the code replaced with \c ... to shorten the examples):
+   \subsection { Mandatory \c FITSKeyword Attributes } {
 
-   \code[lang:xml] { #:
+      A \c FITSKeyword element \e shall define the following attributes:
+
+      \definition {
+
+         \c { name="\e{keyword-name}" }
+         {
+            where \c\e keyword-name is the name of a FITS header keyword. Quoted from the FITS standard:\ref fits_keyword_name
+
+            \e { The keyword name \e shall be a left justified, 8-character, space-filled, ASCII string with no embedded spaces. All digits 0 through 9 (decimal ASCII codes 48 to 57, or hexadecimal 30 to 39) and upper case Latin alphabetic characters ‘A’ through ‘Z’ (decimal 65 to 90 or hexadecimal 41 to 5A) are permitted; lower case characters \e shall \e not be used. The underscore ( ‘_’, decimal 95 or hexadecimal 5F) and hyphen (‘-’, decimal 45 or hexadecimal 2D) are also permitted. No other characters are permitted. }
+
+         }
+
+         \c { value="\e{keyword-value}" }
+         {
+            \c\e keyword-value is the value of a FITS header keyword.\ref fits_keyword_records The HISTORY and COMMENT keywords don't have a value, so this attribute \e must be an empty string for these keywords.
+         }
+
+         \c { comment="\e{keyword-comment}" }
+         {
+            \c\e keyword-comment is the comment of a FITS header keyword.\ref fits_keyword_records
+         }
+      }
+   }
+
+   \region {
+
+      Examples (some parts of the code replaced with \c ... to shorten the examples):
+
+      \code[lang:xml] { #:
 <Image geometry="2048:2048:1" sampleFormat="Float32" bounds="0:1"
                                  colorSpace="Gray" location="attachment:12288:16777216">
 ...
@@ -47,11 +52,11 @@
    <FITSKeyword name="HISTORY" value="" comment="Processed with magic techniques"/>
 ...
 </Image>
-   :# }
+      :# }
 
-   In the next example, a \c FITSKeyword element has been defined somewhere in the \lref xisf_header {XISF header} with \c uid="KWD001", and has been associated with an image through a \lref reference_core_element \c Reference element:
+      In the next example, a \c FITSKeyword element has been defined somewhere in the \lref xisf_header {XISF header} with \c uid="KWD001", and has been associated with an image through a \lref reference_core_element \c Reference element:
 
-   \code[lang:xml] { #:
+      \code[lang:xml] { #:
 <Image ... >
 ...
    <Reference ref="KWD001" />
@@ -59,5 +64,6 @@
 </Image>
 ...
 <FITSKeyword ... uid="KWD001" ... />
-   :# }
+      :# }
+   }
 }
