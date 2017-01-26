@@ -298,7 +298,7 @@
 
       \subsection { \label string_property_type String Property Type } {
 
-         A string is a homogeneous, ordered sequence of zero or more Unicode\ref unicode_standard code points encoded as unsigned integer scalars.
+         A string is a homogeneous, finite ordered sequence of zero or more Unicode\ref unicode_standard code points encoded as unsigned integer scalars.
 
          \list {
             { The Unicode code points contained in a string are \e {string elements} or \e characters. }
@@ -338,7 +338,7 @@
 
       \subsection { \label vector_property_types Vector Property Types } {
 
-         A vector is a homogeneous, ordered sequence of zero or more scalars or complex numbers.
+         A vector is a homogeneous, finite ordered sequence of zero or more scalars or complex numbers.
 
          \list {
             { The scalars or complex numbers contained in a vector are \e {vector components}. }
@@ -376,14 +376,14 @@
 
       \subsection { \label matrix_property_types Matrix Property Types } {
 
-         A matrix is a homogeneous, ordered set of scalars or complex numbers, structured as a two-dimensional array with a fixed number of rows and columns.
+         A matrix is a homogeneous, finite ordered set of scalars or complex numbers, structured as a two-dimensional array with a fixed number of rows and columns.
 
          \list {
             { The scalars or complex numbers contained in a matrix are \e {matrix elements}. }
             { The number of rows and columns in a matrix are the \e {matrix dimensions}. }
             { The total number of elements in a matrix is its \e length, which is equal to the product of its dimensions. }
             { An \e {empty matrix} is a matrix with zero length. }
-            { A \e {matrix index} is an ordered pair of integers (\e{i},\e{j}), with \e i in the range \[0,N--1\] and j in the range \[0,M--1\], being N and M, respectively, the number of rows and columns in the matrix. }
+            { A \e {matrix index} is any ordered pair of integers (\e{i},\e{j}), with \e i in the range \[0,N--1\] and \e j in the range \[0,M--1\], being N and M, respectively, the number of rows and columns in the matrix. }
             { A matrix element \e must be randomly accessible by its corresponding matrix index. }
             { There are no specific limits for the dimensions or the length of a matrix. }
             { When serialized in binary form, a matrix \e shall be stored as a contiguous sequence of matrix elements in \e {row order}: all matrix elements of the first row \e shall be stored by column order at consecutive locations, followed by all matrix elements of the second row, and so on. }
@@ -415,7 +415,7 @@
 
       \subsection { \label table_property_type Table Property Type } {
 
-         An XISF table is a heterogeneous, ordered collection of XISF property values structured as a two-dimensional array with a fixed number of rows and columns. To formally define an XISF table object we need to define the properties of its structure and its data:
+         An XISF table is a heterogeneous, finite ordered collection of XISF property values structured as a two-dimensional array with a fixed number of rows and columns. To formally define an XISF table object we need to define the properties of its structure and its data:
 
          \definition {
             { Table Structure }

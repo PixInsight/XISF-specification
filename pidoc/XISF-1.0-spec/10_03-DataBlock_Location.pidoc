@@ -59,7 +59,7 @@
       \c { \label url_data_block location="url(\e{URL})"\n
            location="url(\e{URL}):\e{index-id}" }
       {
-         Defines an \e {external XISF data block} in a distributed \lref xisf_unit {XISF unit}.
+         Defines an \e {external XISF data block} in a \lref distributed_xisf_unit {distributed XISF unit}.
 
          \c\e URL \e must be a valid \e {uniform resource locator}\ref rfc_3986 specification for a local or remote file where the XISF data block should be available.
 
@@ -102,9 +102,9 @@
 
          In the second form, the specified file \e must be an \lref data_blocks_file {XISF data blocks file}. \c\e index-id \e must be a plain text representation of an unsigned integer, whose value \e must be the unique identifier of a \lref block_index_element {block index element} in the XISF data blocks file. \c\e index-id \e should be represented as an hexadecimal number. The referenced block index element \e must define the position and size of the XISF data block being located.
 
-         In general, absolute paths are \e not \e recommended and \e should be avoided, since they tend to prevent distributed XISF units from being relocatable. If a unit with absolute path names is moved or copied to a different file system or machine, it will cease to be valid unless the original directory tree exists on the target file system.
+         In general, absolute paths are \e not \e recommended and \e should be avoided, since they tend to prevent \lref distributed_xisf_unit {distributed XISF units} from being relocatable. If a unit with absolute path names is moved or copied to a different file system or machine, it will cease to be valid unless the original directory tree exists on the target file system.
 
-         In some special cases, however, absolute paths can be useful. For example, a virtualized file system can be based on absolute paths to symbolic links\ref open_group_posix_symbolic_link pointing to actual directories. In this case a distributed XISF unit with absolute paths to external resources can be made relocatable by emulating the required directory tree structure through symbolic links on the deployment file system.
+         In some special cases, however, absolute paths can be useful. For example, a virtualized file system can be based on absolute paths to symbolic links\ref open_group_posix_symbolic_link pointing to actual directories. In this case a \lref distributed_xisf_unit {distributed XISF unit} with absolute paths to external resources can be made relocatable by emulating the required directory tree structure through symbolic links on the deployment file system.
 
          Parentheses appearing in a path specification \e must be written as XML character or entity references,\ref xml_references so that the resulting \c location attribute value can be parsed correctly. For example:
 
@@ -146,7 +146,7 @@
                   location="path(@header_dir/description&#40;draft&#41;.txt)" />
          :# }
 
-         Relative file paths are the best option to build relocatable distributed XISF units. A distributed unit that locates all of its external data blocks through relative paths can be transferred to any location on any file system, including multiple machines, without breaking its validity. This can't be ensured for blocks located by absolute paths.
+         Relative file paths are the best option to build relocatable \lref distributed_xisf_unit {distributed XISF units}. A distributed unit that locates all of its external data blocks through relative paths can be transferred to any location on any file system, including multiple machines, without breaking its validity. This can't be ensured for blocks located by absolute paths.
       }
    }
 }

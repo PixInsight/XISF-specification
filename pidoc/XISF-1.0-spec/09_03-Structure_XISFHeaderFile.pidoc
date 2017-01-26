@@ -1,5 +1,5 @@
 
 \subsection { \label xisf_header_file XISF Header File } {
 
-   An XISF header file \e must contain \e exclusively the unique \lref xisf_header {XISF header} of a distributed \lref xisf_unit {XISF unit}.
+   An XISF header file \e must contain \e exclusively the unique \lref xisf_header {XISF header} of a \lref distributed_xisf_unit {distributed XISF unit}.
 }

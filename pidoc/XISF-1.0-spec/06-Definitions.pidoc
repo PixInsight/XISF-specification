@@ -1,7 +1,7 @@
 
 \section { Definitions } {
 
-   The following subsections form a collection of important terms and concepts identified during the production of this document. They are included here for informational/reference purposes only.
+   The following subsections form a non-normative collection of important terms and concepts identified during the production of this document. They are included here for informational/reference purposes only.
 
    \definition {
 
@@ -12,7 +12,7 @@
 
       { File }
       {
-         A file is a sequence of \e N 8-bit contiguous bytes, where \e N is the file length and bytes are numbered from 0 to \e{N}--1. The \e theoretical maximum file length is 2\sup{64}--1 = 18,446,744,073,709,551,615 bytes.
+         A file is a finite ordered sequence of \e N 8-bit contiguous bytes, where \e N is the file length and bytes are numbered from 0 to \e{N}--1. The \e theoretical maximum file length is 2\sup{64}--1 = 18,446,744,073,709,551,615 bytes.
       }
 
       { Byte offset / byte position }
@@ -35,12 +35,12 @@
          A set of one or more files defining contents in the XISF format.
       }
 
-      { \lref monolithic_xisf_unit Monolithic XISF unit }
+      { \lref monolithic_xisf_unit {Monolithic XISF unit} }
       {
          An XISF unit structured following the monolithic storage model.
       }
 
-      { \lref distributed_xisf_unit Distributed XISF unit }
+      { \lref distributed_xisf_unit {Distributed XISF unit} }
       {
          An XISF unit structured following the distributed storage model.
       }
@@ -110,6 +110,11 @@
          A structure consisting of zero or more objects stored consecutively without any gaps.
       }
 
+      { Finite sequence }
+      {
+         A sequence containing a finite number of objects. The number of contained objects in a finite sequence is normally called its \e length.
+      }
+
       { Ordered sequence }
       {
          A sequence where the relative locations of its contained objects is a relevant property of the sequence itself.
@@ -117,7 +122,7 @@
 
       { Sorted sequence }
       {
-         An ordered sequence where the relative locations of its contained objects is a function of their values.
+         An ordered sequence where the relative locations of its contained objects are functions of their values.
       }
 
       { Complex number }
@@ -127,22 +132,27 @@
 
       { Array }
       {
-         An ordered sequence where any object can be accessed through an \e {array index}.
+         A finite ordered sequence where any object can be accessed through an \e {array index}.
       }
 
       { Vector }
       {
-         A homogeneous, ordered sequence of zero or more scalars or complex numbers.
+         A homogeneous, finite ordered sequence of zero or more scalars or complex numbers.
       }
 
       { Matrix }
       {
-         A homogeneous set of scalars or complex numbers, structured as a two-dimensional array with a fixed number of rows and columns.
+         A homogeneous, finite set of scalars or complex numbers, structured as a two-dimensional array with a fixed number of rows and columns.
+      }
+
+      { Table }
+      {
+         A heterogeneous, finite set of objects, structured as a two-dimensional array with a fixed number of rows and columns. The structure of a table object is explicitly defined by describing the types and order of the objects contained in a table row.
       }
 
       { String }
       {
-         A homogeneous, ordered sequence of zero or more Unicode\ref unicode_standard code points represented as integer scalars.
+         A homogeneous, finite ordered sequence of zero or more Unicode\ref unicode_standard code points represented as integer scalars.
       }
 
       { Case-sensitive }

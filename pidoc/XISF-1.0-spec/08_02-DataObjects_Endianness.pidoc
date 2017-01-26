@@ -5,5 +5,5 @@
 
    The \e only exception to this rule occurs when an object in another format requiring big endian encoding has to be embedded in an XISF unit. \lref iccprofile_core_element {ICC color profiles}\ref icc_profile are the most frequent instances of this exception.
 
-   The contents of external files not encoded as XISF data blocks, which can be referenced from distributed XISF unit headers, are out of the scope of this specification. Therefore, the endianness of these files and the way they are used are the responsibility of the decoders and applications accessing them.
+   The contents of external files not encoded as XISF data blocks, which can be referenced from \lref distributed_xisf_unit {distributed XISF unit} headers, are out of the scope of this specification. Therefore, the endianness of these files and the way they are used are the responsibility of the decoders and applications accessing them.
 }

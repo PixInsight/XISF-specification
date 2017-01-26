@@ -1,7 +1,7 @@
 
 \subsection { \label external_data_block External XISF Data Block } {
 
-   An external XISF data block is an \lref data_block {XISF data block} stored separately from the \lref xisf_header {XISF header} of a distributed \lref xisf_unit {XISF unit}. An external XISF data block can be stored either in an \lref data_blocks_file {XISF data blocks file}, or in a generic file.
+   An external XISF data block is an \lref data_block {XISF data block} stored separately from the \lref xisf_header {XISF header} of a \lref distributed_xisf_unit {distributed XISF unit}. An external XISF data block can be stored either in an \lref data_blocks_file {XISF data blocks file}, or in a generic file.
 
    The position of an external data block and its length in bytes \e must be completely and unambiguously defined by the XISF header and, when applicable, by the XISF data blocks file where the block is stored.
 }

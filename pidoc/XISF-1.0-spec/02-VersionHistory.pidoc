@@ -11,10 +11,11 @@
       { { 0.4     } { 08 February 2015   } { XISF Version 1.0 Specification (DRAFT 4) } }
       { { 0.5     } { 14 February 2015   } { XISF Version 1.0 Specification (DRAFT 5) } }
       { { 0.6     } { 15 February 2015   } { XISF Version 1.0 Specification (DRAFT 6) } }
-      { { 0.7     } { ?? February 2015   } { XISF Version 1.0 Specification (DRAFT 7) } }
+      { { 0.7     } { 20 February 2015   } { XISF Version 1.0 Specification (DRAFT 7) } }
       { { 0.71    } { 11 March 2016      } { XISF Version 1.0 Specification (DRAFT 7.1) } }
       { { 0.8     } { 20 January 2017    } { XISF Version 1.0 Specification (DRAFT 8) } }
       { { 0.9     } { 23 January 2017    } { XISF Version 1.0 Specification (DRAFT 9) } }
       { { 0.91    } { 25 January 2017    } { XISF Version 1.0 Specification (DRAFT 9.1) } }
+      { { 0.92    } { 26 January 2017    } { XISF Version 1.0 Specification (DRAFT 9.2) } }
    }
 }
