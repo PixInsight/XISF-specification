@@ -39,9 +39,89 @@
 
    \subsection { Optional \c Metadata Properties } {
 
-      In addition, the following properties are \e optional for the \c Metadata element, but \e should be serialized as child \lref property_core_element \c Property elements when appropriate:
+      The following properties are \e optional for the \c Metadata element, but \e should be serialized as child \lref property_core_element \c Property elements when appropriate:
 
       \definition {
+
+         { \c XISF:Abstract }
+         {
+            A \lref string_property_type String property. A summary of the resources or materials included in the XISF unit.
+         }
+
+         { \c XISF:AccessRights }
+         {
+            A \lref string_property_type String property. Information about the persons or institutions that can access the resources or materials included in the XISF unit, and/or information on their security or privacy status.
+         }
+
+         { \c XISF:Authors }
+         {
+            A \lref string_property_type String property. The names of one or more persons or groups that have created the resources or materials included in the XISF unit. Multiple authors \e shall be specified as a newline-separated list.
+
+            Example:
+
+            \code[lang:xml] { #:
+<Property id="XISF:Authors" type="String">James T. Kirk</Property>
+            :# }
+         }
+
+         { \c XISF:BibliographicReferences }
+         {
+            A \lref string_property_type String property. One or more bibliographic references associated with the resources or materials in the XISF unit. Multiple references \e shall be specified as a newline-separated list.
+         }
+
+         { \c XISF:BriefDescription }
+         {
+            A \lref string_property_type String property. A brief description or caption for the materials included in the XISF unit. If this metadata property is specified, its value \e should be as short as possible, and \e should \e not be longer than 256 characters.
+
+            Example:
+
+            \code[lang:xml] { #:
+<Property id="XISF:BriefDescription" type="String">Messier 45, The Pleiades Cluster</Property>
+            :# }
+         }
+
+         { \c XISF:CompressionLevel }
+         {
+            An \lref int32_property_type Int32 property. If the XISF unit contains \lref data_block_compression {compressed data blocks}, this property \e should be defined to inform on the \e {compression level} used in the range from 1 to 100, where 1 means \e {minimum compression} and 100 corresponds to \e {maximum compression}.
+
+            Note that this is an abstract, codec-independent compression level. For example, the standard zlib\ref rfc_1950 codec defines an integer compression level in the range from 0 to 9 that controls the speed/compression balance. In the zlib case, its range \[0,9\] should be mapped linearly to the codec-independent range \[1,100\].
+
+            In complex cases where multiple data blocks have been compressed with different codecs and varying parameters, this property \e should \e not be defined.
+
+            Example:
+
+            \code[lang:xml] { #:
+<Property id="XISF:CompressionLevel" type="Int" value="90" />
+            :# }
+         }
+
+         { \c XISF:CompressionMethods }
+         {
+            A \lref string_property_type String property. If the XISF unit contains \lref data_block_compression {compressed data blocks}, this property \e should be defined to enumerate the applied compression codec(s). If two or more different codecs have been used, they should be specified as a comma-separated list.
+
+            Examples:
+
+            \code[lang:xml] { #:
+<Property id="XISF:CompressionMethods" type="String">zlib+sh,lz4hc</Property>
+            :# }
+         }
+
+         { \c XISF:Contributors }
+         {
+            A \lref string_property_type String property. The names of one or more persons or groups that have contributed to the creation of the resources or materials included in the XISF unit. Multiple contributors \e shall be specified as a newline-separated list.
+         }
+
+         { \c XISF:Copyright }
+         {
+            A \lref string_property_type String property. Copyright information applicable to the materials included in the XISF unit.
+
+            Example:
+
+            \code[lang:xml] { #:
+<Property id="XISF:Copyright" type="String">Copyright (c) 2014 Extragalactic Imaging
+Corporation. All Rights Reserved.</Property>
+            :# }
+         }
 
          { \c XISF:CreatorModule }
          {
@@ -74,73 +154,9 @@
             :# }
          }
 
-         { \c XISF:CompressionMethod }
-         {
-            A \lref string_property_type String property. If the XISF unit contains \lref data_block_compression {compressed data blocks}, this property \e should be defined to enumerate the applied compression codec(s) used. If more than one codec has been used, they should be specified as a comma-separated list.
-
-            Examples:
-
-            \code[lang:xml] { #:
-<Property id="XISF:CompressionMethod" type="String">zlib</Property>
-            :# }
-
-            \code[lang:xml] { #:
-<Property id="XISF:CompressionMethod" type="String">zlib+sh,lz4hc</Property>
-            :# }
-         }
-
-         { \c XISF:CompressionLevel }
-         {
-            An \lref int32_property_type Int32 property. If the XISF unit contains \lref data_block_compression {compressed data blocks}, this property \e should be defined to inform on the \e {compression level} used in the range from 1 to 100, where 1 means \e {minimum compression} and 100 corresponds to \e {maximum compression}.
-
-            Note that this is an abstract, codec-independent compression level. For example, the standard zlib\ref rfc_1950 codec defines an integer compression level in the range from 0 to 9 that controls the speed/compression balance. In the zlib case, its range \[0,9\] should be mapped to the codec-independent range \[1,100\].
-
-            In complex cases where multiple data blocks have been compressed with different codecs and/or varying parameters, this property \e should \e not be defined.
-
-            Example:
-
-            \code[lang:xml] { #:
-<Property id="XISF:CompressionLevel" type="Int" value="90" />
-            :# }
-         }
-
-         { \c XISF:Author }
-         {
-            An \e optional \lref string_property_type String property. The name(s) of the person(s) who have created the \lref xisf_unit {XISF unit}.
-
-            Example:
-
-            \code[lang:xml] { #:
-<Property id="XISF:Author" type="String">James T. Kirk</Property>
-            :# }
-         }
-
-         { \c XISF:Copyright }
-         {
-            An \e optional \lref string_property_type String property. Copyright information applicable to the materials included in the \lref xisf_unit {XISF unit}.
-
-            Example:
-
-            \code[lang:xml] { #:
-<Property id="XISF:Copyright" type="String">Copyright (c) 2014 Extragalactic Imaging
-Corporation. All Rights Reserved.</Property>
-            :# }
-         }
-
-         { \c XISF:BriefDescription }
-         {
-            An \e optional \lref string_property_type String property. A brief description or caption for the materials included in the \lref xisf_unit {XISF unit}. If this metadata property is specified, it \e should be a brief text not longer than 256 characters.
-
-            Example:
-
-            \code[lang:xml] { #:
-<Property id="XISF:BriefDescription" type="String">Messier 45, The Pleiades Cluster</Property>
-            :# }
-         }
-
          { \c XISF:Description }
          {
-            An \e optional \lref string_property_type String property. A description of the materials included in the \lref xisf_unit {XISF unit}.
+            A \lref string_property_type String property. A description of the resources or materials included in the XISF unit.
 
             Example:
 
@@ -151,13 +167,44 @@ Corporation. All Rights Reserved.</Property>
 
          { \c XISF:Keywords }
          {
-            An \e optional \lref string_property_type String property. A comma-separated list of keywords or search index terms applicable to the materials included in the \lref xisf_unit {XISF unit}, specified in decreasing order of relevance.
+            A \lref string_property_type String property. A comma-separated list of keywords or search index terms applicable to the materials included in the XISF unit, specified in decreasing order of relevance.
 
             Example:
 
             \code[lang:xml] { #:
 <Property id="XISF:Keywords" type="String">IC 342, spiral galaxy, deep-sky object</Property>
             :# }
+         }
+
+         { \c XISF:Languages }
+         {
+            A \lref string_property_type String property. A comma-separated list of language identifying tags\ref rfc_5646 corresponding to the languages employed in the documents or textual information included in the XISF unit.
+
+            Example:
+
+            \code[lang:xml] { #:
+<Property id="XISF:Languages" type="String">en,fr</Property>
+            :# }
+         }
+
+         { \c XISF:License }
+         {
+            A \lref string_property_type String property. A legal document giving official permission to do something with the resources or materials included in the XISF unit.
+         }
+
+         { \c XISF:OriginalCreationTime }
+         {
+            A \lref time_point_property_type TimePoint property. The value of this property \e shall represent the date and time the XISF unit was originally created, in case this unit is an updated or augmented version of the same set of resources.
+         }
+
+         { \c XISF:RelatedResources }
+         {
+            A \lref string_property_type String property. One or more resources, such as documents or URLs,\ref rfc_3986 related to the material in this XISF unit. Multiple resources \e shall be specified as a newline-separated list.
+         }
+
+         { \c XISF:Title }
+         {
+            A \lref string_property_type String property. A text fragment suitable to be included as a title in documents, tables or graphical representations.
          }
       }
    }

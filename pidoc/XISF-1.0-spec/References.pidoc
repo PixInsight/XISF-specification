@@ -1,23 +1,25 @@
 
-\reference rfc_1950 { Jean-Loup Gailly, L. Peter Deutsch (1996), RFC 1950: \xref {https://tools.ietf.org/html/rfc1950} \e {ZLIB Compressed Data Format Specification version 3.3} }
+\reference rfc_1950 { Jean-Loup Gailly, L. Peter Deutsch (1996), RFC 1950: \xref {http://tools.ietf.org/html/rfc1950} \e {ZLIB Compressed Data Format Specification version 3.3} }
 
-\reference rfc_1951 { Jean-Loup Gailly, L. Peter Deutsch (1996), RFC 1951: \xref {https://tools.ietf.org/html/rfc1951} \e {DEFLATE Compressed Data Format Specification version 1.3} }
+\reference rfc_1951 { Jean-Loup Gailly, L. Peter Deutsch (1996), RFC 1951: \xref {http://tools.ietf.org/html/rfc1951} \e {DEFLATE Compressed Data Format Specification version 1.3} }
 
-\reference rfc_2119 { Scott Bradner (1997), RFC 2119: \xref {https://tools.ietf.org/html/rfc2119} \e {Key words for use in RFCs to Indicate Requirement Levels}. }
+\reference rfc_2119 { Scott Bradner (1997), RFC 2119: \xref {http://tools.ietf.org/html/rfc2119} \e {Key words for use in RFCs to Indicate Requirement Levels}. }
 
 \reference rfc_3174 { Donald E. Eastlake, 3rd, Paul E. Jones (2001), RFC 3174: \xref {http://tools.ietf.org/html/rfc3174} \e {US Secure Hash Algorithm 1 (SHA1)}. }
 
 \reference rfc_3339 { Chris Newman, Graham Klyne (2002), RFC 3339: \xref {http://tools.ietf.org/html/rfc3339} \e {Date and Time on the Internet: Timestamps} }
 
-\reference rfc_3986 { Tim Berners-Lee, Roy T. Fielding, Larry Masinter (2005), RFC 3986: \xref {https://tools.ietf.org/html/rfc3986} \e {Uniform Resource Identifier (URI): Generic Syntax}. }
+\reference rfc_3986 { Tim Berners-Lee, Roy T. Fielding, Larry Masinter (2005), RFC 3986: \xref {http://tools.ietf.org/html/rfc3986} \e {Uniform Resource Identifier (URI): Generic Syntax}. }
 
 \reference rfc_4122 { Paul J. Leach, Michael Mealling, Rich Salz (2005), RFC 4122: \xref {http://tools.ietf.org/html/rfc4122} \e {A Universally Unique IDentifier (UUID) URN Namespace}. }
 
-\reference rfc_4648 { Simon Josefsson (2006), RFC 4648: \xref {https://tools.ietf.org/html/rfc4648} \e {The Base16, Base32, and Base64 Data Encodings}. }
+\reference rfc_4648 { Simon Josefsson (2006), RFC 4648: \xref {http://tools.ietf.org/html/rfc4648} \e {The Base16, Base32, and Base64 Data Encodings}. }
 
 \reference rfc_5280 { David Cooper, Stefan Santesson, Stephen Farrell, Sharon Boeyen, Russell Housley, Tim Polk (2008), RFC 5280: \xref {http://tools.ietf.org/html/rfc5280} \e {Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile}. }
 
 \reference rfc_5321 { John C. Klensin (2008), RFC 5321: \xref {http://tools.ietf.org/html/rfc5321} \e {Simple Mail Transfer Protocol}. }
+
+\reference rfc_5646 { A. Phillips, M. Davis (2009), RFC 5646: \xref {http://tools.ietf.org/html/rfc5646} \e {Tags for Identifying Languages}. }
 
 \reference rfc_6234 { Donald Eastlake, Tony Hansen (2011), RFC 6234: \xref {http://tools.ietf.org/html/rfc6234} \e {US Secure Hash Algorithms (SHA and SHA-based HMAC and HKDF)}. }
 

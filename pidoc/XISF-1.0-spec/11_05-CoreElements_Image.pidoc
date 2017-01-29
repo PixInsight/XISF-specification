@@ -236,15 +236,20 @@
 
       The identifiers of these properties use namespaces to organize them into several fundamental categories: \c Observer, \c Organization, \c Observation, \c Instrument, and \c Processing. These properties have reserved identifiers that \e must \e not be used for purposes different from the ones described herein.
 
-      All of these properties are optional. However, all encoders---especially image acquisition and processing applications---\e should implement them as necessary and appropriate, following the norms and recommendations given in the list below.
+      All of these properties are \e optional. However, all encoders---especially image acquisition and processing applications---\e should implement them as necessary and appropriate, following the norms and recommendations given in the list below.
 
       \subsection { Observer Namespace } {
 
          \definition {
 
+            { \c Observer:EmailAddress }
+            {
+               A \lref string_property_type String property. One or more email addresses\ref rfc_5321 associated with the persons or groups identified by \c Observer:Name. Multiple addresses \e shall be specified as a comma-separated list.
+            }
+
             { \c Observer:Name }
             {
-               A \lref string_property_type String property. The name or identification of the person or group that acquired the image or carried out the observation.
+               A \lref string_property_type String property. The names or identifications of one or more persons or groups that acquired the image or carried out the observation. Multiple names \e shall be specified as a newline-separated list.
 
                Example:
 
@@ -253,19 +258,14 @@
                :# }
             }
 
-            { \c Observer:EmailAddress }
-            {
-               A \lref string_property_type String property. An email address\ref rfc_5321 associated with the person or group identified by \c Observer:Name.
-            }
-
             { \c Observer:PostalAddress }
             {
-               A \lref string_property_type String property. The postal address of the person or group identified by \c Observer:Name.
+               A \lref string_property_type String property. One or more postal addresses of the persons or groups identified by \c Observer:Name. Multiple addresses \e shall be specified as a newline-separated list.
             }
 
             { \c Observer:Website }
             {
-               A \lref string_property_type String property. The URL\ref rfc_3986 of a website associated with the person or group identified by \c Observer:Name.
+               A \lref string_property_type String property. The URLs\ref rfc_3986 of one or more websites associated with the persons or groups identified by \c Observer:Name. Multiple URLs \e shall be specified as a newline-separated list.
             }
          }
       }
@@ -274,24 +274,24 @@
 
          \definition {
 
-            { \c Organization:Name }
-            {
-               A \lref string_property_type String property. The name or identification of the organization (such as a company, institution, etc.) responsible for the data acquired during this observation.
-            }
-
             { \c Organization:EmailAddress }
             {
-               A \lref string_property_type String property. An email address\ref rfc_5321 associated with the organization identified by \c Organization:Name.
+               A \lref string_property_type String property. One or more email addresses\ref rfc_5321 associated with the organizations identified by \c Organization:Name. Multiple addresses \e shall be specified as a comma-separated list.
+            }
+
+            { \c Organization:Name }
+            {
+               A \lref string_property_type String property. The names or identifications of one or more organizations (such as companies, institutions, etc.) responsible for the data acquired during this observation. Multiple names \e shall be specified as a newline-separated list.
             }
 
             { \c Organization:PostalAddress }
             {
-               A \lref string_property_type String property. The postal address of the organization identified by \c Organization:Name.
+               A \lref string_property_type String property. One or more postal addresses of the organizations identified by \c Organization:Name. Multiple addresses \e shall be specified as a newline-separated list.
             }
 
             { \c Organization:Website }
             {
-               A \lref string_property_type String property. The URL\ref rfc_3986 of a website associated with the organization identified by \c Organization:Name.
+               A \lref string_property_type String property. The URLs\ref rfc_3986 of one or more websites associated with the organizations identified by \c Organization:Name. Multiple URLs \e shall be specified as a newline-separated list.
             }
          }
       }
@@ -299,21 +299,6 @@
       \subsection { Observation Namespace } {
 
          \definition {
-
-            { \c Observation:Equinox }
-            {
-               A \lref float64_property_type Float64 property. The equinox of equatorial coordinates expressed in years. A value before 1984 is a Besselian epoch; otherwise it is a Julian epoch.
-
-               This property applies to the coordinates given by the following properties: \c Observation:Object:RA, \c Observation:Object:Dec, \c Observation:Center:RA, and \c Observation:Center:Dec.
-
-               If this property is not specified, the default value \e shall be 2000.0 (J2000.0 = JD 2451545.0).
-
-               Example:
-
-               \code[lang:xml] { #:
-<Property id="Observation:Equinox" type="Float64" value="1991.25" />
-               :# }
-            }
 
             { \c Observation:CelestialReferenceSystem }
             {
@@ -327,6 +312,53 @@
 
                \code[lang:xml] { #:
 <Property id="Observation:CelestialReferenceSystem" type="String">FK5</Property>
+               :# }
+            }
+
+            { \c Observation:BibliographicReferences }
+            {
+               A \lref string_property_type String property. One or more bibliographic references associated with the data acquired during this observation. Multiple references \e shall be specified as a newline-separated list.
+            }
+
+            { \c Observation:Center:Dec }
+            {
+               A \lref float64_property_type Float64 property. The Declination equatorial coordinate of the center of the image, expressed in degrees. This property refers to the coordinates the telescope has been aimed at in the sky, \e not to an astrometric solution of the image.
+
+               Example:
+
+               \code[lang:xml] { #:
+<Property id="Observation:Center:Dec" type="Float64" value="47.2661464" />
+               :# }
+            }
+
+            { \c Observation:Center:RA }
+            {
+               A \lref float64_property_type Float64 property. The Right Ascension equatorial coordinate of the center of the image, expressed in degrees. This property refers to the coordinates the telescope has been aimed at in the sky, \e not to an astrometric solution of the image.
+
+               Example:
+
+               \code[lang:xml] { #:
+<Property id="Observation:Center:RA" type="Float64" value="195.4997911" />
+               :# }
+            }
+
+            { \c Observation:Description }
+            {
+               A \lref string_property_type String property. A brief description of the observation.
+            }
+
+            { \c Observation:Equinox }
+            {
+               A \lref float64_property_type Float64 property. The equinox of equatorial coordinates expressed in years. A value before 1984 is a Besselian epoch; otherwise it is a Julian epoch.
+
+               This property applies to the coordinates given by the following properties: \c Observation:Object:RA, \c Observation:Object:Dec, \c Observation:Center:RA, and \c Observation:Center:Dec.
+
+               If this property is not specified, the default value \e shall be 2000.0 (J2000.0 = JD 2451545.0).
+
+               Example:
+
+               \code[lang:xml] { #:
+<Property id="Observation:Equinox" type="Float64" value="1991.25" />
                :# }
             }
 
@@ -345,26 +377,66 @@
                :# }
             }
 
-            { \c Observation:Center:RA }
+            { \c Observation:Location:Elevation }
             {
-               A \lref float64_property_type Float64 property. The Right Ascension equatorial coordinate of the center of the image, expressed in degrees. This property refers to the coordinates the telescope has been aimed at in the sky, \e not to an astrometric solution of the image.
+               A \lref float64_property_type Float64 property. The geographic elevation of the observation location in meters.
+            }
+
+            { \c Observation:Location:Latitude }
+            {
+               A \lref float64_property_type Float64 property. The geographic latitude of the observation location in degrees.
+            }
+
+            { \c Observation:Location:Longitude }
+            {
+               A \lref float64_property_type Float64 property. The geographic longitude of the observation location in degrees.
+            }
+
+            { \c Observation:Location:Name }
+            {
+               A \lref string_property_type String property. The name or identification of the observation location.
 
                Example:
 
                \code[lang:xml] { #:
-<Property id="Observation:Center:RA" type="Float64" value="195.4997911" />
+<Property id="Observation:Location:Name"
+          type="String">Observatorio de Aras de los Olmos (OAO)</Property>
                :# }
             }
 
-            { \c Observation:Center:Dec }
+            { \c Observation:Meteorology:AmbientTemperature }
             {
-               A \lref float64_property_type Float64 property. The Declination equatorial coordinate of the center of the image, expressed in degrees. This property refers to the coordinates the telescope has been aimed at in the sky, \e not to an astrometric solution of the image.
+               A \lref float32_property_type Float32 property. Average ambient temperature during the observation in degrees Celsius.
+            }
 
-               Example:
+            { \c Observation:Meteorology:AtmosphericPressure }
+            {
+               A \lref float32_property_type Float32 property. Atmospheric pressure during the observation in hectopascals.
+            }
 
-               \code[lang:xml] { #:
-<Property id="Observation:Center:Dec" type="Float64" value="47.2661464" />
-               :# }
+            { \c Observation:Meteorology:RelativeHumidity }
+            {
+               A \lref float32_property_type Float32 property. Average relative humidity during the observation in percentage units.
+            }
+
+            { \c Observation:Meteorology:WindDirection }
+            {
+               A \lref float32_property_type Float32 property. Average wind direction during the observation in North azimuth degrees, where 0\deg=North, 90\deg=East, 180\deg=South, and 270\deg=West.
+            }
+
+            { \c Observation:Meteorology:WindGust }
+            {
+               A \lref float32_property_type Float32 property. Maximum wind speed measured during the observation in kilometers per hour.
+            }
+
+            { \c Observation:Meteorology:WindSpeed }
+            {
+               A \lref float32_property_type Float32 property. Average wind speed during the observation in kilometers per hour.
+            }
+
+            { \c Observation:Object:Dec }
+            {
+               A \lref float64_property_type Float64 property. The Declination equatorial coordinate of the observed object, expressed in degrees.
             }
 
             { \c Observation:Object:Name }
@@ -383,36 +455,14 @@
                A \lref float64_property_type Float64 property. The Right Ascension equatorial coordinate of the observed object, expressed in degrees.
             }
 
-            { \c Observation:Object:Dec }
+            { \c Observation:RelatedResources }
             {
-               A \lref float64_property_type Float64 property. The Declination equatorial coordinate of the observed object, expressed in degrees.
+               A \lref string_property_type String property. One or more resources, such as documents or URLs,\ref rfc_3986 related to the observation. Multiple resources \e shall be specified as a newline-separated list.
             }
 
-            { \c Observation:Location:Name }
+            { \c Observation:Time:End }
             {
-               A \lref string_property_type String property. The name or identification of the observation location.
-
-               Example:
-
-               \code[lang:xml] { #:
-<Property id="Observation:Location:Name"
-          type="String">Observatorio de Aras de los Olmos (OAO)</Property>
-               :# }
-            }
-
-            { \c Observation:Location:Longitude }
-            {
-               A \lref float64_property_type Float64 property. The geographic longitude of the observation location in degrees.
-            }
-
-            { \c Observation:Location:Latitude }
-            {
-               A \lref float64_property_type Float64 property. The geographic latitude of the observation location in degrees.
-            }
-
-            { \c Observation:Location:Elevation }
-            {
-               A \lref float64_property_type Float64 property. The geographic elevation of the observation location in meters.
+               A \lref time_point_property_type TimePoint property. The date and time on which the observation ended in the UTC time scale.
             }
 
             { \c Observation:Time:Start }
@@ -422,26 +472,6 @@
                \code[lang:xml] { #:
 <Property id="Observation:Time:Start" type="TimePoint" value="2015-01-23T19:52:31.46Z" />
                :# }
-            }
-
-            { \c Observation:Time:End }
-            {
-               A \lref time_point_property_type TimePoint property. The date and time on which the observation ended in the UTC time scale.
-            }
-
-            { \c Observation:AmbientTemperature }
-            {
-               A \lref float32_property_type Float32 property. Average ambient temperature during the observation in degrees Celsius.
-            }
-
-            { \c Observation:RelativeHumidity }
-            {
-               A \lref float32_property_type Float32 property. Average relative humidity during the observation in percentage units.
-            }
-
-            { \c Observation:AtmosphericPressure }
-            {
-               A \lref float32_property_type Float32 property. Atmospheric pressure during the observation in hectopascals.
             }
 
             { \c Observation:Title }
@@ -454,16 +484,6 @@
 <Property id="Observation:Title" type="String">CCD Observations of WY Cyg</Property>
                :# }
             }
-
-            { \c Observation:Description }
-            {
-               A \lref string_property_type String property. A brief description of the observation.
-            }
-
-            { \c Observation:BibliographicReference }
-            {
-               A \lref string_property_type String property. A bibliographic reference associated with the data acquired during this observation.
-            }
          }
       }
 
@@ -471,56 +491,19 @@
 
          \definition {
 
-            { \c Instrument:ExposureTime }
+            { \c Instrument:Camera:Gain }
             {
-               A \lref float32_property_type Float32 property. Total effective exposure time in seconds.
+               A \lref float32_property_type Float32 property. Camera gain in units of electrons per data number.
             }
 
-            { \c Instrument:Telescope:Name }
+            { \c Instrument:Camera:ISOSpeed }
             {
-               A \lref string_property_type String property. The name of the telescope or main instrument used for this observation.
-            }
-
-            { \c Instrument:Telescope:Aperture }
-            {
-               A \lref float32_property_type Float32 property. The aperture diameter of the optical system expressed in meters.
-            }
-
-            { \c Instrument:Telescope:FocalLength }
-            {
-               A \lref float32_property_type Float32 property. The effective focal length of the optical system expressed in meters.
-            }
-
-            { \c Instrument:Telescope:CollectingArea }
-            {
-               A \lref float32_property_type Float32 property. The effective aperture area of the optical system in square meters. The value of this property \e must exclude any obstruction present in the optical path, such as central obstructions caused by secondary mirrors.
-            }
-
-            { \c Instrument:Sensor:XPixelSize }
-            {
-               A \lref float32_property_type Float32 property. Length of a sensor pixel on the X axis of the image, in microns. The value of this property refers to the actual region of the sensor that has accumulated light for an image pixel, that is, it \e must account for pixel binning if it has been used on the X axis (see the \c Instrument:Camera:XBinning property).
-            }
-
-            { \c Instrument:Sensor:YPixelSize }
-            {
-               A \lref float32_property_type Float32 property. Length of a sensor pixel on the Y axis of the image, in microns. The value of this property refers to the actual region of the sensor that has accumulated light for an image pixel, that is, it \e must account for pixel binning if it has been used on the Y axis (see the \c Instrument:Camera:YBinning property).
-            }
-
-            { \c Instrument:Sensor:Temperature }
-            {
-               A \lref float32_property_type Float32 property. Temperature of the sensor during the observation in degrees Celsius.
-            }
-
-            { \c Instrument:Filter:Name }
-            {
-               A \lref string_property_type String property. The name or identifier of the filter used to acquire the image.
-
-               If this property is not specified the image \e shall be assumed to have been acquired through no filter.
+               An \lref int32_property_type Int32 property. Sensitivity of the camera in ISO speed units.\ref iso_12232
 
                Example:
 
                \code[lang:xml] { #:
-<Property id="Instrument:Filter:Name" type="String">Sloan r</Property>
+<Property id="Instrument:Camera:ISOSpeed" type="Int" value="3200" />
                :# }
             }
 
@@ -535,6 +518,16 @@
                :# }
             }
 
+            { \c Instrument:Camera:ReadoutNoise }
+            {
+               A \lref float32_property_type Float32 property. Camera readout noise in electrons.
+            }
+
+            { \c Instrument:Camera:Rotation }
+            {
+               A \lref float32_property_type Float32 property. Rotation angle of the camera in degrees, measured in the counter-clockwise direction with respect to a device-dependent origin.
+            }
+
             { \c Instrument:Camera:XBinning }
             {
                An \lref int32_property_type Int32 property. Pixel binning factor (\ge 1) applied in the horizontal (X-axis) direction.
@@ -545,15 +538,67 @@
                An \lref int32_property_type Int32 property. Pixel binning factor (\ge 1) applied in the vertical (Y-axis) direction.
             }
 
-            { \c Instrument:Camera:ISOSpeed }
+            { \c Instrument:ExposureTime }
             {
-               An \lref int32_property_type Int32 property. Sensitivity of the camera in ISO speed units.\ref iso_12232
+               A \lref float32_property_type Float32 property. Total effective exposure time in seconds.
+            }
+
+            { \c Instrument:Filter:Name }
+            {
+               A \lref string_property_type String property. The name or identifier of the filter used to acquire the image.
+
+               If this property is not specified, it \e shall be assumed that the image has been acquired through no filter.
 
                Example:
 
                \code[lang:xml] { #:
-<Property id="Instrument:Camera:ISOSpeed" type="Int" value="3200" />
+<Property id="Instrument:Filter:Name" type="String">Sloan r</Property>
                :# }
+            }
+
+            { \c Instrument:Focuser:Position }
+            {
+               A \lref float32_property_type Float32 property. Position of the focuser in millimeters, with respect to a device-dependent origin.
+            }
+
+            { \c Instrument:Sensor:TargetTemperature }
+            {
+               A \lref float32_property_type Float32 property. Target temperature of the sensor during the observation in degrees Celsius.
+            }
+
+            { \c Instrument:Sensor:Temperature }
+            {
+               A \lref float32_property_type Float32 property. Measured average temperature of the sensor during the observation in degrees Celsius.
+            }
+
+            { \c Instrument:Sensor:XPixelSize }
+            {
+               A \lref float32_property_type Float32 property. Length of a sensor pixel on the X axis of the image, in microns. The value of this property refers to the actual region of the sensor that has accumulated light for an image pixel, that is, it \e must account for pixel binning if it has been used on the X axis (see the \c Instrument:Camera:XBinning property).
+            }
+
+            { \c Instrument:Sensor:YPixelSize }
+            {
+               A \lref float32_property_type Float32 property. Length of a sensor pixel on the Y axis of the image, in microns. The value of this property refers to the actual region of the sensor that has accumulated light for an image pixel, that is, it \e must account for pixel binning if it has been used on the Y axis (see the \c Instrument:Camera:YBinning property).
+            }
+
+            { \c Instrument:Telescope:Aperture }
+            {
+               A \lref float32_property_type Float32 property. The aperture diameter of the optical system expressed in meters.
+            }
+
+            { \c Instrument:Telescope:CollectingArea }
+            {
+               A \lref float32_property_type Float32 property. The effective aperture area of the optical system in square meters. The value of this property \e must exclude any obstruction present in the optical path, such as central obstructions caused by secondary mirrors.
+            }
+
+            { \c Instrument:Telescope:FocalLength }
+            {
+               A \lref float32_property_type Float32 property. The effective focal length of the optical system expressed in meters.
+            }
+
+            { \c Instrument:Telescope:Name }
+            {
+               A \lref string_property_type String property. The name of the telescope or main instrument used for this observation.
             }
          }
       }
@@ -561,6 +606,21 @@
       \subsection { Processing Namespace } {
 
          \definition {
+
+            { \c Processing:Description }
+            {
+               A \lref string_property_type String property. A description of the processing techniques and procedures that have been applied to the image.
+
+               Example:
+
+               \code[lang:xml] { #:
+<Property id="Processing:Description" type="String">
+This image is an example result of the noise reduction techniques we described in the
+January 2015 Athens workshop.
+...
+</Property>
+               :# }
+            }
 
             { \c Processing:History }
             {
@@ -641,21 +701,6 @@
                :# }
 
                In this example, the \c Processing:History property has been generated by several applications and subsystems responsible for image acquisition and some preprocessing steps. Software names and versions have been prefixed with slash characters and processing tasks have been separated with empty lines, which improves readability.
-            }
-
-            { \c Processing:Description }
-            {
-               A \lref string_property_type String property. A description of the processing techniques and procedures that have been applied to the image.
-
-               Example:
-
-               \code[lang:xml] { #:
-<Property id="Processing:Description" type="String">
-This image is an example result of the noise reduction techniques we described in the
-January 2015 Athens workshop.
-...
-</Property>
-               :# }
             }
          }
       }
