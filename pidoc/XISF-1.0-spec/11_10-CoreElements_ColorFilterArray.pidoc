@@ -99,7 +99,7 @@
 ...
 </Image>
 ...
-<Resolution ... uid="BGGR_Bayer_Filter" ... />
+<ColorFilterArray ... uid="BGGR_Bayer_Filter" ... />
       :# }
    }
 }

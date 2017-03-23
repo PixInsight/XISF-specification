@@ -41,7 +41,7 @@
 
 \reference unicode_ascii_subset { The Unicode Consortium. The Unicode Standard Version 7.0 -- \xref {http://www.unicode.org/charts/PDF/U0000.pdf} \e {C0 Controls and Basic Latin} }
 
-\reference ecmascript_regexp { ECMA International. \xref {http://www.ecma-international.org/publications/files/ECMA-ST/Ecma-262.pdf} \e {ECMAScript Language Specification 5.1 Edition, \sect 15.10: RegExp (Regular Expression) Objects}. }
+\reference ecmascript_regexp { ECMA International. \xref {http://www.ecma-international.org/publications/files/ECMA-ST/Ecma-262.pdf} \e { ECMA‑262 7\sup{th} Edition, ECMAScript 2016 Language Specification, \sect 21.2: RegExp (Regular Expression) Objects}. }
 
 \reference open_group_printf { The Open Group Base Specifications Issue 7. IEEE Std 1003.1, 2013 Edition. \xref {http://pubs.opengroup.org/onlinepubs/9699919799/functions/printf.html} \e {printf() function definition}. }
 

@@ -72,28 +72,35 @@
 
             \table[caption,header,width:100\%] {
                { \c imageType Attribute Values }
-               { { Image type }                        { \c imageType attribute value } }
-               { { Bias frame }                        { \c Bias } }
-               { { Dark frame }                        { \c Dark } }
-               { { Flat field }                        { \c Flat } }
-               { { Light or science frame }            { \c Light } }
-               { { Integrated bias frame }             { \c MasterBias } }
-               { { Integrated dark frame }             { \c MasterDark } }
-               { { Integrated flat field }             { \c MasterFlat } }
-               { { Integrated light or science image } { \c MasterLight } }
-               { { Defect map }                        { \c DefectMap } }
-               { { Pixel rejection map, high values  } { \c RejectionMapHigh } }
-               { { Pixel rejection map, low values  }  { \c RejectionMapLow } }
-               { { Slope map }                         { \c SlopeMap } }
+               { { Image type }                         { \c imageType attribute value } }
+               { { Bias frame }                         { \c Bias } }
+               { { Dark frame }                         { \c Dark } }
+               { { Flat field }                         { \c Flat } }
+               { { Light or science frame }             { \c Light } }
+               { { Integrated bias frame }              { \c MasterBias } }
+               { { Integrated dark frame }              { \c MasterDark } }
+               { { Integrated flat field }              { \c MasterFlat } }
+               { { Integrated light or science image }  { \c MasterLight } }
+               { { Defect map }                         { \c DefectMap } }
+               { { Pixel rejection map, high values  }  { \c RejectionMapHigh } }
+               { { Pixel rejection map, low values  }   { \c RejectionMapLow } }
+               { { Binary rejection map, high values  } { \c BinaryRejectionMapHigh } }
+               { { Binary rejection map, low values  }  { \c BinaryRejectionMapLow } }
+               { { Slope map }                          { \c SlopeMap } }
+               { { Weight map }                         { \c WeightMap } }
             }
 
             A \e {master frame} is the result of the integration of two or more individual frames or images of the same type.
 
             A \e {defect map} is an integer or floating point real image where nonzero pixel sample values represent invalid or defective pixels. Defective pixels are typically ignored or replaced with plausible statistical estimates, such as robust averages of neighbor pixels.
 
-            \e {Rejection maps} are integer or floating point real images where each pixel sample value is proportional to the number of rejected pixels in an integration process at the corresponding pixel coordinates. Low and high rejection maps correspond, respectively, to rejected pixels below and above a central reference value (typically a robust location estimate such as the median of a set of integrated pixels). A rejection map sample value equal to the lower bound of the \lref bounds_image_attribute {representable range} corresponds to zero rejected pixels, while the upper bound indicates that all integrated pixels have been rejected.
+            \e {Pixel rejection maps} are integer or floating point real images where each pixel sample value is proportional to the number of rejected pixels in an integration process at the corresponding pixel coordinates. Low and high rejection maps correspond, respectively, to rejected pixels below and above a central reference value (typically a robust location estimate such as the median of a set of integrated pixels). A rejection map sample value equal to the lower bound of the \lref bounds_image_attribute {representable range} corresponds to zero rejected pixels, while the upper bound indicates that all integrated pixels have been rejected.
+
+            A \e {binary rejection map} is an integer image where a pixel sample value is nonzero if and only if the corresponding pixel sample of a given image has been rejected in an integration process. Low and high binary rejection maps are to be interpreted as in the preceding paragraph for normal rejection maps. Binary rejection maps \e should be generated as 8-bit unsigned integer images.
 
             \e {Slope maps} are integer or floating point real images where each pixel sample value is proportional to the slope of a straight line fitted to a set of integrated pixels at the corresponding pixel coordinates. A slope map value equal to the lower bound of the \lref bounds_image_attribute {representable range} corresponds to a horizontal line (or a slope of zero degrees), while the upper bound represents a vertical line (infinite slope).
+
+            \e {Weight maps} are integer or floating point real images where each pixel sample value is proportional to a statistical weight assigned at the corresponding pixel coordinates. Statistical weights represented by weight maps are typically generated by image calibration, registration and integration processes, but can be produced by any task performing per-pixel evaluations or comparisons.
          }
       }
    }
@@ -234,9 +241,9 @@
 
       In this subsection we formalize a reduced set of \lref property_core_element \c Property core elements designed specifically to support astronomical image data. The \c Property elements described here \e may be generated by encoders as child elements of \lref image_core_element \c Image core elements. They \e may also be associated with images by means of \c uid attributes and child \lref reference_core_element \c Reference elements.
 
-      The identifiers of these properties use namespaces to organize them into several fundamental categories: \c Observer, \c Organization, \c Observation, \c Instrument, and \c Processing. These properties have reserved identifiers that \e must \e not be used for purposes different from the ones described herein.
+      The identifiers of these properties use namespaces to organize them into several fundamental categories: \c Observer, \c Organization, \c Observation, \c Instrument, \c Image and \c Processing. These properties have reserved identifiers that \e must \e not be used for purposes different from the ones described herein.
 
-      All of these properties are \e optional. However, all encoders---especially image acquisition and processing applications---\e should implement them as necessary and appropriate, following the norms and recommendations given in the list below.
+      All of these properties are \e optional. However, all encoders---especially image acquisition and processing applications---\e should implement them as necessary and appropriate, following the norms and recommendations given in the subsections below.
 
       \subsection { Observer Namespace } {
 
@@ -322,7 +329,11 @@
 
             { \c Observation:Center:Dec }
             {
-               A \lref float64_property_type Float64 property. The Declination equatorial coordinate of the center of the image, expressed in degrees. This property refers to the coordinates the telescope has been aimed at in the sky, \e not to an astrometric solution of the image.
+               A \lref float64_property_type Float64 property. The Declination equatorial coordinate of the reference point of the image, expressed in degrees. The reference point location is given by the \c Observation:Center:X and \c Observation:Center:Y properties in \lref image_structure {image coordinates} or, if these properties are not specified, by the geometric center of the image.
+
+               This property refers to the Declination coordinate the telescope has been aimed at in the sky, \e not to an astrometric solution of the image.
+
+               See \lref observation_center_ra \c Observation:Center:RA for important usage recommendations.
 
                Example:
 
@@ -331,15 +342,29 @@
                :# }
             }
 
-            { \c Observation:Center:RA }
+            { \label observation_center_ra \c Observation:Center:RA }
             {
-               A \lref float64_property_type Float64 property. The Right Ascension equatorial coordinate of the center of the image, expressed in degrees. This property refers to the coordinates the telescope has been aimed at in the sky, \e not to an astrometric solution of the image.
+               A \lref float64_property_type Float64 property. The Right Ascension equatorial coordinate of the reference point of the image, expressed in degrees. The reference point location is given by the \c Observation:Center:X and \c Observation:Center:Y properties in \lref image_structure {image coordinates} or, if these properties are not specified, by the geometric center of the image.
+
+               This property refers to the Right Ascension coordinate the telescope has been aimed at in the sky, \e not to an astrometric solution of the image.
+
+               \c Observation:Center:RA and \c Observation:Center:Dec are the reference coordinates to be used for applications where positional accuracy is required. For example, these coordinates can be appropriate to provide an initial search position for a plate solving routine. \c Observation:Object:RA and \c Observation:Object:Dec, which are mainly intended for metadata classification and search operations, \e should \e not be used for these purposes unless \c Observation:Center coordinates are not available.
 
                Example:
 
                \code[lang:xml] { #:
 <Property id="Observation:Center:RA" type="Float64" value="195.4997911" />
                :# }
+            }
+
+            { \c Observation:Center:X }
+            {
+               A \lref float64_property_type Float64 property. The horizontal \lref image_structure {image coordinate} of the reference point of the image. The reference point is the location on the image to which the \c Observation:Center:RA and \c Observation:Center:Dec properties are referred. When this property is not specified, the reference point's horizontal coordinate \e shall be the horizontal image coordinate of the geometric center of the image.
+            }
+
+            { \c Observation:Center:Y }
+            {
+               A \lref float64_property_type Float64 property. The vertical \lref image_structure {image coordinate} of the reference point of the image. The reference point is the location on the image to which the \c Observation:Center:RA and \c Observation:Center:Dec properties are referred. When this property is not specified, the reference point's vertical coordinate \e shall be the vertical image coordinate of the geometric center of the image.
             }
 
             { \c Observation:Description }
@@ -437,6 +462,8 @@
             { \c Observation:Object:Dec }
             {
                A \lref float64_property_type Float64 property. The Declination equatorial coordinate of the observed object, expressed in degrees.
+
+               See \lref observation_center_ra \c Observation:Center:RA for important usage recommendations.
             }
 
             { \c Observation:Object:Name }
@@ -453,6 +480,8 @@
             { \c Observation:Object:RA }
             {
                A \lref float64_property_type Float64 property. The Right Ascension equatorial coordinate of the observed object, expressed in degrees.
+
+               See \lref observation_center_ra \c Observation:Center:RA for important usage recommendations.
             }
 
             { \c Observation:RelatedResources }
@@ -525,7 +554,7 @@
 
             { \c Instrument:Camera:Rotation }
             {
-               A \lref float32_property_type Float32 property. Rotation angle of the camera in degrees, measured in the counter-clockwise direction with respect to a device-dependent origin.
+               A \lref float32_property_type Float32 property. Estimated rotation angle of the camera in degrees, measured in the counter-clockwise direction with respect to a device-dependent origin.
             }
 
             { \c Instrument:Camera:XBinning }
@@ -558,7 +587,7 @@
 
             { \c Instrument:Focuser:Position }
             {
-               A \lref float32_property_type Float32 property. Position of the focuser in millimeters, with respect to a device-dependent origin.
+               A \lref float32_property_type Float32 property. Estimated position of the focuser in millimeters, measured with respect to a device-dependent origin.
             }
 
             { \c Instrument:Sensor:TargetTemperature }
@@ -568,7 +597,7 @@
 
             { \c Instrument:Sensor:Temperature }
             {
-               A \lref float32_property_type Float32 property. Measured average temperature of the sensor during the observation in degrees Celsius.
+               A \lref float32_property_type Float32 property. Estimated average temperature of the sensor during the observation in degrees Celsius.
             }
 
             { \c Instrument:Sensor:XPixelSize }
@@ -599,6 +628,45 @@
             { \c Instrument:Telescope:Name }
             {
                A \lref string_property_type String property. The name of the telescope or main instrument used for this observation.
+            }
+         }
+      }
+
+      \subsection { Image Namespace } {
+
+         \definition {
+
+            { \c Image:GroupId }
+            {
+               A \lref string_property_type String property. The value of this property is the identifier of a group of images to which this image belongs. It \e must be a sequence of one or more 8-bit ASCII characters\ref unicode_ascii_subset satisfying the following regular expression:\ref ecmascript_regexp
+
+               \block[marginleft:2em] \c {
+                  #:[_a-zA-Z0-9][_a-zA-Z0-9-\.]*:#
+               }
+            }
+
+            { \c Image:SubframeNumber }
+            {
+               An \lref uint32_property_type UInt32 property. The value of this property \e must be greater than or equal to one. It represents the relative order of the image in an ordered sequence of images to which it belongs.
+
+               Example:
+
+               \code[lang:xml] { #:
+<Property id="Image:GroupId" type="String">M42-Dec2016</Property>
+<Property id="Image:SubgroupId" type="String">very_short_exposures-0.5m</Property>
+<Property id="Image:SubframeNumber" type="UInt32" value="171" />
+               :# }
+            }
+
+            { \c Image:SubgroupId }
+            {
+               A \lref string_property_type String property. The value of this property is the identifier of a subgroup of images to which this image belongs. It \e must be a sequence of one or more 8-bit ASCII characters\ref unicode_ascii_subset satisfying the following regular expression:\ref ecmascript_regexp
+
+               \block[marginleft:2em] \c {
+                  #:[_a-zA-Z0-9][_a-zA-Z0-9-\.]*:#
+               }
+
+               This property \e must \e not be specified if \c Image:GroupId is not specified: In order to declare an image as pertaining to a given subgroup, the group to which the specified subgroup belongs must also be declared.
             }
          }
       }

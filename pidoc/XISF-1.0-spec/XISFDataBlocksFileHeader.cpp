@@ -5,16 +5,16 @@
  */
 struct XISFDataBlocksFileHeader
 {
-   uint8_t  magic[ 8 ];   // 'XISB0100'
-   uint64_t reserved = 0; // reserved - must be zero
+   uint8_t  signature[ 8 ]; // 'XISB0100'
+   uint64_t reserved = 0;   // reserved - must be zero
 
    /*
     * Constructs a default XISF data blocks file header.
     */
    XISFDataBlocksFileHeader()
    {
-      magic[0] = 'X'; magic[1] = 'I'; magic[2] = 'S'; magic[3] = 'B';
-      magic[4] = '0'; magic[5] = '1'; magic[6] = '0'; magic[7] = '0';
+      signature[0] = 'X'; signature[1] = 'I'; signature[2] = 'S'; signature[3] = 'B';
+      signature[4] = '0'; signature[5] = '1'; signature[6] = '0'; signature[7] = '0';
    }
 
    /*
@@ -22,7 +22,8 @@ struct XISFDataBlocksFileHeader
     */
    bool IsValid() const
    {
-      return magic[0] == 'X' && magic[1] == 'I' && magic[2] == 'S' && magic[3] == 'B' &&
-             magic[4] == '0' && magic[5] == '1' && magic[6] == '0' && magic[7] == '0';
+      return
+      signature[0] == 'X' && signature[1] == 'I' && signature[2] == 'S' && signature[3] == 'B' &&
+      signature[4] == '0' && signature[5] == '1' && signature[6] == '0' && signature[7] == '0';
    }
 };

@@ -3,13 +3,13 @@
 
    The \c ICCProfile core element defines an ICC color profile\ref icc_profile \ref iso_15076_1 serialized in an \lref xisf_unit {XISF unit}.
 
-   ICC color profiles \e shall be serialized as \lref data_block {XISF data blocks} storing ICC profile structures.
+   ICC color profiles \e shall be serialized as \lref data_block {XISF data blocks}, which must store ICC profile structures unaltered.
 
    An \c ICCProfile element \e must be either a child element of an \lref image_core_element \c Image core element, or a child element of the unique \lref root_element {XISF root element}. In the former case, the ICC profile \e shall be associated with the corresponding image. In the latter case, a \c uid attribute \e should be defined to associate the ICC profile with one or more \c Image elements by means of child \lref reference_core_element \c Reference elements.
 
    The \e {embedded profile flag} (see Section 7.2.11 of the ICC profile specification\ref icc_profile) of an ICC profile stored in an XISF unit \e must be set to one to signify that the profile has been embedded in a file.
 
-   Note that the ICC profile specification states that \e {all profile data shall be encoded as big-endian} (Section 7 of the ICC profile specification\ref icc_profile). This implies that an XISF data block storing an ICC profile structure is an exception to the \lref endianness {native little-endian encoding} of XISF.
+   \c ICCProfile core elements \e shall \e not include a \lref data_block_byte_order {\c byteOrder attribute}. Note that the ICC profile specification states that \e {all profile data shall be encoded as big-endian} (Section 7 of the ICC profile specification\ref icc_profile). This implies that an XISF data block storing an ICC profile structure is an exception to the \lref endianness {default little-endian encoding} of XISF.
 
    \region {
 

@@ -1,13 +1,13 @@
 
 \subsection { \label xisf_image XISF Image } {
 
-   \subsection { Structure and Properties } {
+   \subsection { \label image_structure Structure and Properties } {
 
       In the context of this specification, an image is an object with the following structure and properties:
 
       \list[spaced] {
 
-         { An image is a set of scalars or complex numbers structured as a non-empty collection of \im{n}-dimensional arrays.\ref nist_array }
+         { An image is a set of scalars or complex numbers structured as a non-empty, finite ordered collection of \im{n}-dimensional arrays.\ref nist_array }
 
          { The \e dimensionality of the image is \im{n > 0}. }
 
@@ -22,6 +22,8 @@
          { An image with any length \im{#: d_j = 0 :#} for \im{#: 0 \le j < n :#} is an \e {empty image}. Empty images cannot be serialized in an XISF unit. }
 
          { A \e {pixel coordinate} is an integer array index \im i_j such that \im{#: 0 \le i_j < d_j :#}. }
+
+         { An \e {image coordinate} is any real number \im t_j such that \im{#: \lfloor t_j \rfloor = i_j \enspace \hbox{for} \enspace 0 \le t_j < d_j :#}. }
 
          { Any \im{m}-tuple formed with the set of scalars or complex numbers at the same pixel coordinates \im{#: i_0,\dots,i_{n-1} :#} is a \e pixel. }
 

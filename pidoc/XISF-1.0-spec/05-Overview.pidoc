@@ -8,6 +8,7 @@
       { Two storage models }
       {
          \list[spaced] {
+
             { \e { Monolithic model }, where all image metadata, pixel data and image properties are stored in a single, self-contained file. }
             { \e { Distributed model }, where metadata are stored in a single header file, while pixel data and image properties are stored as separate files, including local and remote files. }
          }
@@ -65,7 +66,7 @@
 
       { Data compression }
       {
-         The XISF specification supports data compression codecs, including lossless and lossy compression schemes. The deflate/zlib and LZ4 algorithms are the standard compression codecs of XISF 1.0.
+         The XISF specification supports data compression codecs, including lossless and lossy compression schemes. The deflate/zlib, LZ4 and LZ4HC algorithms, with and without byte shuffling, are the standard compression codecs of XISF 1.0.
       }
 
       { Digital signatures }
@@ -86,6 +87,16 @@
       { Properties }
       {
          An XISF property is a data block accessible through a unique identifier (name-value pairs). Properties can be associated with images, with the whole XISF unit, or be serialized as standalone elements. XISF properties are typed objects of scalar, complex, string, time point, vector, matrix and table types.
+      }
+
+      { Table properties }
+      {
+         An XISF table property is an heterogeneous collection of XISF properties with a matrix-like organization. Table properties allow generation of human-readable serializations with explicit declaration of data structures.
+      }
+
+      { Flexible, efficient byte ordering }
+      {
+         Individual data blocks can be stored encoded as little-endian or big-endian in an XISF unit. This allows for optimized access to data structures, tailored to specific hardware architectures. The default byte order is little-endian, which is consistent with the vast majority of systems where XISF is going to be implemented and deployed.
       }
 
       { Legacy FITS format compatibility }

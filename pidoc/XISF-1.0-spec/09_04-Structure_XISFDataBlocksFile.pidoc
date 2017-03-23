@@ -17,11 +17,11 @@
          Eight contiguous bytes reserved for future use. The values of these bytes \e shall be zero.
       }
 
-      { Block index }
+      { \label block_index Block index }
       {
          The block index of an XISF data blocks file is a singly linked list\ref nist_linked_list \ref sedgewick_2011_linked_lists \ref cormen_2009_linked_lists of \e {block index nodes} (Figure \figref fig_XISF_block_index_structure). A block index node contains a sequence of \e {block index elements}. Each block index element may define the position and length of an XISF data block stored in the data blocks file.
 
-         A block index node \e shall have the following structure:
+         A block index node \e shall have the structure described below. In a block index node, all integer elements (unsigned 32-bit and 64-bit integers) \e shall be stored encoded in little-endian byte order.
 
          \definition {
 
@@ -137,7 +137,7 @@
 
    \code[import] XISFDataBlocksFileHeader.cpp
 
-   In the next code fragment we implement the XISF block index element structure. Unique identifiers (the \c uniqueId member of \c XISFBlockIndexElement in the code) can be generated from high-quality, pseudo-random uniform deviates as unsigned 64-bit integers with a good random seeding routine. The XorShift1024* algorithm\ref vigna_2014 \ref vigna_2014_1 \ref www_xorshift is \e recommended for this task.
+   In the next code fragment we implement the XISF block index element structure, assuming a little-endian architecture. Unique identifiers (the \c uniqueId member of \c XISFBlockIndexElement in the code) can be generated from high-quality, pseudo-random uniform deviates as unsigned 64-bit integers with a good random seeding routine. The XorShift1024* algorithm\ref vigna_2014 \ref vigna_2014_1 \ref www_xorshift is \e recommended for this task.
 
    \code[import] XISFBlockIndexElement.cpp
 }

@@ -3,7 +3,7 @@
 
    The \c FITSKeyword core element defines a FITS header keyword\ref fits_keyword_records and associates it with an \lref xisf_image {XISF image} serialized in an \lref xisf_unit {XISF unit}.
 
-   The contents of a \c FITSKeyword core element (i.e., the values of its \c name, \c value and \c comment attributes; see below) \e must comply with the requirements of the FITS format specification\ref fits_format for header keywords.
+   The data serialized by a \c FITSKeyword core element (i.e., the values of its \c name, \c value and \c comment attributes; see below) \e must comply with the requirements of the FITS format specification (version 3.0 of the FITS standard\ref fits_format) for header keywords.
 
    A \c FITSKeyword element \e must be either a child element of an \lref image_core_element \c Image core element, or a child element of the unique \lref root_element {XISF root element}. In the former case, the FITS header keyword \e shall be associated with the corresponding image. In the latter case, a \c uid attribute \e should be defined to associate the FITS header keyword with one or more \c Image elements by means of child \lref reference_core_element \c Reference elements.
 

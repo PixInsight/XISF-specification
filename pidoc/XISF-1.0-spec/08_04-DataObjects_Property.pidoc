@@ -353,7 +353,7 @@
          \table[caption,header,width:100\%] {
             { XISF Vector Property Types }
             { \nowrap{ Type name } \nowrap{ Alternate name } { Description } }
-            { { I8Vector } {  } { A vector whose components are \lref int8_property_type Int8 values. } }
+            { { \label i8vector_property_type I8Vector } {  } { A vector whose components are \lref int8_property_type Int8 values. } }
             { { \label bytearray_property_type UI8Vector } { ByteArray } { A vector whose components are \lref uint8_property_type UInt8 values. } }
             { { I16Vector } {  } { A vector whose components are \lref int16_property_type Int16 values. } }
             { { UI16Vector } {  } { A vector whose components are \lref uint16_property_type UInt16 values. } }
@@ -392,8 +392,8 @@
          \table[caption,header,width:100\%] {
             { XISF Matrix Property Types }
             { \nowrap{ Type name } \nowrap{ Alternate name } { Description } }
-            { { I8Matrix } {  } { A matrix whose elements are \lref int8_property_type Int8 values. } }
-            { { UI8Matrix } { ByteMatrix } { A matrix whose elements are \lref uint8_property_type UInt8 values. } }
+            { { \label i8matrix_property_type I8Matrix } {  } { A matrix whose elements are \lref int8_property_type Int8 values. } }
+            { { \label bytematrix_property_type UI8Matrix } { ByteMatrix } { A matrix whose elements are \lref uint8_property_type UInt8 values. } }
             { { I16Matrix } {  } { A matrix whose elements are \lref int16_property_type Int16 values. } }
             { { UI16Matrix } {  } { A matrix whose elements are \lref uint16_property_type UInt16 values. } }
             { { I32Matrix } { IMatrix } { A matrix whose elements are \lref int32_property_type Int32 values. } }

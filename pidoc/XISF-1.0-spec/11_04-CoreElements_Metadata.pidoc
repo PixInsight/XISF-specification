@@ -95,14 +95,14 @@
             :# }
          }
 
-         { \c XISF:CompressionMethods }
+         { \c XISF:CompressionCodecs }
          {
             A \lref string_property_type String property. If the XISF unit contains \lref data_block_compression {compressed data blocks}, this property \e should be defined to enumerate the applied compression codec(s). If two or more different codecs have been used, they should be specified as a comma-separated list.
 
             Examples:
 
             \code[lang:xml] { #:
-<Property id="XISF:CompressionMethods" type="String">zlib+sh,lz4hc</Property>
+<Property id="XISF:CompressionCodecs" type="String">zlib+sh,lz4hc</Property>
             :# }
          }
 

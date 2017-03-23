@@ -12,7 +12,7 @@
 
       { Header length }
       {
-         An unsigned 32-bit integer whose value \e must be the length in bytes of the \lref xisf_header {XISF header}.
+         An unsigned 32-bit integer whose value \e must be the length in bytes of the \lref xisf_header {XISF header}. This value \e shall be stored encoded in little-endian byte order.
       }
 
       { Reserved field }
@@ -51,7 +51,7 @@
 
    \vs[length:2em]
 
-   The following C++ code snippet shows a practical implementation of a structure to represent the initial components of a monolithic XISF file, including construction and validation.
+   The following C++ code snippet shows a practical implementation of a structure to represent the initial components of a monolithic XISF file, including construction and validation. This implementation assumes a little-endian architecture.
 
    \code[import] XISFMonolithicFileHeader.cpp
 }

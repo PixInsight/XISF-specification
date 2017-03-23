@@ -5,7 +5,7 @@
 
    Two storage models are supported and formally defined in this specification: \e monolithic and \e distributed. The difference between the monolithic and distributed storage models is that a monolithic XISF unit must store the header and all of the data pertaining to the XISF unit in a single file, while a distributed XISF unit must store the header and the data separately in different files.
 
-   \subsection { \label monolitic_xisf_unit Monolithic XISF Unit } {
+   \subsection { \label monolithic_xisf_unit Monolithic XISF Unit } {
 
       The contents of a monolithic XISF unit (Figure \figref fig_monolithic_XISF_unit_structure) \e shall be stored in a single \lref monolithic_xisf_file {monolithic XISF file}, which \e must include a unique \lref xisf_header {XISF header} and zero or more \lref attached_data_block {attached XISF data blocks}.
 
