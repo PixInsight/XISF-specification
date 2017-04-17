@@ -393,7 +393,7 @@
 
                This property applies to the coordinates given by the following properties: \c Observation:Location:Longitude, \c Observation:Location:Latitude, and \c Observation:Location:Elevation.
 
-               If this property is not specified, the default datum \e shall be the World Geodetic System, WGS 84.\ref wikipedia_wgs
+               If this property is not specified, the default datum \e shall be the latest revision of the World Geodetic System, WGS 84 as of releasing this specification document.\ref wikipedia_wgs
 
                Example:
 
@@ -576,7 +576,7 @@
             {
                A \lref string_property_type String property. The name or identifier of the filter used to acquire the image.
 
-               If this property is not specified, it \e shall be assumed that the image has been acquired through no filter.
+               If this property is not specified, it \e shall be assumed that the image has been acquired directly through no filter.
 
                Example:
 
@@ -636,16 +636,7 @@
 
          \definition {
 
-            { \c Image:GroupId }
-            {
-               A \lref string_property_type String property. The value of this property is the identifier of a group of images to which this image belongs. It \e must be a sequence of one or more 8-bit ASCII characters\ref unicode_ascii_subset satisfying the following regular expression:\ref ecmascript_regexp
-
-               \block[marginleft:2em] \c {
-                  #:[_a-zA-Z0-9][_a-zA-Z0-9-\.]*:#
-               }
-            }
-
-            { \c Image:SubframeNumber }
+            { \c Image:FrameNumber }
             {
                An \lref uint32_property_type UInt32 property. The value of this property \e must be greater than or equal to one. It represents the relative order of the image in an ordered sequence of images to which it belongs.
 
@@ -654,8 +645,17 @@
                \code[lang:xml] { #:
 <Property id="Image:GroupId" type="String">M42-Dec2016</Property>
 <Property id="Image:SubgroupId" type="String">very_short_exposures-0.5m</Property>
-<Property id="Image:SubframeNumber" type="UInt32" value="171" />
+<Property id="Image:FrameNumber" type="UInt32" value="171" />
                :# }
+            }
+
+            { \c Image:GroupId }
+            {
+               A \lref string_property_type String property. The value of this property is the identifier of a group of images to which this image belongs. It \e must be a sequence of one or more 8-bit ASCII characters\ref unicode_ascii_subset satisfying the following regular expression:\ref ecmascript_regexp
+
+               \block[marginleft:2em] \c {
+                  #:[_a-zA-Z0-9][_a-zA-Z0-9-\.]*:#
+               }
             }
 
             { \c Image:SubgroupId }
@@ -694,7 +694,7 @@ January 2015 Athens workshop.
             {
                A \lref string_property_type String property. The value of this property should be a human-readable description of the image processing algorithms and procedures applied to the image, from the initial raw data to its current state, in chronological order. The role of this property is merely informative; a decoder \e must \e not rely on its contents to modify its own behavior or the way it interprets an image.
 
-               The format used to generate this property is application-dependent. However, a few guidelines \e should be observed by encoders to produce useful and reliable information:
+               The format used to generate this property is application-dependent. However, a few guidelines \e should be observed by encoders, as far as possible, to produce useful and reliable information:
 
                \list[spaced] {
 

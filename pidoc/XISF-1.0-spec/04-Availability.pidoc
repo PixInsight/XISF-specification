@@ -22,7 +22,15 @@
 
    \xref https://github.com/PixInsight/XISF-specification https://github.com/PixInsight/XISF-specification
 
-   For discussion on the XISF specification and implementations, please join us at PixInsight Forum:
+   The reference XISF implementation in the C++ programming language is part of the PixInsight Class Library (PCL) distribution, which can be used freely to include XISF support in any application:
+
+   \xref https://github.com/PixInsight/PCL https://github.com/PixInsight/PCL
+
+   For general information on XISF, including the latest news on the format and its development:
+
+   \xref http://pixinsight.com/xisf/ http://pixinsight.com/xisf/
+
+   For discussion on the XISF specification and its implementations, feel free to join us at PixInsight Forum:
 
    \xref http://pixinsight.com/forum/index.php?board=20.0 http://pixinsight.com/forum/index.php?board=20.0
 }

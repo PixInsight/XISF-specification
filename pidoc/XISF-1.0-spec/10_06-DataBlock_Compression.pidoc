@@ -1,3 +1,4 @@
+
 \subsection { \label data_block_compression XISF Data Block Compression } {
 
    An \lref data_block {XISF data block} \e may be transformed with a compression codec or algorithm. Both lossless and lossy compression schemes are permitted. XML elements serializing the values of compressed XISF data blocks \e must include a \c compression XML attribute with the following syntax:

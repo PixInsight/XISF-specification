@@ -11,7 +11,7 @@
 
    \subsection { Acknowledgments } {
 
-      A number of people, mainly PixInsight users and developers, have helped and supported us in our work on this specification. Their contributions to this document have allowed us to extend and improve the functionality and features of XISF, as well as to detect errors, inaccuracies and potential usability and interoperability issues. Among them, we want to make special mention of Vicent Peris, Georg Viehoever, Jean--Marc Lugrin, Mike Schuster, Klaus Kretzschmar, and Jon Rista.
+      A number of people, mainly PixInsight users and developers, have helped and supported us in our work on this specification. Their contributions to this document have allowed us to extend and improve the functionality and features of XISF, as well as to detect errors, inaccuracies, and potential usability and interoperability issues. Among them, we want to make special mention of Vicent Peris, Georg Viehoever, Jean--Marc Lugrin, Mike Schuster, Klaus Kretzschmar, and Jon Rista.
    }
 
    \subsection { Copyright Information } {

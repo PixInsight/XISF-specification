@@ -206,7 +206,7 @@
 
                \c hex
                {
-                  The integer value \e shall be represented as an hexadecimal (base 16) number using the digits from '0' to '9' and from 'a' to 'f' to represent the numbers from 0 to 9 and from 10 to 15, respectively.
+                  The integer value \e shall be represented as a hexadecimal (base 16) number using the digits from '0' to '9' and from 'a' to 'f' to represent the numbers from 0 to 9 and from 10 to 15, respectively.
                }
             }
 
@@ -447,7 +447,7 @@
             }
          }
 
-         In data disposition and access terms, an XISF table behaves like a matrix property. However, unlike a matrix, a table is an heterogeneous collection, so it can be used to store sequences of objects of different types.
+         In data disposition and access terms, an XISF table behaves like a matrix property. However, unlike a matrix, a table is a heterogeneous collection, so it can be used to store sequences of objects of different types.
 
          Table properties cannot be nested, that is, a table property cannot belong to or be serialized in a table property. Coherently with this restriction, as noted above, table fields \e shall \e not be of table type.
 

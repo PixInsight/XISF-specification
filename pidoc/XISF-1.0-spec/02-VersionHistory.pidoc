@@ -19,5 +19,7 @@
       { { 0.92    } { 26 January 2017    } { XISF Version 1.0 Specification (DRAFT 9.2) } }
       { { 0.93    } { 29 January 2017    } { XISF Version 1.0 Specification (DRAFT 9.3) } }
       { { 0.94    } { 23 March 2017      } { XISF Version 1.0 Specification (DRAFT 9.4) } }
+      { { 0.95    } { 24 March 2017      } { XISF Version 1.0 Specification (DRAFT 9.5) } }
+      { { 1.00    } { 17 April 2017      } { XISF Version 1.0 Specification (FINAL) } }
    }
 }

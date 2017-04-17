@@ -5,14 +5,12 @@
 
       \list {
 
-         { The \e {leader length} field of a \lref monolithic_xisf_file {monolithic XISF file}. }
+         { The \e {header length} field of a \lref monolithic_xisf_file {monolithic XISF file}. }
          { The \e length and \e {next node} fields of a \lref block_index {block index node} in an \lref data_blocks_file {XISF data blocks file}. }
          { The \e {unique identifier}, \e {block position}, \e {block length} and \e {uncompressed block length} fields of a \lref block_index_element {block index element} in an \lref data_blocks_file {XISF data blocks file}. }
       }
 
    \lref xisf_header {XISF headers} are plain text XML documents encoded in UTF-8, where byte order is immaterial.
 
-   With the only exception of \lref iccprofile_core_element {ICC color profiles}\ref icc_profile, which \e must be serialized with big-endian encoding, all XISF data blocks can be encoded in either little-endian or big-endian byte order. See the \lref data_block_byte_order {XISF Data Block Byte Order} section for implementation details.
-
-   The contents of external files not encoded as XISF data blocks, which can be referenced from \lref distributed_xisf_unit {distributed XISF unit} headers, are out of the scope of this specification. Therefore, the endianness of these files and the way they are used are the responsibility of the decoders and applications accessing them.
+   With the only exception of \lref iccprofile_core_element {ICC color profiles}\ref icc_profile, which \e must be serialized with big-endian encoding, all XISF data blocks \e may be encoded in either little-endian or big-endian byte order. See the \lref data_block_byte_order {XISF Data Block Byte Order} section for implementation details.
 }

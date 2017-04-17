@@ -1,0 +1,42 @@
+
+\subsection { \label data_block_byte_order XISF Data Block Byte Order } {
+
+   XML elements serializing \lref data_block {XISF data blocks} \e may, with the only exception of ICC color profiles as described below, include a \c byteOrder attribute to specify the byte order, or \e endianness, of the serialized data.
+
+   The \c byteOrder attribute \e shall \e not be present in \lref iccprofile_core_element \c ICCProfile core elements. The ICC color profile specification\ref icc_profile \ref iso_15076_1 requires big-endian encoding for ICC profile structures, which \e must be serialized unaltered in XISF units.
+
+   For the rest of core elements, the \c byteOrder attribute is \e optional. When it is not specified, the little-endian encoding \e shall be assumed by default.
+
+   Endianness is immaterial for data blocks consisting of sequences of single bytes without structuration into words or multibyte ordered subsequences. For such blocks the \c byteOrder attribute is unnecessary and \e should \e not be used. For example, an element serializing a String property as a data block does not need and should not include a \c byteOrder attribute, since \lref string_property_type \c String property values are necessarily encoded in UTF-8. The same applies to elements serializing \lref i8vector_property_type  I8Vector, \lref bytearray_property_type ByteArray, \lref i8matrix_property_type I8Matrix, and \lref bytematrix_property_type ByteMatrix properties, as well as \lref image_core_element \c Image core elements serializing 8-bit images.
+
+   The syntax of the \c byteOrder attribute is the following:
+
+   \definition {
+
+      \c { byteOrder="\e{endianness}" }
+      {
+         where \c\e endianness \e must be one of:
+
+         \definition {
+
+            \c big
+            {
+               The serialized block is encoded in big-endian byte order.
+            }
+
+            \c little
+            {
+               The serialized block is encoded in little-endian byte order. Note that this attribute value is included for completeness. Its use is normally unnecessary because data blocks are always encoded as little-endian by default in XISF units (with the exception of ICC color profiles, wich are always big-endian, as described above).
+            }
+         }
+      }
+   }
+
+   Example:
+
+   \code[lang:xml] { #:
+<Image geometry="4096:4096:1" sampleFormat="Float32" bounds="0:1"
+       location="attached:134217728:67108864"
+       byteOrder="big" />
+   :# }
+}

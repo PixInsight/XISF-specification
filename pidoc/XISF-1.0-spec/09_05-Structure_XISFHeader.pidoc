@@ -34,7 +34,7 @@ Created with TheMagicImagingSoftware - http://reallymagic.com/
 -->
          :# }
 
-         An XISF encoder should replace "TheMagicImagingSoftware" and "http://reallymagic.com/" in the comment above with the name of the software application that has created the XISF unit and a relevant URL, respectively.
+         An XISF encoder should replace "TheMagicImagingSoftware" and "http://reallymagic.com/" in the comment above with the name of the software application or system that has created the XISF unit and a relevant URL, respectively.
 
          An XISF decoder \e must \e not rely on the information included in the initial comment of an XISF header to modify its behavior in any way.
       }

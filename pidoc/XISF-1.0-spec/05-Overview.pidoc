@@ -91,7 +91,7 @@
 
       { Table properties }
       {
-         An XISF table property is an heterogeneous collection of XISF properties with a matrix-like organization. Table properties allow generation of human-readable serializations with explicit declaration of data structures.
+         An XISF table property is a heterogeneous collection of XISF properties with a matrix-like organization. Table properties allow generation of human-readable serializations with explicit declaration of data structures.
       }
 
       { Flexible, efficient byte ordering }

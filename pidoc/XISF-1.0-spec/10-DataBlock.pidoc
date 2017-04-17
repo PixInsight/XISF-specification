@@ -10,6 +10,7 @@
    \include 10_01-DataBlock_Attached.pidoc
    \include 10_02-DataBlock_External.pidoc
    \include 10_03-DataBlock_Location.pidoc
-   \include 10_04-DataBlock_Checksum.pidoc
-   \include 10_05-DataBlock_Compression.pidoc
+   \include 10_04-DataBlock_ByteOrder.pidoc
+   \include 10_05-DataBlock_Checksum.pidoc
+   \include 10_06-DataBlock_Compression.pidoc
 }
