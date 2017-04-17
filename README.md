@@ -1,4 +1,4 @@
-XISF-specification
+XISF Specification
 ==================
 
 Extensible Image Serialization Format (XISF, pronounced [ɛksˈɪsf]) is a free file format for storage, management and interchange of digital images and associated data.
