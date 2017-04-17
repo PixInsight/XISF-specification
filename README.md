@@ -13,15 +13,22 @@ This repository maintains the latest version of XISF format specification in PID
 
 http://pixinsight.com/doc/docs/XISF-1.0-spec/XISF-1.0-spec.html
 
-For discussion on the XISF specification, please join us at PixInsight Forum:
+The reference XISF implementation in the C++ programming language is part of the PixInsight Class Library (PCL) distribution, which can be used freely to include XISF support in any application:
+
+https://github.com/PixInsight/PCL
+
+For general information on XISF, including the latest news on the format and its development:
+
+http://pixinsight.com/xisf/
+
+For discussion on the XISF specification and its implementations, feel free to join us at PixInsight Forum:
 
 http://pixinsight.com/forum/index.php?board=20.0
-
 
 Acknowledgments
 ---------------
 
-A number of people, mainly PixInsight users and developers, have helped and supported us in our work on this specification. Their contributions to this document have allowed us to extend and improve the functionality and features of XISF, as well as to detect errors, inaccuracies and potential usability and interoperability issues. Among them, we want to make special mention of Vicent Peris, Georg Viehoever, Jean–Marc Lugrin, Mike Schuster, Klaus Kretzschmar, and Jon Rista.
+A number of people, mainly PixInsight users and developers, have helped and supported us in our work on this specification. Their contributions to this document have allowed us to extend and improve the functionality and features of XISF, as well as to detect errors, inaccuracies, and potential usability and interoperability issues. Among them, we want to make special mention of Vicent Peris, Georg Viehoever, Jean–Marc Lugrin, Mike Schuster, Klaus Kretzschmar, and Jon Rista.
 
 Copyright Information
 ---------------------
