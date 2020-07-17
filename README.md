@@ -1,49 +1,8 @@
 XISF Specification
-==================
+------------------
 
-Extensible Image Serialization Format (XISF, pronounced [ɛksˈɪsf]) is a free file format for storage, management and interchange of digital images and associated data.
+This repository is obsolete and will no longer be updated.
 
-XISF has been originally conceived and implemented as the native file format of PixInsight, an image processing software platform designed specifically for astronomical imaging, and developed by the Spain-based software development company Pleiades Astrophoto S.L. However, our hope is that XISF serves as an efficient tool for the development of imaging software, including not only software specialized in astronomy, but image processing software in a wide range of technical and general fields.
+Since February 2019, our official open-source repositories are on GitLab:
 
-Two key elements in the design of XISF can be found in its title: extensible and serialization. Extensibility is crucial to adapt the format easily and efficiently to the requirements of present and future software applications. The architecture of XISF has to facilitate the development of extensions to the core format specification, and for this purpose XISF headers are standard XML documents. Serialization denotes the ability of XISF to store not just image data, but also data structures associated with the environments where the images evolve as living objects. These data structures can be deserialized to recreate the images along with their working contexts. We formalize the resources to store data structures and objects as properties of a variety of predefined data types. XISF properties can be directly associated with images, with entire XISF units, or be defined as standalone components.
-
-Finally, XISF is a free format open to the contributions of anyone interested, including users of PixInsight and other applications, as well as individuals and groups from other development teams, institutions and companies involved or interested in image processing software.
-
-This repository maintains the latest version of XISF format specification in PIDoc source code. The online version of the latest XISF specification document is available here:
-
-http://pixinsight.com/doc/docs/XISF-1.0-spec/XISF-1.0-spec.html
-
-The reference XISF implementation in the C++ programming language is part of the PixInsight Class Library (PCL) distribution, which can be used freely to include XISF support in any application:
-
-https://github.com/PixInsight/PCL
-
-For general information on XISF, including the latest news on the format and its development:
-
-http://pixinsight.com/xisf/
-
-For discussion on the XISF specification and its implementations, feel free to join us at PixInsight Forum:
-
-http://pixinsight.com/forum/index.php?board=20.0
-
-Acknowledgments
----------------
-
-A number of people, mainly PixInsight users and developers, have helped and supported us in our work on this specification. Their contributions to this document have allowed us to extend and improve the functionality and features of XISF, as well as to detect errors, inaccuracies, and potential usability and interoperability issues. Among them, we want to make special mention of Vicent Peris, Georg Viehoever, Jean–Marc Lugrin, Mike Schuster, Klaus Kretzschmar, and Jon Rista.
-
-Copyright Information
----------------------
-
-Copyright © 2014-2017 Pleiades Astrophoto S.L. All rights reserved.
-
-This document may be copied and furnished to others, and derivative works that comment on or otherwise explain it or assist in its implementation may be prepared, copied, published, and distributed, in whole or in part, without restriction of any kind, provided that the above copyright notice, this Copyright Information section and the Disclaimers section below are included on all such copies and derivative works. However, this document itself may not be modified in any way, including by removing the copyright notice or references to Pleiades Astrophoto S.L., except as needed for the purpose of developing any document or deliverable produced by Pleiades Astrophoto S.L.
-
-The official version of this format specification document is the English language version on the PixInsight.com website. In the event of discrepancies between a translated version and the official version, the official version shall govern.
-
-The limited permissions granted above are perpetual and will not be revoked by Pleiades Astrophoto S.L. or its successors or assigns.
-
-Disclaimer
-----------
-
-This document and the information contained herein is provided on an "AS IS" basis and PLEIADES ASTROPHOTO S.L. DISCLAIMS ALL WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, ANY ACTUAL OR ASSERTED WARRANTY OF NON-INFRINGEMENT OF PROPRIETARY RIGHTS, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE. NEITHER PLEIADES ASTROPHOTO S.L. NOR ITS CONTRIBUTORS SHALL BE HELD LIABLE FOR ANY IMPROPER OR INCORRECT USE OF INFORMATION. NEITHER PLEIADES ASTROPHOTO S.L. NOR ITS CONTRIBUTORS ASSUME ANY RESPONSIBILITY FOR ANYONE'S USE OF INFORMATION PROVIDED BY PLEIADES ASTROPHOTO S.L. IN NO EVENT SHALL PLEIADES ASTROPHOTO S.L. OR ITS CONTRIBUTORS BE LIABLE TO ANYONE FOR DAMAGES OF ANY KIND, INCLUDING BUT NOT LIMITED TO, COMPENSATORY DAMAGES, LOST PROFITS, LOST DATA OR ANY FORM OF SPECIAL, INCIDENTAL, INDIRECT, CONSEQUENTIAL OR PUNITIVE DAMAGES OF ANY KIND WHETHER BASED ON BREACH OF CONTRACT OR WARRANTY, TORT, PRODUCT LIABILITY OR OTHERWISE.
-
-TRADEMARKS: Pleiades Astrophoto and PixInsight are trademarks of Pleiades Astrophoto S.L. Other product names and trademarks mentioned in this document are the property of their respective owners, which are in no way associated or affiliated with Pleiades Astrophoto S.L. Use of these names does not imply any co-operation or endorsement.
+https://gitlab.com/pixinsight
